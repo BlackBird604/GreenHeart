@@ -5,6 +5,8 @@
 #include "Components/DecalComponent.h"
 #include "Engine/World.h"
 
+#include "Actors/Fields/Plant.h"
+
 AFieldTile::AFieldTile()
 {
 	PrimaryActorTick.bCanEverTick = false;
@@ -23,6 +25,18 @@ AFieldTile::AFieldTile()
 void AFieldTile::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+}
+
+void AFieldTile::SpawnPlant()
+{
+	if (PlantClass != nullptr)
+	{
+		FActorSpawnParameters SpawnInfo;
+		FVector SpawnLocation = GetActorLocation();
+		FRotator SpawnRotation = GetActorRotation();
+		SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+		PlantActor = GetWorld()->SpawnActor<APlant>(PlantClass, SpawnLocation, SpawnRotation, SpawnInfo);
+	}
 }
 
