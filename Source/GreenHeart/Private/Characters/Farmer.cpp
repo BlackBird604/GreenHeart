@@ -6,6 +6,10 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "TimerManager.h"
+#include "Kismet/GameplayStatics.h"
+
+#include "Actors/Tools/Tool.h"
 
 AFarmer::AFarmer()
 {
@@ -31,7 +35,15 @@ AFarmer::AFarmer()
 void AFarmer::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	// TEMPORARY
+	if (!ToolClass->IsChildOf(ATool::StaticClass()))
+	{
+		ToolClass = ATool::StaticClass();
+	}
+	FActorSpawnParameters SpawnInfo;
+	SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	CurrentTool = GetWorld()->SpawnActor<ATool>(ToolClass, SpawnInfo);
 }
 
 void AFarmer::Tick(float DeltaTime)
@@ -57,6 +69,9 @@ void AFarmer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	InputComponent->BindAction("MoveDown", IE_Released, this, &AFarmer::OnMoveDownReleased);
 	InputComponent->BindAction("MoveLeft", IE_Released, this, &AFarmer::OnMoveLeftReleased);
 	InputComponent->BindAction("MoveRight", IE_Released, this, &AFarmer::OnMoveRightReleased);
+
+	InputComponent->BindAction("UseTool", IE_Pressed, this, &AFarmer::OnUseToolPressed);
+	InputComponent->BindAction("UseTool", IE_Released, this, &AFarmer::OnUseToolReleased);
 }
 
 void AFarmer::OnMoveUpPressed()
@@ -109,5 +124,27 @@ void AFarmer::DecrementMovementInputs()
 	if (MovementInputs < 0)
 	{
 		MovementInputs = 0;
+	}
+}
+
+void AFarmer::OnUseToolPressed()
+{
+	GetWorld()->GetTimerManager().SetTimer(ToolChargeTimer, this, &AFarmer::ChargeTool, 1.0f, true, 0.0f);
+}
+
+void AFarmer::ChargeTool()
+{
+	if (CurrentTool)
+	{
+		CurrentTool->Charge();
+	}
+}
+
+void AFarmer::OnUseToolReleased()
+{
+	GetWorld()->GetTimerManager().ClearTimer(ToolChargeTimer);
+	if (CurrentTool)
+	{
+		CurrentTool->Use(this);
 	}
 }
