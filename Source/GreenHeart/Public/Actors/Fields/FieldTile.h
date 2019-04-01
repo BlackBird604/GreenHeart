@@ -4,19 +4,23 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Interfaces/ToolAffectable.h"
 #include "FieldTile.generated.h"
 
 class UBoxComponent;
 class UDecalComponent;
 class APlant;
+class UMaterialInstance;
 
 UCLASS()
-class GREENHEART_API AFieldTile : public AActor
+class GREENHEART_API AFieldTile : public AActor, public IToolAffectable
 {
 	GENERATED_BODY()
 	
 public:	
 	AFieldTile();
+
+	virtual void UseTool(const ATool* Instigator) override;
 
 protected:
 	virtual void BeginPlay() override;
@@ -29,6 +33,18 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Temporary")
 	TSubclassOf<APlant> PlantClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Setup|Textures")
+	UMaterialInstance* Dry;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Setup|Textures")
+	UMaterialInstance* Wet;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Setup|Textures")
+	UMaterialInstance* DrySeeded;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Setup|Textures")
+	UMaterialInstance* WetSeeded;
 
 private:
 	void SpawnPlant();

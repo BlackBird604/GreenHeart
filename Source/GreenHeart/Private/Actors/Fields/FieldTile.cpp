@@ -4,6 +4,7 @@
 #include "Components/BoxComponent.h"
 #include "Components/DecalComponent.h"
 #include "Engine/World.h"
+#include "Materials/MaterialInstance.h"
 
 #include "Actors/Fields/Plant.h"
 
@@ -25,7 +26,6 @@ AFieldTile::AFieldTile()
 void AFieldTile::BeginPlay()
 {
 	Super::BeginPlay();
-
 }
 
 void AFieldTile::SpawnPlant()
@@ -37,6 +37,14 @@ void AFieldTile::SpawnPlant()
 		FRotator SpawnRotation = GetActorRotation();
 		SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 		PlantActor = GetWorld()->SpawnActor<APlant>(PlantClass, SpawnLocation, SpawnRotation, SpawnInfo);
+	}
+}
+
+void AFieldTile::UseTool(const ATool* Instigator)
+{
+	if (!Instigator)
+	{
+		return;
 	}
 }
 
