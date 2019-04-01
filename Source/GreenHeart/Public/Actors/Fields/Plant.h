@@ -8,6 +8,19 @@
 
 class UBoxComponent;
 class UStaticMeshComponent;
+class UStaticMesh;
+
+USTRUCT(BlueprintType)
+struct FGrowthInfo
+{
+	GENERATED_USTRUCT_BODY()
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	int32 GrowthValue = 0;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	UStaticMesh* PlantMesh;
+};
 
 UCLASS()
 class GREENHEART_API APlant : public AActor
@@ -26,4 +39,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	UStaticMeshComponent* PlantMesh;
 
+private:
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	TArray<FGrowthInfo> GrowthInfos;
+
+	int32 GrowthValue = 0;
 };

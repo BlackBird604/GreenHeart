@@ -3,6 +3,7 @@
 #include "FieldGrid.h"
 #include "Engine/World.h"
 
+#include "Defaults/ProjectDefaults.h"
 #include "Actors/Fields/FieldTile.h"
 
 AFieldGrid::AFieldGrid()
@@ -35,8 +36,8 @@ void AFieldGrid::SpawnFieldTiles()
 FVector AFieldGrid::GetTileSpawnLocation(int32 Row, int32 Column) const
 {
 	FVector ActorLocation = GetActorLocation();
-	float XOffset = Row * TileSpacing.X;
-	float YOffset = Column * TileSpacing.Y;
+	float XOffset = Row * ProjectDefaults::TileSize;
+	float YOffset = Column * ProjectDefaults::TileSize;
 	FVector TileRelativeLocation = FVector(XOffset, YOffset, 0.0f);
 	return ActorLocation + TileRelativeLocation;
 }

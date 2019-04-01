@@ -3,6 +3,7 @@
 #include "Tool.h"
 #include "Engine/World.h"
 #include "Interfaces/ToolAffectable.h"
+#include "Defaults/ProjectDefaults.h"
 
 #include "DrawDebugHelpers.h"
 
@@ -39,15 +40,17 @@ void ATool::Use(const AActor* User)
 	TArray<FVector2D> TraceOffsets = AffectedTiles[CurrentCharge - 1].TraceOffsets;
 	for (FVector2D TraceOffset : TraceOffsets)
 	{
-		FVector Start = User->GetActorLocation();
-		Start += User->GetActorForwardVector() * TraceOffset.X * 100.0f;
-		Start += User->GetActorRightVector() * TraceOffset.Y * 100.0f;
-		FVector End = Start + FVector(0.0f, 0.0f, -100.f);
+		float TileSize = ProjectDefaults::TileSize;
+		float TraceLength = 100;
+		FVector TraceStart = User->GetActorLocation();
+		TraceStart += User->GetActorForwardVector() * TraceOffset.X * TileSize;
+		TraceStart += User->GetActorRightVector() * TraceOffset.Y * TileSize;
+		FVector TraceEnd = TraceStart + FVector(0.0f, 0.0f, -TraceLength);
 
-		DrawDebugLine(GetWorld(), Start, End, FColor::Green, true, 10);
+		DrawDebugLine(GetWorld(), TraceStart, TraceEnd, FColor::Green, true, 10); // TEMPORARY
 
 		TArray<FHitResult> HitResults;
-		GetWorld()->LineTraceMultiByChannel(HitResults, Start, End, ECollisionChannel::ECC_Visibility);
+		GetWorld()->LineTraceMultiByChannel(HitResults, TraceStart, TraceEnd, ECollisionChannel::ECC_Visibility);
 		for (FHitResult HitResult : HitResults)
 		{
 			IToolAffectable* AffectableActor = Cast<IToolAffectable>(HitResult.Actor);

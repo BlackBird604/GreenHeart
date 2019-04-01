@@ -4,15 +4,19 @@
 #include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
 
+#include "Defaults/ProjectDefaults.h"
+
 APlant::APlant()
 {
 	PrimaryActorTick.bCanEverTick = false;
 	CollisionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("CollisionBox"));
-	FVector BoxExtent = FVector(50.0f, 50.0f, 50.0f);
+	float TileSize = ProjectDefaults::TileSize;
+	FVector BoxExtent = FVector(TileSize / 2.0f);
 	CollisionBox->SetBoxExtent(BoxExtent);
 	RootComponent = CollisionBox;
 	PlantMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PlantMesh"));
 	PlantMesh->SetupAttachment(CollisionBox);
+	PlantMesh->bReceivesDecals = false;
 }
 
 void APlant::BeginPlay()

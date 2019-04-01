@@ -20,9 +20,6 @@ protected:
 	virtual void BeginPlay() override;
 
 	UPROPERTY(EditAnywhere, Category = "Setup")
-	FVector2D TileSpacing = FVector2D(100, 100);
-
-	UPROPERTY(EditAnywhere, Category = "Setup")
 	FVector2D TileAmount = FVector2D(3, 3);
 
 	UPROPERTY(EditDefaultsOnly, Category = "Classes")
