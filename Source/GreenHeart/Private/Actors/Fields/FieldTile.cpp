@@ -7,6 +7,7 @@
 #include "Materials/MaterialInstance.h"
 
 #include "Actors/Fields/Plant.h"
+#include "Actors/Tools/Seeds.h"
 
 AFieldTile::AFieldTile()
 {
@@ -45,6 +46,34 @@ void AFieldTile::UseTool(const ATool* Instigator)
 	if (!Instigator)
 	{
 		return;
+	}
+
+	switch (Instigator->GetType())
+	{
+	case EToolType::Hoe:
+		if (!bIsTilled)
+		{
+			bIsTilled = true;
+			Decal->SetDecalMaterial(Dry);
+		}
+		break;
+	case EToolType::WateringCan:
+		if (bIsTilled)
+		{
+			bIsWatered = true;
+			Decal->SetDecalMaterial(Wet);
+		}
+		break;
+	case EToolType::Seeds:
+		if (bIsTilled)
+		{
+			if (const ASeeds* Seeds = Cast<ASeeds>(Instigator))
+			{
+				PlantClass = Seeds->GetPlantClass();
+				SpawnPlant();
+			}
+		}
+		break;
 	}
 }
 

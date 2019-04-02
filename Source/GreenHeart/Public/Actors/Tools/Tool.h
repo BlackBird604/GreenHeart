@@ -15,6 +15,14 @@ struct FToolChargeInfo
 		TArray<FVector2D> TraceOffsets;
 };
 
+UENUM(BlueprintType)
+enum class EToolType : uint8
+{
+	Hoe,
+	WateringCan,
+	Seeds
+};
+
 UCLASS()
 class GREENHEART_API ATool : public AActor
 {
@@ -31,7 +39,11 @@ public:
 
 	bool Charge();
 
+	EToolType GetType() const;
+
 private:
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	EToolType ToolType;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	TArray<FToolChargeInfo> AffectedTiles;

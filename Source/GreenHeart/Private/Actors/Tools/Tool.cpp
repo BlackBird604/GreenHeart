@@ -63,3 +63,8 @@ void ATool::Use(const AActor* User)
 	}
 	CurrentCharge = 0;
 }
+
+EToolType ATool::GetType() const
+{
+	return ToolType;
+}
