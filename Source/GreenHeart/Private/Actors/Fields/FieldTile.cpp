@@ -6,6 +6,8 @@
 #include "Engine/World.h"
 #include "Materials/MaterialInstance.h"
 
+#include "Defaults/ProjectDefaults.h"
+#include "Types/CollisionTypes.h"
 #include "Actors/Fields/Plant.h"
 #include "Actors/Tools/Seeds.h"
 
@@ -15,18 +17,22 @@ AFieldTile::AFieldTile()
 
 	CollisionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("CollisionBox"));
 	RootComponent = CollisionBox;
-	FVector BoxExtent = FVector(50, 50, 1);
+	float TileSize = ProjectDefaults::TileSize;
+	FVector BoxExtent = FVector(TileSize/2.0f, TileSize/2.0f, 1.0f);
 	CollisionBox->SetBoxExtent(BoxExtent);
 
 	Decal = CreateDefaultSubobject<UDecalComponent>(TEXT("Decal"));
-	Decal->DecalSize = FVector(50, 50, 50);
+	Decal->DecalSize = FVector(TileSize/2.0f);
 	Decal->SetRelativeRotation(FRotator(90.0f, 0.0f, 0.0f));
 	Decal->SetupAttachment(CollisionBox);
+
+	CollisionBox->SetCollisionProfileName(CollisionPresets::Field);
 }
 
 void AFieldTile::BeginPlay()
 {
 	Super::BeginPlay();
+
 }
 
 void AFieldTile::SpawnPlant()

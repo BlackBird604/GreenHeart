@@ -5,6 +5,7 @@
 #include "Interfaces/ToolAffectable.h"
 #include "Defaults/ProjectDefaults.h"
 
+#include "Types/CollisionTypes.h"
 #include "DrawDebugHelpers.h"
 
 ATool::ATool()
@@ -41,7 +42,7 @@ void ATool::Use(const AActor* User)
 	for (FVector2D TraceOffset : TraceOffsets)
 	{
 		float TileSize = ProjectDefaults::TileSize;
-		float TraceLength = 100;
+		float TraceLength = 100.0f;
 		FVector TraceStart = User->GetActorLocation();
 		TraceStart += User->GetActorForwardVector() * TraceOffset.X * TileSize;
 		TraceStart += User->GetActorRightVector() * TraceOffset.Y * TileSize;
@@ -50,7 +51,7 @@ void ATool::Use(const AActor* User)
 		DrawDebugLine(GetWorld(), TraceStart, TraceEnd, FColor::Green, true, 10); // TEMPORARY
 
 		TArray<FHitResult> HitResults;
-		GetWorld()->LineTraceMultiByChannel(HitResults, TraceStart, TraceEnd, ECollisionChannel::ECC_Visibility);
+		GetWorld()->LineTraceMultiByChannel(HitResults, TraceStart, TraceEnd, ECC_ToolTrace);
 		for (FHitResult HitResult : HitResults)
 		{
 			IToolAffectable* AffectableActor = Cast<IToolAffectable>(HitResult.Actor);

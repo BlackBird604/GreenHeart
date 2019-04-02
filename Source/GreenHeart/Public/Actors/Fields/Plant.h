@@ -40,6 +40,10 @@ protected:
 	UStaticMeshComponent* PlantMesh;
 
 private:
+	void Grow(); //Temporary
+
+	FTimerHandle GrowthTimer; //Temporary
+
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	TArray<FGrowthInfo> GrowthInfos;
 
