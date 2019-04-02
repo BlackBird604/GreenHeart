@@ -2,6 +2,7 @@
 
 #include "Farmer.h"
 #include "Components/InputComponent.h"
+#include "Components/SkeletalMeshComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Camera/CameraComponent.h"
@@ -30,6 +31,7 @@ AFarmer::AFarmer()
 	FollowCamera->PostProcessSettings.MotionBlurAmount = 0.0f;
 
 	bUseControllerRotationYaw = false;
+	GetMesh()->bReceivesDecals = false;
 }
 
 void AFarmer::BeginPlay()
