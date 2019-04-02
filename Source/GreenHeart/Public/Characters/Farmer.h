@@ -8,6 +8,7 @@
 
 class USpringArmComponent;
 class UCameraComponent;
+class UInventoryComponent;
 class ATool;
 
 UCLASS()
@@ -36,6 +37,7 @@ protected:
 
 	void OnUseToolPressed();
 	void OnUseToolReleased();
+	void OnNextToolPressed();
 
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	USpringArmComponent* SpringArm;
@@ -43,11 +45,13 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	UCameraComponent* FollowCamera;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Setup") // TEMPORARY
-	TSubclassOf<ATool> ToolClass;
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	UInventoryComponent* Inventory;
 
 private:
 	void DecrementMovementInputs();
+
+	ATool* SpawnTool();
 
 	void ChargeTool();
 

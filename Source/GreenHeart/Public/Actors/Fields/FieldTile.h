@@ -49,10 +49,14 @@ protected:
 private:
 	void SpawnPlant();
 
+	void UpdateDecalMaterial();
+
 	UPROPERTY()
 	APlant* PlantActor;
 
 	bool bIsWatered = false;
 
 	bool bIsTilled = false;
+
+	bool bIsSeeded = false;
 };

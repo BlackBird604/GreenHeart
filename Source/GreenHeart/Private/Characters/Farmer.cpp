@@ -11,6 +11,7 @@
 #include "Kismet/GameplayStatics.h"
 
 #include "Actors/Tools/Tool.h"
+#include "Components/InventoryComponent.h"
 
 AFarmer::AFarmer()
 {
@@ -30,6 +31,8 @@ AFarmer::AFarmer()
 	FollowCamera->PostProcessSettings.bOverride_MotionBlurAmount = true;
 	FollowCamera->PostProcessSettings.MotionBlurAmount = 0.0f;
 
+	Inventory = CreateDefaultSubobject<UInventoryComponent>(TEXT("Inventory"));
+
 	bUseControllerRotationYaw = false;
 	GetMesh()->bReceivesDecals = false;
 }
@@ -37,15 +40,7 @@ AFarmer::AFarmer()
 void AFarmer::BeginPlay()
 {
 	Super::BeginPlay();
-
-	// TEMPORARY
-	if (!ToolClass->IsChildOf(ATool::StaticClass()))
-	{
-		ToolClass = ATool::StaticClass();
-	}
-	FActorSpawnParameters SpawnInfo;
-	SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-	CurrentTool = GetWorld()->SpawnActor<ATool>(ToolClass, SpawnInfo);
+	CurrentTool = SpawnTool();
 }
 
 void AFarmer::Tick(float DeltaTime)
@@ -74,6 +69,7 @@ void AFarmer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 	InputComponent->BindAction("UseTool", IE_Pressed, this, &AFarmer::OnUseToolPressed);
 	InputComponent->BindAction("UseTool", IE_Released, this, &AFarmer::OnUseToolReleased);
+	InputComponent->BindAction("NextTool", IE_Pressed, this, &AFarmer::OnNextToolPressed);
 }
 
 void AFarmer::OnMoveUpPressed()
@@ -149,4 +145,23 @@ void AFarmer::OnUseToolReleased()
 	{
 		CurrentTool->Use(this);
 	}
+}
+
+void AFarmer::OnNextToolPressed()
+{
+	if (CurrentTool)
+	{
+		CurrentTool->Destroy();
+	}
+
+	Inventory->NextTool();
+	CurrentTool = SpawnTool();
+}
+
+ATool* AFarmer::SpawnTool()
+{
+	TSubclassOf<ATool> ToolClass = Inventory->GetCurrentTool();
+	FActorSpawnParameters SpawnInfo;
+	SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	return GetWorld()->SpawnActor<ATool>(ToolClass, SpawnInfo);
 }

@@ -54,9 +54,9 @@ void AFieldTile::UseTool(const ATool* Instigator)
 		if (!bIsTilled)
 		{
 			bIsTilled = true;
-			Decal->SetDecalMaterial(Dry);
 		}
 		break;
+
 	case EToolType::WateringCan:
 		if (bIsTilled)
 		{
@@ -64,6 +64,7 @@ void AFieldTile::UseTool(const ATool* Instigator)
 			Decal->SetDecalMaterial(Wet);
 		}
 		break;
+
 	case EToolType::Seeds:
 		if (bIsTilled)
 		{
@@ -71,9 +72,37 @@ void AFieldTile::UseTool(const ATool* Instigator)
 			{
 				PlantClass = Seeds->GetPlantClass();
 				SpawnPlant();
+				bIsSeeded = true;
 			}
 		}
 		break;
+	}
+	UpdateDecalMaterial();
+}
+
+void AFieldTile::UpdateDecalMaterial()
+{
+	if (!bIsTilled)
+	{
+		Decal->SetDecalMaterial(nullptr);
+		return;
+	}
+
+	if (!bIsWatered && !bIsSeeded)
+	{
+		Decal->SetDecalMaterial(Dry);
+	}
+	else if (bIsWatered && !bIsSeeded)
+	{
+		Decal->SetDecalMaterial(Wet);
+	}
+	else if (!bIsWatered && bIsSeeded)
+	{
+		Decal->SetDecalMaterial(DrySeeded);
+	}
+	else
+	{
+		Decal->SetDecalMaterial(WetSeeded);
 	}
 }
 
