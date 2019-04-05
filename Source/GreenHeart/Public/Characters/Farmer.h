@@ -23,6 +23,8 @@ public:
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	void Move();
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -49,13 +51,10 @@ protected:
 	UInventoryComponent* Inventory;
 
 private:
-	void DecrementMovementInputs();
 
 	ATool* SpawnTool();
 
 	void ChargeTool();
-
-	int32 MovementInputs = 0;
 
 	FTimerHandle ToolChargeTimer;
 
