@@ -25,6 +25,8 @@ public:
 
 	void Move();
 
+	void OnSprintPressed();
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -36,6 +38,8 @@ protected:
 	void OnMoveDownReleased();
 	void OnMoveLeftReleased();
 	void OnMoveRightReleased();
+
+	void OnSprintReleased();
 
 	void OnUseToolPressed();
 	void OnUseToolReleased();

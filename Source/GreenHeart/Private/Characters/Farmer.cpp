@@ -17,6 +17,7 @@ bool isUpPressed = false;
 bool isDownPressed = false;
 bool isLeftPressed = false;
 bool isRightPressed = false;
+bool isSprint = false;
 bool doMovement = false;
 
 AFarmer::AFarmer()
@@ -68,16 +69,13 @@ void AFarmer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	InputComponent->BindAction("MoveDown", IE_Pressed, this, &AFarmer::OnMoveDownPressed);
 	InputComponent->BindAction("MoveLeft", IE_Pressed, this, &AFarmer::OnMoveLeftPressed);
 	InputComponent->BindAction("MoveRight", IE_Pressed, this, &AFarmer::OnMoveRightPressed);
+	InputComponent->BindAction("Sprint", IE_Pressed, this, &AFarmer::OnSprintPressed);
 
 	InputComponent->BindAction("MoveUp", IE_Released, this, &AFarmer::OnMoveUpReleased);
 	InputComponent->BindAction("MoveDown", IE_Released, this, &AFarmer::OnMoveDownReleased);
 	InputComponent->BindAction("MoveLeft", IE_Released, this, &AFarmer::OnMoveLeftReleased);
 	InputComponent->BindAction("MoveRight", IE_Released, this, &AFarmer::OnMoveRightReleased);
-
-	InputComponent->BindAction("MoveUp", IE_Released, this, &AFarmer::OnMoveUpReleased);
-	InputComponent->BindAction("MoveDown", IE_Released, this, &AFarmer::OnMoveDownReleased);
-	InputComponent->BindAction("MoveLeft", IE_Released, this, &AFarmer::OnMoveLeftReleased);
-	InputComponent->BindAction("MoveRight", IE_Released, this, &AFarmer::OnMoveRightReleased);
+	InputComponent->BindAction("Sprint", IE_Released, this, &AFarmer::OnSprintReleased);
 
 	InputComponent->BindAction("UseTool", IE_Pressed, this, &AFarmer::OnUseToolPressed);
 	InputComponent->BindAction("UseTool", IE_Released, this, &AFarmer::OnUseToolReleased);
@@ -87,7 +85,7 @@ void AFarmer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 void AFarmer::Move()
 {
 	doMovement = true;
-	if (isUpPressed && isRightPressed && !isLeftPressed && !isDownPressed)
+	/*if (isUpPressed && isRightPressed && !isLeftPressed && !isDownPressed)  //4 another direction movement
 		SetActorRotation(FRotator(0, 45, 0));
 	else if (isDownPressed && isRightPressed && !isLeftPressed && !isUpPressed)
 		SetActorRotation(FRotator(0, 135, 0));
@@ -95,17 +93,18 @@ void AFarmer::Move()
 		SetActorRotation(FRotator(0, -135, 0));
 	else if (isUpPressed && isLeftPressed && !isRightPressed && !isDownPressed)
 		SetActorRotation(FRotator(0, -45, 0));
-	else if (isUpPressed && !isDownPressed && !isLeftPressed && !isRightPressed)
+	else*/ if (isUpPressed && !isDownPressed && !isLeftPressed && !isRightPressed)
 		SetActorRotation(FRotator(0, 0, 0));
 	else if (isRightPressed && !isLeftPressed && !isUpPressed && !isDownPressed)
 		SetActorRotation(FRotator(0, 90, 0));
 	else if (isDownPressed && !isUpPressed && !isLeftPressed && !isRightPressed)
 		SetActorRotation(FRotator(0, 180, 0));
 	else if (isLeftPressed && !isRightPressed && !isUpPressed && !isDownPressed)
-		SetActorRotation(FRotator(0, -90, 0));	
-	else
+		SetActorRotation(FRotator(0, -90, 0));
+	else if (!isSprint)
 		doMovement = false;
 }
+
 
 void AFarmer::OnMoveUpPressed()
 {
@@ -127,6 +126,12 @@ void AFarmer::OnMoveRightPressed()
 	isRightPressed = true;
 }
 
+void AFarmer::OnSprintPressed()
+{
+	GetCharacterMovement()->MaxWalkSpeed = 400;
+	isSprint = true;
+}
+
 void AFarmer::OnMoveUpReleased()
 {
 	isUpPressed = false;
@@ -145,6 +150,12 @@ void AFarmer::OnMoveLeftReleased()
 void AFarmer::OnMoveRightReleased()
 {
 	isRightPressed = false;
+}
+
+void AFarmer::OnSprintReleased()
+{
+	GetCharacterMovement()->MaxWalkSpeed = 200;
+	isSprint = false;
 }
 
 void AFarmer::OnUseToolPressed()
