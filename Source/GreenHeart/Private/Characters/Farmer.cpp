@@ -13,6 +13,13 @@
 #include "Actors/Tools/Tool.h"
 #include "Components/InventoryComponent.h"
 
+bool isUpPressed = false;
+bool isDownPressed = false;
+bool isLeftPressed = false;
+bool isRightPressed = false;
+bool isSprint = false;
+bool doMovement = false;
+
 AFarmer::AFarmer()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -46,7 +53,8 @@ void AFarmer::BeginPlay()
 void AFarmer::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	if (MovementInputs > 0)
+	Move();
+	if (doMovement)
 	{
 		FVector MovementDirection = GetActorForwardVector();
 		AddMovementInput(MovementDirection);
@@ -61,68 +69,93 @@ void AFarmer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	InputComponent->BindAction("MoveDown", IE_Pressed, this, &AFarmer::OnMoveDownPressed);
 	InputComponent->BindAction("MoveLeft", IE_Pressed, this, &AFarmer::OnMoveLeftPressed);
 	InputComponent->BindAction("MoveRight", IE_Pressed, this, &AFarmer::OnMoveRightPressed);
+	InputComponent->BindAction("Sprint", IE_Pressed, this, &AFarmer::OnSprintPressed);
 
 	InputComponent->BindAction("MoveUp", IE_Released, this, &AFarmer::OnMoveUpReleased);
 	InputComponent->BindAction("MoveDown", IE_Released, this, &AFarmer::OnMoveDownReleased);
 	InputComponent->BindAction("MoveLeft", IE_Released, this, &AFarmer::OnMoveLeftReleased);
 	InputComponent->BindAction("MoveRight", IE_Released, this, &AFarmer::OnMoveRightReleased);
+	InputComponent->BindAction("Sprint", IE_Released, this, &AFarmer::OnSprintReleased);
 
 	InputComponent->BindAction("UseTool", IE_Pressed, this, &AFarmer::OnUseToolPressed);
 	InputComponent->BindAction("UseTool", IE_Released, this, &AFarmer::OnUseToolReleased);
 	InputComponent->BindAction("NextTool", IE_Pressed, this, &AFarmer::OnNextToolPressed);
 }
 
+void AFarmer::Move()
+{
+	doMovement = true;
+	/*if (isUpPressed && isRightPressed && !isLeftPressed && !isDownPressed)  //4 another direction movement
+		SetActorRotation(FRotator(0, 45, 0));
+	else if (isDownPressed && isRightPressed && !isLeftPressed && !isUpPressed)
+		SetActorRotation(FRotator(0, 135, 0));
+	else if (isDownPressed && isLeftPressed && !isRightPressed && !isUpPressed)
+		SetActorRotation(FRotator(0, -135, 0));
+	else if (isUpPressed && isLeftPressed && !isRightPressed && !isDownPressed)
+		SetActorRotation(FRotator(0, -45, 0));
+	else*/ if (isUpPressed && !isDownPressed && !isLeftPressed && !isRightPressed)
+		SetActorRotation(FRotator(0, 0, 0));
+	else if (isRightPressed && !isLeftPressed && !isUpPressed && !isDownPressed)
+		SetActorRotation(FRotator(0, 90, 0));
+	else if (isDownPressed && !isUpPressed && !isLeftPressed && !isRightPressed)
+		SetActorRotation(FRotator(0, 180, 0));
+	else if (isLeftPressed && !isRightPressed && !isUpPressed && !isDownPressed)
+		SetActorRotation(FRotator(0, -90, 0));
+	else if (!isSprint)
+		doMovement = false;
+}
+
+
 void AFarmer::OnMoveUpPressed()
 {
-	SetActorRotation(FRotator(0, 0, 0));
-	MovementInputs++;
+	isUpPressed = true;
 }
 
 void AFarmer::OnMoveDownPressed()
 {
-	SetActorRotation(FRotator(0, 180, 0));
-	MovementInputs++;
+	isDownPressed = true;
 }
 
 void AFarmer::OnMoveLeftPressed()
 {
-	SetActorRotation(FRotator(0, -90, 0));
-	MovementInputs++;
+	isLeftPressed = true;
 }
 
 void AFarmer::OnMoveRightPressed()
 {
-	SetActorRotation(FRotator(0, 90, 0));
-	MovementInputs++;
+	isRightPressed = true;
+}
+
+void AFarmer::OnSprintPressed()
+{
+	GetCharacterMovement()->MaxWalkSpeed = 400;
+	isSprint = true;
 }
 
 void AFarmer::OnMoveUpReleased()
 {
-	DecrementMovementInputs();
+	isUpPressed = false;
 }
 
 void AFarmer::OnMoveDownReleased()
 {
-	DecrementMovementInputs();
+	isDownPressed = false;
 }
 
 void AFarmer::OnMoveLeftReleased()
 {
-	DecrementMovementInputs();
+	isLeftPressed = false;
 }
 
 void AFarmer::OnMoveRightReleased()
 {
-	DecrementMovementInputs();
+	isRightPressed = false;
 }
 
-void AFarmer::DecrementMovementInputs()
+void AFarmer::OnSprintReleased()
 {
-	MovementInputs--;
-	if (MovementInputs < 0)
-	{
-		MovementInputs = 0;
-	}
+	GetCharacterMovement()->MaxWalkSpeed = 200;
+	isSprint = false;
 }
 
 void AFarmer::OnUseToolPressed()
