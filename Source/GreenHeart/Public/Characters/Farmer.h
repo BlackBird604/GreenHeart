@@ -27,6 +27,12 @@ public:
 
 	void OnSprintPressed();
 
+	UFUNCTION(BlueprintCallable, Category = "AnimNotifies")
+	void DisableMovement();
+
+	UFUNCTION(BlueprintCallable, Category = "AnimNotifies")
+	void EnableMovement();
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -57,6 +63,8 @@ protected:
 private:
 
 	ATool* SpawnTool();
+
+	void UpdateChargePose();
 
 	void ChargeTool();
 

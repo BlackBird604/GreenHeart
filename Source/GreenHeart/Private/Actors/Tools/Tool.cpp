@@ -22,23 +22,39 @@ void ATool::BeginPlay()
 
 bool ATool::Charge()
 {
-	if (CurrentCharge < MaxCharge || CurrentCharge < AffectedTiles.Num())
+	if (CurrentCharge < MaxCharge && CurrentCharge < ChargeInfo.Num())
 	{
 		CurrentCharge++;
+		UE_LOG(LogTemp,Warning,TEXT("CHARGE!"))
 		return true;
 	}
-
 	return false;
 }
 
+UAnimMontage* ATool::GetChargeMontage()
+{
+	if (CurrentCharge < ChargeInfo.Num())
+	{
+		return ChargeInfo[CurrentCharge].Montage;
+	}
+	return nullptr;
+}
+
+UAnimMontage* ATool::GetUseMontage()
+{
+	return UseMontage;
+}
+
+//REFACTORING
 void ATool::Use(const AActor* User)
 {
-	if (!User)
+	if (!User || CurrentCharge >= ChargeInfo.Num())
 	{
 		return;
 	}
 
-	TArray<FVector2D> TraceOffsets = AffectedTiles[CurrentCharge - 1].TraceOffsets;
+
+	TArray<FVector2D> TraceOffsets = ChargeInfo[CurrentCharge].TraceOffsets;
 	for (FVector2D TraceOffset : TraceOffsets)
 	{
 		float TileSize = ProjectDefaults::TileSize;

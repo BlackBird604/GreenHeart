@@ -9,6 +9,7 @@
 #include "Components/CapsuleComponent.h"
 #include "TimerManager.h"
 #include "Kismet/GameplayStatics.h"
+#include "Animation/AnimMontage.h"
 
 #include "Actors/Tools/Tool.h"
 #include "Components/InventoryComponent.h"
@@ -85,15 +86,7 @@ void AFarmer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 void AFarmer::Move()
 {
 	doMovement = true;
-	/*if (isUpPressed && isRightPressed && !isLeftPressed && !isDownPressed)  //4 another direction movement
-		SetActorRotation(FRotator(0, 45, 0));
-	else if (isDownPressed && isRightPressed && !isLeftPressed && !isUpPressed)
-		SetActorRotation(FRotator(0, 135, 0));
-	else if (isDownPressed && isLeftPressed && !isRightPressed && !isUpPressed)
-		SetActorRotation(FRotator(0, -135, 0));
-	else if (isUpPressed && isLeftPressed && !isRightPressed && !isDownPressed)
-		SetActorRotation(FRotator(0, -45, 0));
-	else*/ if (isUpPressed && !isDownPressed && !isLeftPressed && !isRightPressed)
+	if (isUpPressed && !isDownPressed && !isLeftPressed && !isRightPressed)
 		SetActorRotation(FRotator(0, 0, 0));
 	else if (isRightPressed && !isLeftPressed && !isUpPressed && !isDownPressed)
 		SetActorRotation(FRotator(0, 90, 0));
@@ -103,6 +96,18 @@ void AFarmer::Move()
 		SetActorRotation(FRotator(0, -90, 0));
 	else if (!isSprint)
 		doMovement = false;
+}
+
+
+void AFarmer::DisableMovement()
+{
+	UE_LOG(LogTemp,Warning,TEXT("Movement disabled"))
+}
+
+
+void AFarmer::EnableMovement()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Movement enabled"))
 }
 
 
@@ -160,7 +165,19 @@ void AFarmer::OnSprintReleased()
 
 void AFarmer::OnUseToolPressed()
 {
-	GetWorld()->GetTimerManager().SetTimer(ToolChargeTimer, this, &AFarmer::ChargeTool, 1.0f, true, 0.0f);
+	UpdateChargePose();
+	GetWorld()->GetTimerManager().SetTimer(ToolChargeTimer, this, &AFarmer::ChargeTool, 1.0f, true, 1.0f);
+}
+
+void AFarmer::UpdateChargePose()
+{
+	if (!CurrentTool)
+	{
+		return;
+	}
+
+	UAnimMontage* ChargeMontage = CurrentTool->GetChargeMontage();
+	PlayAnimMontage(ChargeMontage);
 }
 
 void AFarmer::ChargeTool()
@@ -168,6 +185,7 @@ void AFarmer::ChargeTool()
 	if (CurrentTool)
 	{
 		CurrentTool->Charge();
+		UpdateChargePose();
 	}
 }
 
@@ -176,6 +194,8 @@ void AFarmer::OnUseToolReleased()
 	GetWorld()->GetTimerManager().ClearTimer(ToolChargeTimer);
 	if (CurrentTool)
 	{
+		UAnimMontage* UseMontage = CurrentTool->GetUseMontage();
+		PlayAnimMontage(UseMontage);
 		CurrentTool->Use(this);
 	}
 }

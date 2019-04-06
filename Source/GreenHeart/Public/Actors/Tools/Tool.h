@@ -6,13 +6,18 @@
 #include "GameFramework/Actor.h"
 #include "Tool.generated.h"
 
+class UAnimMontage;
+
 USTRUCT(BlueprintType)
 struct FToolChargeInfo
 {
 	GENERATED_USTRUCT_BODY()
 
-		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-		TArray<FVector2D> TraceOffsets;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	TArray<FVector2D> TraceOffsets;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	UAnimMontage* Montage;
 };
 
 UENUM(BlueprintType)
@@ -41,12 +46,19 @@ public:
 
 	EToolType GetType() const;
 
+	UAnimMontage* GetChargeMontage();
+
+	UAnimMontage* GetUseMontage();
+
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	EToolType ToolType;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
-	TArray<FToolChargeInfo> AffectedTiles;
+	TArray<FToolChargeInfo> ChargeInfo;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	UAnimMontage* UseMontage;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	int32 MaxCharge = 0;
