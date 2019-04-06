@@ -112,3 +112,31 @@ void AFieldTile::UpdateDecalMaterial()
 	}
 }
 
+FFieldTileState AFieldTile::GetState()
+{
+	FFieldTileState State;
+	State.bIsTilled = bIsTilled;
+	State.bIsWatered = bIsWatered;
+	State.bIsSeeded = bIsSeeded;
+	State.PlantClass = PlantClass;
+	if (PlantActor)
+	{
+		State.PlantState = PlantActor->GetState();
+	}
+	return State;
+}
+
+void AFieldTile::RestoreState(const FFieldTileState& TileState)
+{
+	bIsTilled = TileState.bIsTilled;
+	bIsWatered = TileState.bIsWatered;
+	bIsSeeded = TileState.bIsSeeded;
+	PlantClass = TileState.PlantClass;
+
+	SpawnPlant();
+	if (PlantActor)
+	{
+		PlantActor->RestoreState(TileState.PlantState);
+	}
+}
+

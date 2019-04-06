@@ -35,6 +35,11 @@ void APlant::BeginPlay()
 void APlant::Grow()
 {
 	GrowthValue++;
+	UpdateMesh();
+}
+
+void APlant::UpdateMesh()
+{
 	UStaticMesh* NewMesh = nullptr;
 	for (FGrowthInfo GrowthInfo : GrowthInfos)
 	{
@@ -47,6 +52,7 @@ void APlant::Grow()
 			break;
 		}
 	}
+
 	PlantMesh->SetStaticMesh(NewMesh);
 
 	if (NewMesh)
@@ -57,6 +63,19 @@ void APlant::Grow()
 	{
 		CollisionBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	}
+}
+
+FPlantState APlant::GetState()
+{
+	FPlantState State;
+	State.GrowthValue = GrowthValue;
+	return State;
+}
+
+void APlant::RestoreState(const FPlantState& PlantState)
+{
+	GrowthValue = PlantState.GrowthValue;
+	UpdateMesh();
 }
 
 

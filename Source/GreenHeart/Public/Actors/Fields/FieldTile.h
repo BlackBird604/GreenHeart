@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Interfaces/ToolAffectable.h"
+#include "Structs/FieldTileState.h"
 #include "FieldTile.generated.h"
 
 class UBoxComponent;
@@ -21,6 +22,10 @@ public:
 	AFieldTile();
 
 	virtual void UseTool(const ATool* Instigator) override;
+
+	FFieldTileState GetState();
+
+	void RestoreState(const FFieldTileState& TileState);
 
 protected:
 	virtual void BeginPlay() override;

@@ -16,6 +16,10 @@ class GREENHEART_API AFieldGrid : public AActor
 public:	
 	AFieldGrid();
 
+	void SaveState();
+
+	void RestoreState();
+
 protected:
 	virtual void BeginPlay() override;
 

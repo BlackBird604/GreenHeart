@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Structs/PlantState.h"
 #include "Plant.generated.h"
 
 class UBoxComponent;
@@ -30,6 +31,10 @@ class GREENHEART_API APlant : public AActor
 public:	
 	APlant();
 
+	FPlantState GetState();
+
+	void RestoreState(const FPlantState& PlantState);
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -40,6 +45,8 @@ protected:
 	UStaticMeshComponent* PlantMesh;
 
 private:
+	void UpdateMesh();
+
 	void Grow(); //Temporary
 
 	FTimerHandle GrowthTimer; //Temporary

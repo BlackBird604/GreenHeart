@@ -4,6 +4,7 @@
 #include "Engine/World.h"
 
 #include "Defaults/ProjectDefaults.h"
+#include "Fundamentals/FarmingGameInstance.h"
 #include "Actors/Fields/FieldTile.h"
 
 AFieldGrid::AFieldGrid()
@@ -40,4 +41,42 @@ FVector AFieldGrid::GetTileSpawnLocation(int32 Row, int32 Column) const
 	float YOffset = Column * ProjectDefaults::TileSize;
 	FVector TileRelativeLocation = FVector(XOffset, YOffset, 0.0f);
 	return ActorLocation + TileRelativeLocation;
+}
+
+void AFieldGrid::SaveState()
+{
+	FFieldGridState State;
+	for (AFieldTile* TileActor : TileActors)
+	{
+		if (TileActor)
+		{
+			State.TileStates.Add(TileActor->GetState());
+		}
+		else
+		{
+			State.TileStates.Add(FFieldTileState());
+		}
+	}
+
+	UFarmingGameInstance* GameInstance = Cast<UFarmingGameInstance>(GetGameInstance());
+	if (GameInstance)
+	{
+		GameInstance->SetGridState(State);
+	}
+}
+
+void AFieldGrid::RestoreState()
+{
+	UFarmingGameInstance* GameInstance = Cast<UFarmingGameInstance>(GetGameInstance());
+	if (GameInstance)
+	{
+		FFieldGridState State = GameInstance->GetGridState();
+		for (int32 i = 0; i < State.TileStates.Num(); i++)
+		{
+			if (TileActors[i])
+			{
+				TileActors[i]->RestoreState(State.TileStates[i]);
+			}
+		}
+	}
 }
