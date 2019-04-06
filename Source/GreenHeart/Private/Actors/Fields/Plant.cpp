@@ -7,10 +7,6 @@
 #include"Types/CollisionTypes.h"
 #include "Defaults/ProjectDefaults.h"
 
-//Temporary
-#include "Engine/World.h"
-#include "TimerManager.h"
-
 APlant::APlant()
 {
 	PrimaryActorTick.bCanEverTick = false;
@@ -28,14 +24,6 @@ APlant::APlant()
 void APlant::BeginPlay()
 {
 	Super::BeginPlay();
-	GetWorld()->GetTimerManager().SetTimer(GrowthTimer, this, &APlant::Grow, 3.0f, true, 3.0f); //Temporary
-}
-
-// TEMPORARY
-void APlant::Grow()
-{
-	GrowthValue++;
-	UpdateMesh();
 }
 
 void APlant::UpdateMesh()

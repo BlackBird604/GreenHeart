@@ -132,11 +132,11 @@ void AFieldTile::RestoreState(const FFieldTileState& TileState)
 	bIsWatered = TileState.bIsWatered;
 	bIsSeeded = TileState.bIsSeeded;
 	PlantClass = TileState.PlantClass;
-
 	SpawnPlant();
 	if (PlantActor)
 	{
 		PlantActor->RestoreState(TileState.PlantState);
 	}
+	UpdateDecalMaterial();
 }
 

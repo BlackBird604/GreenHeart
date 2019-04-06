@@ -16,12 +16,10 @@ class GREENHEART_API AFieldGrid : public AActor
 public:	
 	AFieldGrid();
 
-	void SaveState();
-
-	void RestoreState();
-
 protected:
 	virtual void BeginPlay() override;
+
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 	UPROPERTY(EditAnywhere, Category = "Setup")
 	FVector2D TileAmount = FVector2D(3, 3);
@@ -31,6 +29,10 @@ protected:
 
 private:
 	void SpawnFieldTiles();
+
+	void SaveState();
+
+	void RestoreState();
 
 	FVector GetTileSpawnLocation(int32 Row, int32 Column) const;
 

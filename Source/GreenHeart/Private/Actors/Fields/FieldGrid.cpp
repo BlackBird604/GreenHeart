@@ -17,6 +17,13 @@ void AFieldGrid::BeginPlay()
 {
 	Super::BeginPlay();
 	SpawnFieldTiles();
+	RestoreState();
+}
+
+void AFieldGrid::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+	SaveState();
 }
 
 void AFieldGrid::SpawnFieldTiles()

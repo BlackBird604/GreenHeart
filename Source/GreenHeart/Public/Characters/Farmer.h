@@ -51,6 +51,10 @@ protected:
 	void OnUseToolReleased();
 	void OnNextToolPressed();
 
+	// Temporary
+	void OnResetLevelPressed();
+	void OnNextDayPressed();
+
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	USpringArmComponent* SpringArm;
 

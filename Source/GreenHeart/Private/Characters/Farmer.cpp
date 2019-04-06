@@ -14,6 +14,9 @@
 #include "Actors/Tools/Tool.h"
 #include "Components/InventoryComponent.h"
 
+// Temporary
+#include "Fundamentals/FarmingGameInstance.h"
+
 bool isUpPressed = false;
 bool isDownPressed = false;
 bool isLeftPressed = false;
@@ -81,6 +84,9 @@ void AFarmer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	InputComponent->BindAction("UseTool", IE_Pressed, this, &AFarmer::OnUseToolPressed);
 	InputComponent->BindAction("UseTool", IE_Released, this, &AFarmer::OnUseToolReleased);
 	InputComponent->BindAction("NextTool", IE_Pressed, this, &AFarmer::OnNextToolPressed);
+
+	InputComponent->BindAction("ResetLevel", IE_Pressed, this, &AFarmer::OnResetLevelPressed);
+	InputComponent->BindAction("NextDay", IE_Pressed, this, &AFarmer::OnNextDayPressed);
 }
 
 void AFarmer::Move()
@@ -217,4 +223,14 @@ ATool* AFarmer::SpawnTool()
 	FActorSpawnParameters SpawnInfo;
 	SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	return GetWorld()->SpawnActor<ATool>(ToolClass, SpawnInfo);
+}
+
+void AFarmer::OnResetLevelPressed()
+{
+	UGameplayStatics::OpenLevel(this, FName(*GetWorld()->GetName()), false);
+}
+
+void AFarmer::OnNextDayPressed()
+{
+	UGameplayStatics::OpenLevel(this, "Testing", false);
 }

@@ -47,10 +47,6 @@ protected:
 private:
 	void UpdateMesh();
 
-	void Grow(); //Temporary
-
-	FTimerHandle GrowthTimer; //Temporary
-
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	TArray<FGrowthInfo> GrowthInfos;
 
