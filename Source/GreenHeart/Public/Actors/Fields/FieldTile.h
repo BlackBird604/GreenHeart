@@ -36,9 +36,6 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	UDecalComponent* Decal;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Temporary")
-	TSubclassOf<APlant> PlantClass;
-
 	UPROPERTY(EditDefaultsOnly, Category = "Setup|Textures")
 	UMaterialInstance* Dry;
 
@@ -58,6 +55,9 @@ private:
 
 	UPROPERTY()
 	APlant* PlantActor;
+
+	UPROPERTY()
+	TSubclassOf<APlant> PlantClass;
 
 	bool bIsWatered = false;
 

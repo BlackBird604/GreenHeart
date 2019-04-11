@@ -25,7 +25,6 @@ bool ATool::Charge()
 	if (CurrentCharge < MaxCharge && CurrentCharge < ChargeInfo.Num())
 	{
 		CurrentCharge++;
-		UE_LOG(LogTemp,Warning,TEXT("CHARGE!"))
 		return true;
 	}
 	return false;
@@ -53,7 +52,6 @@ void ATool::Use(const AActor* User)
 		return;
 	}
 
-
 	TArray<FVector2D> TraceOffsets = ChargeInfo[CurrentCharge].TraceOffsets;
 	for (FVector2D TraceOffset : TraceOffsets)
 	{
@@ -63,8 +61,6 @@ void ATool::Use(const AActor* User)
 		TraceStart += User->GetActorForwardVector() * TraceOffset.X * TileSize;
 		TraceStart += User->GetActorRightVector() * TraceOffset.Y * TileSize;
 		FVector TraceEnd = TraceStart + FVector(0.0f, 0.0f, -TraceLength);
-
-		DrawDebugLine(GetWorld(), TraceStart, TraceEnd, FColor::Green, true, 10); // TEMPORARY
 
 		TArray<FHitResult> HitResults;
 		GetWorld()->LineTraceMultiByChannel(HitResults, TraceStart, TraceEnd, ECC_ToolTrace);

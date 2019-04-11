@@ -53,6 +53,12 @@ void APlant::UpdateMesh()
 	}
 }
 
+void APlant::UseTool(const ATool* Instigator)
+{
+	UE_LOG(LogTemp, Warning, TEXT("PLANT AFFECTED!"));
+}
+
+
 FPlantState APlant::GetState()
 {
 	FPlantState State;

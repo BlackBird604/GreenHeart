@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Interfaces/ToolAffectable.h"
 #include "Structs/PlantState.h"
 #include "Plant.generated.h"
 
@@ -24,12 +25,20 @@ struct FGrowthInfo
 };
 
 UCLASS()
-class GREENHEART_API APlant : public AActor
+class GREENHEART_API APlant : public AActor, public IToolAffectable
 {
 	GENERATED_BODY()
 	
+
 public:	
 	APlant();
+
+protected:
+	virtual void BeginPlay() override;
+
+
+public:
+	virtual void UseTool(const ATool* Instigator) override;
 
 	FPlantState GetState();
 
@@ -40,8 +49,6 @@ public:
 	bool HasMesh(int32 CheckedValue);
 
 protected:
-	virtual void BeginPlay() override;
-
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	UBoxComponent* CollisionBox;
 
@@ -49,6 +56,7 @@ protected:
 	UStaticMeshComponent* PlantMesh;
 
 private:
+
 	void UpdateMesh();
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")

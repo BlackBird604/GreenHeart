@@ -14,9 +14,6 @@
 #include "Actors/Tools/Tool.h"
 #include "Components/InventoryComponent.h"
 
-// Temporary
-#include "Fundamentals/FarmingGameInstance.h"
-
 bool isUpPressed = false;
 bool isDownPressed = false;
 bool isLeftPressed = false;

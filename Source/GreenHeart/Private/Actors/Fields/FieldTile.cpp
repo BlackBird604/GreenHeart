@@ -25,6 +25,7 @@ AFieldTile::AFieldTile()
 	Decal->DecalSize = FVector(TileSize/2.0f);
 	Decal->SetRelativeRotation(FRotator(90.0f, 0.0f, 0.0f));
 	Decal->SetupAttachment(CollisionBox);
+	Decal->SetHiddenInGame(true);
 
 	CollisionBox->SetCollisionProfileName(CollisionPresets::Field);
 }
@@ -76,9 +77,12 @@ void AFieldTile::UseTool(const ATool* Instigator)
 		{
 			if (const ASeeds* Seeds = Cast<ASeeds>(Instigator))
 			{
-				PlantClass = Seeds->GetPlantClass();
-				SpawnPlant();
-				bIsSeeded = true;
+				if (!PlantClass)
+				{
+					PlantClass = Seeds->GetPlantClass();
+					SpawnPlant();
+					bIsSeeded = true;
+				}
 			}
 		}
 		break;
@@ -91,9 +95,11 @@ void AFieldTile::UpdateDecalMaterial()
 	if (!bIsTilled)
 	{
 		Decal->SetDecalMaterial(nullptr);
+		Decal->SetHiddenInGame(true);
 		return;
 	}
 
+	Decal->SetHiddenInGame(false);
 	if (!bIsWatered && !bIsSeeded)
 	{
 		Decal->SetDecalMaterial(Dry);
