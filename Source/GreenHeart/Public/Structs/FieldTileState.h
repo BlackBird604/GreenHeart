@@ -3,6 +3,7 @@
 #pragma once
 
 #include "Structs/PlantState.h"
+#include "Actors/Fields/Plant.h"
 #include "FieldTileState.generated.h"
 
 USTRUCT(BlueprintType)
@@ -11,7 +12,7 @@ struct FFieldTileState
 	GENERATED_USTRUCT_BODY()
 
 	UPROPERTY()
-	TSubclassOf<class APlant> PlantClass;
+	TSubclassOf<APlant> PlantClass;
 
 	UPROPERTY()
 	FPlantState PlantState;

@@ -66,4 +66,24 @@ void APlant::RestoreState(const FPlantState& PlantState)
 	UpdateMesh();
 }
 
+int32 APlant::GetMaxGrowthValue()
+{
+	int32 MaxValue = 0;
+	for (FGrowthInfo GrowthInfo : GrowthInfos)
+	{
+		MaxValue = FMath::Max(MaxValue, GrowthInfo.GrowthValue);
+	}
+	return MaxValue;
+}
 
+bool APlant::HasMesh(int32 CheckedValue)
+{
+	for (FGrowthInfo GrowthInfo : GrowthInfos)
+	{
+		if (CheckedValue >= GrowthInfo.GrowthValue)
+		{
+			return true;
+		}
+	}
+	return false;
+}

@@ -35,6 +35,10 @@ public:
 
 	void RestoreState(const FPlantState& PlantState);
 
+	int32 GetMaxGrowthValue();
+
+	bool HasMesh(int32 CheckedValue);
+
 protected:
 	virtual void BeginPlay() override;
 

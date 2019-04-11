@@ -20,5 +20,7 @@ public:
 private:
 	void ApplyNextDay(FFieldTileState& TileState);
 
-	void ApplyNextDay(FPlantState& PlantState);
+	void ApplyNextDay(FPlantState& PlantState, bool bIsWatered, TSubclassOf<APlant> PlantClass);
+
+	bool HasPlantMesh(FPlantState& PlantState, TSubclassOf<APlant> PlantClass);
 };
