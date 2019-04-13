@@ -68,13 +68,11 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	UInventoryComponent* Inventory;
 
-	UPROPERTY(VisibleAnywhere, Category = "Components")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 	USceneComponent* PickupComponent;
 
 private:
 	ATool* SpawnTool();
-
-	AActor* SpawnCollectedActor(TSubclassOf<AActor> CollectedActorClass);
 
 	void UpdateChargePose();
 

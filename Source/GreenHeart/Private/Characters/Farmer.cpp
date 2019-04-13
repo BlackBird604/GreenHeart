@@ -16,6 +16,7 @@
 #include "Actors/Tools/Tool.h"
 #include "Components/InventoryComponent.h"
 #include "Interfaces/Collectable.h"
+#include "Interfaces/Throwable.h"
 
 bool isUpPressed = false;
 bool isDownPressed = false;
@@ -175,6 +176,11 @@ void AFarmer::OnSprintReleased()
 
 void AFarmer::OnUseToolPressed()
 {
+	if (ItemInHands)
+	{
+		return;
+	}
+
 	UpdateChargePose();
 	GetWorld()->GetTimerManager().SetTimer(ToolChargeTimer, this, &AFarmer::ChargeTool, 1.0f, true, 1.0f);
 }
@@ -201,6 +207,11 @@ void AFarmer::ChargeTool()
 
 void AFarmer::OnUseToolReleased()
 {
+	if (ItemInHands)
+	{
+		return;
+	}
+
 	GetWorld()->GetTimerManager().ClearTimer(ToolChargeTimer);
 	if (CurrentTool)
 	{
@@ -223,6 +234,16 @@ void AFarmer::OnNextToolPressed()
 
 void AFarmer::OnInteractPressed()
 {
+	if (IThrowable* ThrowableActor = Cast<IThrowable>(ItemInHands))
+	{
+		if (ThrowableActor->CanBeThrown(GetActorForwardVector()))
+		{
+			ThrowableActor->Throw(GetActorForwardVector());
+			ItemInHands = nullptr;
+			return;
+		}
+	}
+
 	float TileSize = ProjectDefaults::TileSize;
 	float TraceLength = 100.0f;
 	FVector TraceStart = GetActorLocation();
@@ -235,8 +256,7 @@ void AFarmer::OnInteractPressed()
 	{
 		if (CollectableActor->CanBeCollected())
 		{
-			TSubclassOf<AActor> CollectableActorClass = CollectableActor->Collect();
-			ItemInHands = SpawnCollectedActor(CollectableActorClass);
+			ItemInHands = CollectableActor->Collect();
 			if (ItemInHands)
 			{
 				PlayPickupTimeline();
@@ -252,13 +272,6 @@ ATool* AFarmer::SpawnTool()
 	FActorSpawnParameters SpawnInfo;
 	SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	return GetWorld()->SpawnActor<ATool>(ToolClass, SpawnInfo);
-}
-
-AActor* AFarmer::SpawnCollectedActor(TSubclassOf<AActor> CollectedActorClass)
-{
-	FActorSpawnParameters SpawnInfo;
-	SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-	return GetWorld()->SpawnActor<AActor>(CollectedActorClass, SpawnInfo);
 }
 
 void AFarmer::OnResetLevelPressed()
