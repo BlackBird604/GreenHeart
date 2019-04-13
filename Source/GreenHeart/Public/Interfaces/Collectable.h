@@ -13,6 +13,7 @@ class UCollectable : public UInterface
 	GENERATED_BODY()
 };
 
+class AActor;
 
 class GREENHEART_API ICollectable
 {
@@ -21,5 +22,5 @@ class GREENHEART_API ICollectable
 public:
 	virtual bool CanBeCollected() = 0;
 
-	virtual void Collect() = 0;
+	virtual TSubclassOf<AActor> Collect() = 0;
 };

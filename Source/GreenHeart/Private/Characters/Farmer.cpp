@@ -233,10 +233,15 @@ void AFarmer::OnInteractPressed()
 	GetWorld()->LineTraceSingleByChannel(HitResult, TraceStart, TraceEnd, ECC_InteractionTrace);
 	if (ICollectable* CollectableActor = Cast<ICollectable>(HitResult.Actor))
 	{
-		
 		if (CollectableActor->CanBeCollected())
 		{
-			UE_LOG(LogTemp, Warning, TEXT("INTERACTION SUCCESS!"));
+			TSubclassOf<AActor> CollectableActorClass = CollectableActor->Collect();
+			ItemInHands = SpawnCollectedActor(CollectableActorClass);
+			if (ItemInHands)
+			{
+				PlayPickupTimeline();
+				ItemInHands->AttachToComponent(PickupComponent, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+			}
 		}
 	}
 }
@@ -247,6 +252,13 @@ ATool* AFarmer::SpawnTool()
 	FActorSpawnParameters SpawnInfo;
 	SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	return GetWorld()->SpawnActor<ATool>(ToolClass, SpawnInfo);
+}
+
+AActor* AFarmer::SpawnCollectedActor(TSubclassOf<AActor> CollectedActorClass)
+{
+	FActorSpawnParameters SpawnInfo;
+	SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	return GetWorld()->SpawnActor<AActor>(CollectedActorClass, SpawnInfo);
 }
 
 void AFarmer::OnResetLevelPressed()

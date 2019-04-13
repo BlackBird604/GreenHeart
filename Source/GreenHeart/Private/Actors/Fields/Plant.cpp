@@ -4,8 +4,9 @@
 #include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
 
-#include"Types/CollisionTypes.h"
+#include "Types/CollisionTypes.h"
 #include "Defaults/ProjectDefaults.h"
+#include "Actors/Fields/Crop.h"
 
 APlant::APlant()
 {
@@ -63,9 +64,10 @@ bool APlant::CanBeCollected()
 	return GrowthValue >= GetMaxGrowthValue();
 }
 
-void APlant::Collect()
+TSubclassOf<AActor> APlant::Collect()
 {
-	UE_LOG(LogTemp, Warning, TEXT("COLLECT PLANT!"));
+	Destroy();
+	return CropClass;
 }
 
 

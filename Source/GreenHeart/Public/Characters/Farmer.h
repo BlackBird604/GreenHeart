@@ -36,6 +36,9 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void PlayPickupTimeline();
+
 	void OnMoveUpPressed();
 	void OnMoveDownPressed();
 	void OnMoveLeftPressed();
@@ -69,8 +72,9 @@ protected:
 	USceneComponent* PickupComponent;
 
 private:
-
 	ATool* SpawnTool();
+
+	AActor* SpawnCollectedActor(TSubclassOf<AActor> CollectedActorClass);
 
 	void UpdateChargePose();
 
@@ -79,4 +83,6 @@ private:
 	FTimerHandle ToolChargeTimer;
 
 	ATool* CurrentTool;
+
+	AActor* ItemInHands;
 };

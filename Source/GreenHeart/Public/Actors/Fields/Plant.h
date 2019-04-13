@@ -12,6 +12,7 @@
 class UBoxComponent;
 class UStaticMeshComponent;
 class UStaticMesh;
+class ACrop;
 
 USTRUCT(BlueprintType)
 struct FGrowthInfo
@@ -43,7 +44,7 @@ public:
 
 	virtual bool CanBeCollected() override;
 
-	virtual void Collect() override;
+	virtual TSubclassOf<AActor> Collect() override;
 
 	FPlantState GetState();
 
@@ -61,11 +62,13 @@ protected:
 	UStaticMeshComponent* PlantMesh;
 
 private:
-
 	void UpdateMesh();
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	TArray<FGrowthInfo> GrowthInfos;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	TSubclassOf<ACrop> CropClass;
 
 	int32 GrowthValue = 0;
 };
