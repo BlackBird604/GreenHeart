@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Interfaces/ToolAffectable.h"
+#include "Interfaces/Collectable.h"
 #include "Structs/PlantState.h"
 #include "Plant.generated.h"
 
@@ -25,7 +26,7 @@ struct FGrowthInfo
 };
 
 UCLASS()
-class GREENHEART_API APlant : public AActor, public IToolAffectable
+class GREENHEART_API APlant : public AActor, public IToolAffectable, public ICollectable
 {
 	GENERATED_BODY()
 	
@@ -39,6 +40,10 @@ protected:
 
 public:
 	virtual void UseTool(const ATool* Instigator) override;
+
+	virtual bool CanBeCollected() override;
+
+	virtual void Collect() override;
 
 	FPlantState GetState();
 

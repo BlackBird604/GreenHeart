@@ -11,8 +11,11 @@
 #include "Kismet/GameplayStatics.h"
 #include "Animation/AnimMontage.h"
 
+#include "Defaults/ProjectDefaults.h"
+#include "Types/CollisionTypes.h"
 #include "Actors/Tools/Tool.h"
 #include "Components/InventoryComponent.h"
+#include "Interfaces/Collectable.h"
 
 bool isUpPressed = false;
 bool isDownPressed = false;
@@ -38,6 +41,9 @@ AFarmer::AFarmer()
 	FollowCamera->SetupAttachment(SpringArm);
 	FollowCamera->PostProcessSettings.bOverride_MotionBlurAmount = true;
 	FollowCamera->PostProcessSettings.MotionBlurAmount = 0.0f;
+
+	PickupComponent = CreateDefaultSubobject<USceneComponent>(TEXT("PickupComponent"));
+	PickupComponent->SetupAttachment(RootComponent);
 
 	Inventory = CreateDefaultSubobject<UInventoryComponent>(TEXT("Inventory"));
 
@@ -65,7 +71,7 @@ void AFarmer::Tick(float DeltaTime)
 void AFarmer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-	
+
 	InputComponent->BindAction("MoveUp", IE_Pressed, this, &AFarmer::OnMoveUpPressed);
 	InputComponent->BindAction("MoveDown", IE_Pressed, this, &AFarmer::OnMoveDownPressed);
 	InputComponent->BindAction("MoveLeft", IE_Pressed, this, &AFarmer::OnMoveLeftPressed);
@@ -81,6 +87,7 @@ void AFarmer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	InputComponent->BindAction("UseTool", IE_Pressed, this, &AFarmer::OnUseToolPressed);
 	InputComponent->BindAction("UseTool", IE_Released, this, &AFarmer::OnUseToolReleased);
 	InputComponent->BindAction("NextTool", IE_Pressed, this, &AFarmer::OnNextToolPressed);
+	InputComponent->BindAction("Interact", IE_Pressed, this, &AFarmer::OnInteractPressed);
 
 	InputComponent->BindAction("ResetLevel", IE_Pressed, this, &AFarmer::OnResetLevelPressed);
 	InputComponent->BindAction("NextDay", IE_Pressed, this, &AFarmer::OnNextDayPressed);
@@ -104,7 +111,7 @@ void AFarmer::Move()
 
 void AFarmer::DisableMovement()
 {
-	UE_LOG(LogTemp,Warning,TEXT("Movement disabled"))
+	UE_LOG(LogTemp, Warning, TEXT("Movement disabled"))
 }
 
 
@@ -212,6 +219,26 @@ void AFarmer::OnNextToolPressed()
 
 	Inventory->NextTool();
 	CurrentTool = SpawnTool();
+}
+
+void AFarmer::OnInteractPressed()
+{
+	float TileSize = ProjectDefaults::TileSize;
+	float TraceLength = 100.0f;
+	FVector TraceStart = GetActorLocation();
+	TraceStart += GetActorForwardVector() * TileSize;
+	FVector TraceEnd = TraceStart + FVector(0.0f, 0.0f, -TraceLength);
+
+	FHitResult HitResult;
+	GetWorld()->LineTraceSingleByChannel(HitResult, TraceStart, TraceEnd, ECC_InteractionTrace);
+	if (ICollectable* CollectableActor = Cast<ICollectable>(HitResult.Actor))
+	{
+		
+		if (CollectableActor->CanBeCollected())
+		{
+			UE_LOG(LogTemp, Warning, TEXT("INTERACTION SUCCESS!"));
+		}
+	}
 }
 
 ATool* AFarmer::SpawnTool()

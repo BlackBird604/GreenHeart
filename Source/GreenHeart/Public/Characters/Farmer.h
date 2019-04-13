@@ -50,6 +50,7 @@ protected:
 	void OnUseToolPressed();
 	void OnUseToolReleased();
 	void OnNextToolPressed();
+	void OnInteractPressed();
 
 	// Temporary
 	void OnResetLevelPressed();
@@ -63,6 +64,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	UInventoryComponent* Inventory;
+
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	USceneComponent* PickupComponent;
 
 private:
 

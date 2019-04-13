@@ -58,6 +58,16 @@ void APlant::UseTool(const ATool* Instigator)
 	UE_LOG(LogTemp, Warning, TEXT("PLANT AFFECTED!"));
 }
 
+bool APlant::CanBeCollected()
+{
+	return GrowthValue >= GetMaxGrowthValue();
+}
+
+void APlant::Collect()
+{
+	UE_LOG(LogTemp, Warning, TEXT("COLLECT PLANT!"));
+}
+
 
 FPlantState APlant::GetState()
 {
