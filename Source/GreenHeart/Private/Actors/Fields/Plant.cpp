@@ -66,6 +66,7 @@ bool APlant::CanBeCollected()
 
 TSubclassOf<AActor> APlant::Collect()
 {
+	OnDepleted.Broadcast();
 	Destroy();
 	return CropClass;
 }

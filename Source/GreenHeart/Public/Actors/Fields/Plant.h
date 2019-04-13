@@ -26,6 +26,8 @@ struct FGrowthInfo
 	UStaticMesh* PlantMesh;
 };
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnDepletedSignature);
+
 UCLASS()
 class GREENHEART_API APlant : public AActor, public IToolAffectable, public ICollectable
 {
@@ -53,6 +55,9 @@ public:
 	int32 GetMaxGrowthValue();
 
 	bool HasMesh(int32 CheckedValue);
+
+	UPROPERTY(BlueprintAssignable)
+	FOnDepletedSignature OnDepleted;
 
 protected:
 	UPROPERTY(VisibleAnywhere, Category = "Components")

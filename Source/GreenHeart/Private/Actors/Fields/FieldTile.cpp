@@ -45,6 +45,10 @@ void AFieldTile::SpawnPlant()
 		FRotator SpawnRotation = GetActorRotation();
 		SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 		PlantActor = GetWorld()->SpawnActor<APlant>(PlantClass, SpawnLocation, SpawnRotation, SpawnInfo);
+		if (PlantActor)
+		{
+			PlantActor->OnDepleted.AddDynamic(this, &AFieldTile::ClearPlant);
+		}
 	}
 }
 
@@ -146,3 +150,7 @@ void AFieldTile::RestoreState(const FFieldTileState& TileState)
 	UpdateDecalMaterial();
 }
 
+void AFieldTile::ClearPlant()
+{
+	PlantClass = nullptr;
+}

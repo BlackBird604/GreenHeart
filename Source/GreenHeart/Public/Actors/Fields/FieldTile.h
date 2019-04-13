@@ -53,6 +53,9 @@ private:
 
 	void UpdateDecalMaterial();
 
+	UFUNCTION()
+	void ClearPlant();
+
 	UPROPERTY()
 	APlant* PlantActor;
 
