@@ -46,7 +46,7 @@ public:
 
 	virtual bool CanBeCollected() override;
 
-	virtual TSubclassOf<AActor> Collect() override;
+	virtual AActor* Collect() override;
 
 	FPlantState GetState();
 

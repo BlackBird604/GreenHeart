@@ -64,11 +64,15 @@ bool APlant::CanBeCollected()
 	return GrowthValue >= GetMaxGrowthValue();
 }
 
-TSubclassOf<AActor> APlant::Collect()
+AActor* APlant::Collect()
 {
+	FActorSpawnParameters SpawnInfo;
+	SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	AActor* CropActor = GetWorld()->SpawnActor<AActor>(CropClass, SpawnInfo);
+
 	OnDepleted.Broadcast();
 	Destroy();
-	return CropClass;
+	return CropActor;
 }
 
 
