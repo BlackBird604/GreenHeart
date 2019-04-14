@@ -2,16 +2,24 @@
 
 #include "Tool.h"
 #include "Engine/World.h"
-#include "Interfaces/ToolAffectable.h"
-#include "Defaults/ProjectDefaults.h"
+#include "Components/SkeletalMeshComponent.h"
 
+#include "Defaults/ProjectDefaults.h"
 #include "Types/CollisionTypes.h"
-#include "DrawDebugHelpers.h"
+#include "Interfaces/ToolAffectable.h"
 
 ATool::ATool()
 {
 	PrimaryActorTick.bCanEverTick = false;
 
+	SceneRoot = CreateDefaultSubobject<USceneComponent>(TEXT("SceneRoot"));
+	RootComponent = SceneRoot;
+
+	ToolMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("ToolMesh"));
+	ToolMesh->SetupAttachment(SceneRoot);
+	ToolMesh->bReceivesDecals = false;
+
+	SetActorHiddenInGame(true);
 }
 
 void ATool::BeginPlay()

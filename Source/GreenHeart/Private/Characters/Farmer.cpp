@@ -56,6 +56,10 @@ void AFarmer::BeginPlay()
 {
 	Super::BeginPlay();
 	CurrentTool = SpawnTool();
+	if (CurrentTool && GetMesh())
+	{
+		CurrentTool->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, FName("ToolSocket"));
+	}
 }
 
 void AFarmer::Tick(float DeltaTime)
@@ -119,6 +123,14 @@ void AFarmer::DisableMovement()
 void AFarmer::EnableMovement()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Movement enabled"))
+}
+
+void AFarmer::SetToolHidden(bool bNewHidden)
+{
+	if (CurrentTool)
+	{
+		CurrentTool->SetActorHiddenInGame(bNewHidden);
+	}
 }
 
 
@@ -230,6 +242,10 @@ void AFarmer::OnNextToolPressed()
 
 	Inventory->NextTool();
 	CurrentTool = SpawnTool();
+	if (CurrentTool && GetMesh())
+	{
+		CurrentTool->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, FName("ToolSocket"));
+	}
 }
 
 void AFarmer::OnInteractPressed()

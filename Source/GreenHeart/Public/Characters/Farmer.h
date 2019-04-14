@@ -33,6 +33,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "AnimNotifies")
 	void EnableMovement();
 
+	UFUNCTION(BlueprintCallable, Category = "AnimNotifies")
+	void SetToolHidden(bool bNewHidden);
+
 protected:
 	virtual void BeginPlay() override;
 

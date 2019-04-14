@@ -25,8 +25,13 @@ enum class EToolType : uint8
 {
 	Hoe,
 	WateringCan,
-	Seeds
+	Seeds,
+	Hammer,
+	Scythe
 };
+
+class USceneComponent;
+class USkeletalMeshComponent;
 
 UCLASS()
 class GREENHEART_API ATool : public AActor
@@ -49,6 +54,13 @@ public:
 	UAnimMontage* GetChargeMontage();
 
 	UAnimMontage* GetUseMontage();
+
+protected:
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	USceneComponent* SceneRoot;
+
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	USkeletalMeshComponent* ToolMesh;
 
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
