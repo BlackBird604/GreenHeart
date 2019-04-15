@@ -197,13 +197,16 @@ void AFarmer::OnSprintReleased()
 
 void AFarmer::OnUseToolPressed()
 {
-	if (ItemInHands)
+	if (!GetMesh()->GetAnimInstance()->Montage_IsPlaying(UseMontage) || !isMovementDisabled)
 	{
-		return;
-	}
+		if (ItemInHands)
+		{
+			return;
+		}
 
-	UpdateChargePose();
-	GetWorld()->GetTimerManager().SetTimer(ToolChargeTimer, this, &AFarmer::ChargeTool, 1.0f, true, 1.0f);
+		UpdateChargePose();
+		GetWorld()->GetTimerManager().SetTimer(ToolChargeTimer, this, &AFarmer::ChargeTool, 1.0f, true, 1.0f);
+	}
 }
 
 void AFarmer::UpdateChargePose()
@@ -244,48 +247,54 @@ void AFarmer::OnUseToolReleased()
 
 void AFarmer::OnNextToolPressed()
 {
-	if (CurrentTool)
+	if (!GetMesh()->GetAnimInstance()->Montage_IsPlaying(UseMontage) || !isMovementDisabled)
 	{
-		CurrentTool->Destroy();
-	}
+		if (CurrentTool)
+		{
+			CurrentTool->Destroy();
+		}
 
-	Inventory->NextTool();
-	CurrentTool = SpawnTool();
-	if (CurrentTool && GetMesh())
-	{
-		CurrentTool->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, FName("ToolSocket"));
+		Inventory->NextTool();
+		CurrentTool = SpawnTool();
+		if (CurrentTool && GetMesh())
+		{
+			CurrentTool->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, FName("ToolSocket"));
+		}
 	}
 }
 
 void AFarmer::OnInteractPressed()
 {
-	if (IThrowable* ThrowableActor = Cast<IThrowable>(ItemInHands))
+	if (!GetMesh()->GetAnimInstance()->Montage_IsPlaying(UseMontage) || !isMovementDisabled)
 	{
-		if (ThrowableActor->CanBeThrown(GetActorForwardVector()))
+		if (IThrowable* ThrowableActor = Cast<IThrowable>(ItemInHands))
 		{
-			ThrowableActor->Throw(GetActorForwardVector());
-			ItemInHands = nullptr;
-			return;
-		}
-	}
-
-	float TileSize = ProjectDefaults::TileSize;
-	float TraceLength = 100.0f;
-	FVector TraceStart = GetActorLocation();
-	TraceStart += GetActorForwardVector() * TileSize;
-	FVector TraceEnd = TraceStart + FVector(0.0f, 0.0f, -TraceLength);
-
-	FHitResult HitResult;
-	GetWorld()->LineTraceSingleByChannel(HitResult, TraceStart, TraceEnd, ECC_InteractionTrace);
-	if (ICollectable* CollectableActor = Cast<ICollectable>(HitResult.Actor))
-	{
-		if (CollectableActor->CanBeCollected())
-		{
-			ItemInHands = CollectableActor->Collect();
-			if (ItemInHands)
+			if (ThrowableActor->CanBeThrown(GetActorForwardVector()))
 			{
-				PlayPickupTimeline();
-				ItemInHands->AttachToComponent(PickupComponent, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+				ThrowableActor->Throw(GetActorForwardVector());
+				ItemInHands = nullptr;
+				return;
+			}
+		}
+
+		float TileSize = ProjectDefaults::TileSize;
+		float TraceLength = 100.0f;
+		FVector TraceStart = GetActorLocation();
+		TraceStart += GetActorForwardVector() * TileSize;
+		FVector TraceEnd = TraceStart + FVector(0.0f, 0.0f, -TraceLength);
+
+		FHitResult HitResult;
+		GetWorld()->LineTraceSingleByChannel(HitResult, TraceStart, TraceEnd, ECC_InteractionTrace);
+		if (ICollectable* CollectableActor = Cast<ICollectable>(HitResult.Actor))
+		{
+			if (CollectableActor->CanBeCollected())
+			{
+				ItemInHands = CollectableActor->Collect();
+				if (ItemInHands)
+				{
+					PlayPickupTimeline();
+					ItemInHands->AttachToComponent(PickupComponent, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+				}
 			}
 		}
 	}
