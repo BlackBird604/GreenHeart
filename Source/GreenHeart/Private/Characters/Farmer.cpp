@@ -10,6 +10,7 @@
 #include "TimerManager.h"
 #include "Kismet/GameplayStatics.h"
 #include "Animation/AnimMontage.h"
+#include "Animation/AnimInstance.h"
 
 #include "Defaults/ProjectDefaults.h"
 #include "Types/CollisionTypes.h"
@@ -23,7 +24,11 @@ bool isDownPressed = false;
 bool isLeftPressed = false;
 bool isRightPressed = false;
 bool isSprint = false;
+bool isMovementDisabled = false;
 bool doMovement = false;
+
+
+UAnimMontage* UseMontage;
 
 AFarmer::AFarmer()
 {
@@ -101,7 +106,9 @@ void AFarmer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 void AFarmer::Move()
 {
 	doMovement = true;
-	if (isUpPressed && !isDownPressed && !isLeftPressed && !isRightPressed)
+	if (GetMesh()->GetAnimInstance()->Montage_IsPlaying(UseMontage) || isMovementDisabled)
+		doMovement = false;
+	else if (isUpPressed && !isDownPressed && !isLeftPressed && !isRightPressed)
 		SetActorRotation(FRotator(0, 0, 0));
 	else if (isRightPressed && !isLeftPressed && !isUpPressed && !isDownPressed)
 		SetActorRotation(FRotator(0, 90, 0));
@@ -116,12 +123,14 @@ void AFarmer::Move()
 
 void AFarmer::DisableMovement()
 {
+	isMovementDisabled = true;
 	UE_LOG(LogTemp, Warning, TEXT("Movement disabled"))
 }
 
 
 void AFarmer::EnableMovement()
 {
+	isMovementDisabled = false;
 	UE_LOG(LogTemp, Warning, TEXT("Movement enabled"))
 }
 
@@ -227,7 +236,7 @@ void AFarmer::OnUseToolReleased()
 	GetWorld()->GetTimerManager().ClearTimer(ToolChargeTimer);
 	if (CurrentTool)
 	{
-		UAnimMontage* UseMontage = CurrentTool->GetUseMontage();
+		UseMontage = CurrentTool->GetUseMontage();
 		PlayAnimMontage(UseMontage);
 		CurrentTool->Use(this);
 	}
