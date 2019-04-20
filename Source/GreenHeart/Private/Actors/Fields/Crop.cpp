@@ -40,4 +40,9 @@ void ACrop::Throw(const FVector& Direction)
 	DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
 }
 
+int32 ACrop::GetPrice()
+{
+	return 99;
+}
+
 

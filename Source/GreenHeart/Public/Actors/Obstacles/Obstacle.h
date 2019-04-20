@@ -9,6 +9,7 @@
 #include "Obstacle.generated.h"
 
 class UBoxComponent;
+class UStaticMeshComponent;
 
 UCLASS()
 class GREENHEART_API AObstacle : public AActor, public IToolAffectable

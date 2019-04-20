@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Interfaces/Throwable.h"
+#include "Interfaces/Sellable.h"
 #include "Crop.generated.h"
 
 class USphereComponent;
@@ -12,7 +13,7 @@ class UStaticMeshComponent;
 class UProjectileMovementComponent;
 
 UCLASS()
-class GREENHEART_API ACrop : public AActor, public IThrowable
+class GREENHEART_API ACrop : public AActor, public IThrowable, public ISellable
 {
 	GENERATED_BODY()
 	
@@ -26,6 +27,8 @@ public:
 	virtual bool CanBeThrown(const FVector& Direction) override;
 
 	virtual void Throw(const FVector& Direction) override;
+
+	virtual int32 GetPrice() override;
 
 protected:
 	UPROPERTY(VisibleAnywhere, Category = "Components")
