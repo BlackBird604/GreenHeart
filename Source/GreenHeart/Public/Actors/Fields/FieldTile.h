@@ -53,6 +53,8 @@ private:
 
 	void UpdateDecalMaterial();
 
+	bool isBlocked();
+
 	UFUNCTION()
 	void ClearPlant();
 

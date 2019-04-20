@@ -22,4 +22,6 @@ struct FFieldTileState
 	bool bIsWatered;
 
 	bool bIsSeeded;
+
+	bool bIsBlocked;
 };

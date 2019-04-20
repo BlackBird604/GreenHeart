@@ -54,7 +54,7 @@ void AFieldTile::SpawnPlant()
 
 void AFieldTile::UseTool(const ATool* Instigator)
 {
-	if (!Instigator)
+	if (!Instigator || isBlocked())
 	{
 		return;
 	}
@@ -133,6 +133,7 @@ FFieldTileState AFieldTile::GetState()
 	{
 		State.PlantState = PlantActor->GetState();
 	}
+	State.bIsBlocked = isBlocked();
 	return State;
 }
 
@@ -153,4 +154,16 @@ void AFieldTile::RestoreState(const FFieldTileState& TileState)
 void AFieldTile::ClearPlant()
 {
 	PlantClass = nullptr;
+}
+
+bool AFieldTile::isBlocked()
+{
+	float TraceLength = 100.0f;
+	FVector TraceStart = GetActorLocation();
+	FVector TraceEnd = TraceStart + FVector(0.0f, 0.0f, TraceLength);
+
+	FHitResult HitResult;
+	GetWorld()->LineTraceSingleByChannel(HitResult, TraceStart, TraceEnd, ECC_ObstacleTrace);
+
+	return HitResult.bBlockingHit;
 }
