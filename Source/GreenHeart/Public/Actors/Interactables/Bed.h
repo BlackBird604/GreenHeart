@@ -5,31 +5,29 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Interfaces/Interactable.h"
-#include "Door.generated.h"
+#include "Bed.generated.h"
 
 class UBoxComponent;
-class USceneComponent;
+class UStaticMeshComponent;
 
 UCLASS()
-class GREENHEART_API ADoor : public AActor, public IInteractable
+class GREENHEART_API ABed : public AActor, public IInteractable
 {
 	GENERATED_BODY()
 	
 public:	
-	ADoor();
-
-	virtual void Interact() override;
+	ABed();
 
 protected:
 	virtual void BeginPlay() override;
+
+	virtual void Interact() override;
 
 protected:
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	UBoxComponent* CollisionBox;
 
 	UPROPERTY(VisibleAnywhere, Category = "Components")
-	USceneComponent* FirstMovementPoint;
+	UStaticMeshComponent* BedMesh;
 
-	UPROPERTY(VisibleAnywhere, Category = "Components")
-	USceneComponent* SecondMovementPoint;
 };

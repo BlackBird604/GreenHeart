@@ -15,16 +15,17 @@ class GREENHEART_API UFarmingGameInstance : public UGameInstance
 	GENERATED_BODY()
 
 public:
-	UFUNCTION(BlueprintCallable)
-	void ApplyNextDay();
-
 	void SetGridState(FFieldGridState NewState);
 
 	FFieldGridState GetGridState();
 
 	void OpenLevel(FName LevelName, int32 SpawnPoint);
 
+	void StartNextDay();
+
 private:
+	void ApplyNextDayChanges();
+
 	UPROPERTY()
 	FFieldGridState FieldGridState;
 };

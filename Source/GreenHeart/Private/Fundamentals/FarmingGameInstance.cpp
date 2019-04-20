@@ -5,7 +5,7 @@
 
 #include "Objects/FieldStateUpdater.h"
 
-void UFarmingGameInstance::ApplyNextDay()
+void UFarmingGameInstance::ApplyNextDayChanges()
 {
 	UFieldStateUpdater* FieldUpdater = NewObject<UFieldStateUpdater>();
 	FieldUpdater->ApplyNextDay(FieldGridState);
@@ -24,4 +24,11 @@ FFieldGridState UFarmingGameInstance::GetGridState()
 void UFarmingGameInstance::OpenLevel(FName LevelName, int32 SpawnPoint)
 {
 	UGameplayStatics::OpenLevel(this, LevelName, false);
+}
+
+void UFarmingGameInstance::StartNextDay()
+{
+	ApplyNextDayChanges();
+	OpenLevel("Farm", 0); // TEMPORARY
+
 }

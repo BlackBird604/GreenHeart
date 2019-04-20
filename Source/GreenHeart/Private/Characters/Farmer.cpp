@@ -18,6 +18,7 @@
 #include "Components/InventoryComponent.h"
 #include "Interfaces/Collectable.h"
 #include "Interfaces/Throwable.h"
+#include "Interfaces/Interactable.h"
 
 bool isUpPressed = false;
 bool isDownPressed = false;
@@ -296,6 +297,10 @@ void AFarmer::OnInteractPressed()
 					ItemInHands->AttachToComponent(PickupComponent, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
 				}
 			}
+		}
+		else if (IInteractable* InteractableActor = Cast<IInteractable>(HitResult.Actor))
+		{
+			InteractableActor->Interact();
 		}
 	}
 }
