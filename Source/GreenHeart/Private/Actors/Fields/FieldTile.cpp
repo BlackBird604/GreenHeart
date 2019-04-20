@@ -134,6 +134,7 @@ FFieldTileState AFieldTile::GetState()
 		State.PlantState = PlantActor->GetState();
 	}
 	State.bIsBlocked = isBlocked();
+	State.Location = GetActorLocation();
 	return State;
 }
 

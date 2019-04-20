@@ -21,6 +21,9 @@ protected:
 
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	TSubclassOf<AObstacle> WeedClass;
+
 private:
 	UFUNCTION()
 	void RemoveObstacle(AActor* RemovedActor);

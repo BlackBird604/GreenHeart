@@ -17,6 +17,8 @@ struct FFieldTileState
 	UPROPERTY()
 	FPlantState PlantState;
 
+	FVector Location;
+
 	bool bIsTilled;
 
 	bool bIsWatered;

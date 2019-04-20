@@ -16,6 +16,10 @@ AObstacleManager::AObstacleManager()
 void AObstacleManager::BeginPlay()
 {
 	Super::BeginPlay();
+	if (!WeedClass->IsChildOf(AObstacle::StaticClass()))
+	{
+		WeedClass = AObstacle::StaticClass();
+	}
 	RestoreState();
 }
 
@@ -51,6 +55,7 @@ void AObstacleManager::RestoreState()
 		for (int32 i = 0; i < ObstacleStates.Num(); i++)
 		{
 			FObstacleState ObstacleState = ObstacleStates[i];
+			ObstacleState.Class = ObstacleStates[i].Class ? ObstacleStates[i].Class : WeedClass;
 			FActorSpawnParameters SpawnInfo;
 			SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 			AObstacle* Obstacle = GetWorld()->SpawnActor<AObstacle>(ObstacleState.Class, ObstacleState.Location, FRotator(0.0f), SpawnInfo);

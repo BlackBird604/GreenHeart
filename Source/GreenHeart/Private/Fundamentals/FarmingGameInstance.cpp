@@ -3,8 +3,7 @@
 #include "FarmingGameInstance.h"
 #include "Kismet/GameplayStatics.h"
 
-#include "Objects/FieldStateUpdater.h"
-#include "Objects/ObstacleStateUpdater.h"
+#include "Objects/FarmUpdater.h"
 
 void UFarmingGameInstance::Init()
 {
@@ -26,8 +25,8 @@ void UFarmingGameInstance::StartNewGame()
 
 void UFarmingGameInstance::ApplyNextDayChanges()
 {
-	UFieldStateUpdater* FieldUpdater = NewObject<UFieldStateUpdater>();
-	FieldUpdater->ApplyNextDay(FieldGridState);
+	UFarmUpdater* FieldUpdater = NewObject<UFarmUpdater>();
+	FieldUpdater->ApplyNextDay(FieldGridState, ObstacleStates);
 }
 
 void UFarmingGameInstance::SetGridState(FFieldGridState NewState)
