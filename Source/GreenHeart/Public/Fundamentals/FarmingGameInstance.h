@@ -22,6 +22,8 @@ public:
 
 	FFieldGridState GetGridState();
 
+	void OpenLevel(FName LevelName, int32 SpawnPoint);
+
 private:
 	UPROPERTY()
 	FFieldGridState FieldGridState;

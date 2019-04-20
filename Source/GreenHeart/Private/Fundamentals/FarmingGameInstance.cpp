@@ -1,6 +1,8 @@
 // The Green Heart @Politechnika Opolska
 
 #include "FarmingGameInstance.h"
+#include "Kismet/GameplayStatics.h"
+
 #include "Objects/FieldStateUpdater.h"
 
 void UFarmingGameInstance::ApplyNextDay()
@@ -17,4 +19,9 @@ void UFarmingGameInstance::SetGridState(FFieldGridState NewState)
 FFieldGridState UFarmingGameInstance::GetGridState()
 {
 	return FieldGridState;
+}
+
+void UFarmingGameInstance::OpenLevel(FName LevelName, int32 SpawnPoint)
+{
+	UGameplayStatics::OpenLevel(this, LevelName, false);
 }
