@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Enums/ToolTypes.h"
 #include "Tool.generated.h"
 
 class UAnimMontage;
@@ -18,16 +19,6 @@ struct FToolChargeInfo
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	UAnimMontage* Montage;
-};
-
-UENUM(BlueprintType)
-enum class EToolType : uint8
-{
-	Hoe,
-	WateringCan,
-	Seeds,
-	Hammer,
-	Scythe
 };
 
 class USceneComponent;

@@ -54,7 +54,7 @@ void APlant::UpdateMesh()
 	}
 }
 
-void APlant::UseTool(const ATool* Instigator)
+void APlant::UseTool(const ATool* Instigator, int32 Strength)
 {
 	UE_LOG(LogTemp, Warning, TEXT("PLANT AFFECTED!"));
 }

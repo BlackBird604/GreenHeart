@@ -21,5 +21,5 @@ class GREENHEART_API IToolAffectable
 	GENERATED_BODY()
 
 public:
-	virtual void UseTool(const ATool* Instigator) = 0;
+	virtual void UseTool(const ATool* Instigator, int32 Strength = 0) = 0;
 };

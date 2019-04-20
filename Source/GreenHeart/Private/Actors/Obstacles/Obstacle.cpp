@@ -29,7 +29,10 @@ void AObstacle::BeginPlay()
 	
 }
 
-void AObstacle::UseTool(const ATool* Instigator)
+void AObstacle::UseTool(const ATool* Instigator, int32 Strength)
 {
-
+	if (Instigator->GetType() == AffectedByTool)
+	{
+		UE_LOG(LogTemp,Warning,TEXT("OK"))
+	}
 }

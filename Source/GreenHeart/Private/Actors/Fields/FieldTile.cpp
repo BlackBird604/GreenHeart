@@ -52,7 +52,7 @@ void AFieldTile::SpawnPlant()
 	}
 }
 
-void AFieldTile::UseTool(const ATool* Instigator)
+void AFieldTile::UseTool(const ATool* Instigator, int32 Strength)
 {
 	if (!Instigator || isBlocked())
 	{

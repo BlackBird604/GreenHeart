@@ -77,7 +77,7 @@ void ATool::Use(const AActor* User)
 			IToolAffectable* AffectableActor = Cast<IToolAffectable>(HitResult.Actor);
 			if (AffectableActor)
 			{
-				AffectableActor->UseTool(this);
+				AffectableActor->UseTool(this, CurrentCharge);
 			}
 		}
 

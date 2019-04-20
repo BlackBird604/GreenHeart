@@ -21,7 +21,7 @@ class GREENHEART_API AFieldTile : public AActor, public IToolAffectable
 public:	
 	AFieldTile();
 
-	virtual void UseTool(const ATool* Instigator) override;
+	virtual void UseTool(const ATool* Instigator, int32 Strength) override;
 
 	FFieldTileState GetState();
 

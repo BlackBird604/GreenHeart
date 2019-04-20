@@ -42,7 +42,7 @@ protected:
 
 
 public:
-	virtual void UseTool(const ATool* Instigator) override;
+	virtual void UseTool(const ATool* Instigator, int32 Strength) override;
 
 	virtual bool CanBeCollected() override;
 
