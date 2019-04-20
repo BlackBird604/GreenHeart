@@ -10,6 +10,6 @@ struct FFieldGridState
 {
 	GENERATED_USTRUCT_BODY()
 
-		UPROPERTY()
-		TArray<FFieldTileState> TileStates;
+	UPROPERTY()
+	TArray<FFieldTileState> TileStates;
 };

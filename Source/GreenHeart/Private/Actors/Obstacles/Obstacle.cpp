@@ -33,6 +33,8 @@ void AObstacle::UseTool(const ATool* Instigator, int32 Strength)
 {
 	if (Instigator->GetType() == AffectedByTool)
 	{
-		UE_LOG(LogTemp,Warning,TEXT("OK"))
+		OnObstacleDestroyed.Broadcast(this);
+		Destroy();
 	}
 }
+

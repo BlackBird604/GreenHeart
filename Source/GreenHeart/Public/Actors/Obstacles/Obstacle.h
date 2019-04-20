@@ -11,6 +11,8 @@
 class UBoxComponent;
 class UStaticMeshComponent;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDestroyedSignature, AActor*, DestroyedActor);
+
 UCLASS()
 class GREENHEART_API AObstacle : public AActor, public IToolAffectable
 {
@@ -24,6 +26,9 @@ protected:
 
 public:
 	virtual void UseTool(const ATool* Instigator, int32 Strength) override;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnDestroyedSignature OnObstacleDestroyed;
 
 protected:
 	UPROPERTY(VisibleAnywhere, Category = "Components")

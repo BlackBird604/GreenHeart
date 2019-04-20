@@ -42,7 +42,7 @@ void ACrop::Throw(const FVector& Direction)
 
 int32 ACrop::GetPrice()
 {
-	return 99;
+	return SellPrice;
 }
 
 

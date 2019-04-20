@@ -40,6 +40,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	UProjectileMovementComponent* ProjectileMovement;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	int32 SellPrice = 0;
+
 private:
 	float HorizontalSpeed = 300.0f;
 
