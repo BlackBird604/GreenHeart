@@ -4,13 +4,16 @@
 #include "Components/BoxComponent.h"
 #include "Components/SceneComponent.h"
 
+#include "Types/CollisionTypes.h"
+
 ADoor::ADoor()
 {
 	PrimaryActorTick.bCanEverTick = false;
 
 	CollisionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("CollisionBox"));
 	RootComponent = CollisionBox;
-	CollisionBox->SetGenerateOverlapEvents(true);
+	CollisionBox->SetCollisionProfileName(CollisionPresets::Interactable);
+
 
 	FirstMovementPoint = CreateDefaultSubobject<USceneComponent>(TEXT("FirstMovementPoint"));
 	FirstMovementPoint->SetupAttachment(CollisionBox);

@@ -4,6 +4,7 @@
 #include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
 
+#include "Types/CollisionTypes.h"
 #include "Fundamentals/FarmingGameInstance.h"
 
 ABed::ABed()
@@ -12,7 +13,7 @@ ABed::ABed()
 
 	CollisionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("CollisionBox"));
 	RootComponent = CollisionBox;
-	CollisionBox->SetGenerateOverlapEvents(true);
+	CollisionBox->SetCollisionProfileName(CollisionPresets::Interactable);
 
 	BedMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BedMesh"));
 	BedMesh->SetupAttachment(CollisionBox);
