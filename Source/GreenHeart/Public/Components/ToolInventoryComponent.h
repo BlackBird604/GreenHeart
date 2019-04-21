@@ -4,17 +4,18 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "InventoryComponent.generated.h"
+#include "Structs/ToolInfo.h"
+#include "ToolInventoryComponent.generated.h"
 
 class ATool;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class GREENHEART_API UInventoryComponent : public UActorComponent
+class GREENHEART_API UToolInventoryComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
 public:	
-	UInventoryComponent();
+	UToolInventoryComponent();
 
 protected:
 	virtual void BeginPlay() override;
@@ -22,10 +23,14 @@ protected:
 public:
 	void NextTool();
 
-	TSubclassOf<ATool> GetCurrentTool();
+	FToolInfo GetCurrentTool();
+
+	void RemoveCurrentTool();
 
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
-		TArray<TSubclassOf<ATool>> Tools;
+	TArray<FToolInfo> ToolInfos;
+
+	int32 MinimumSize = 3;
 		
 };

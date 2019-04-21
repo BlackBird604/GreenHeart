@@ -32,6 +32,18 @@ bool ACrop::CanBeThrown(const FVector& Direction)
 	return true;
 }
 
+bool ACrop::CanBeStored()
+{
+	return true;
+}
+
+FItemInfo ACrop::GetItemInfo()
+{
+	FItemInfo ItemInfo = FItemInfo();
+	ItemInfo.Class = GetClass();
+	return ItemInfo;
+}
+
 void ACrop::Throw(const FVector& Direction)
 {
 	ProjectileMovement->Velocity = Direction * HorizontalSpeed;

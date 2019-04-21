@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Enums/ToolTypes.h"
+#include "Structs/ToolInfo.h"
 #include "Tool.generated.h"
 
 class UAnimMontage;

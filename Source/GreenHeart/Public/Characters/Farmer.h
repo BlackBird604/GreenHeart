@@ -8,7 +8,8 @@
 
 class USpringArmComponent;
 class UCameraComponent;
-class UInventoryComponent;
+class UToolInventoryComponent;
+class UItemInventoryComponent;
 class ATool;
 
 UCLASS()
@@ -58,6 +59,8 @@ protected:
 	void OnNextToolPressed();
 	void OnInteractPressed();
 
+	void OnNextItemPressed();
+
 	// Temporary
 	void OnResetLevelPressed();
 	void OnNextDayPressed();
@@ -69,13 +72,18 @@ protected:
 	UCameraComponent* FollowCamera;
 
 	UPROPERTY(VisibleAnywhere, Category = "Components")
-	UInventoryComponent* Inventory;
+	UToolInventoryComponent* ToolInventory;
+
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	UItemInventoryComponent* ItemInventory;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 	USceneComponent* PickupComponent;
 
 private:
 	ATool* SpawnTool();
+
+	AActor* GetItemFromInventory();
 
 	void UpdateChargePose();
 

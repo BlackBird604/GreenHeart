@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "Interfaces/Throwable.h"
 #include "Interfaces/Sellable.h"
+#include "Interfaces/PickupItem.h"
+#include "Structs/ItemInfo.h"
 #include "Crop.generated.h"
 
 class USphereComponent;
@@ -13,7 +15,7 @@ class UStaticMeshComponent;
 class UProjectileMovementComponent;
 
 UCLASS()
-class GREENHEART_API ACrop : public AActor, public IThrowable, public ISellable
+class GREENHEART_API ACrop : public AActor, public IThrowable, public ISellable, public IPickupItem
 {
 	GENERATED_BODY()
 	
@@ -29,6 +31,10 @@ public:
 	virtual void Throw(const FVector& Direction) override;
 
 	virtual int32 GetPrice() override;
+
+	virtual bool CanBeStored() override;
+
+	virtual FItemInfo GetItemInfo() override;
 
 protected:
 	UPROPERTY(VisibleAnywhere, Category = "Components")

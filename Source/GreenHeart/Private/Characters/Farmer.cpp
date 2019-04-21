@@ -15,10 +15,12 @@
 #include "Defaults/ProjectDefaults.h"
 #include "Types/CollisionTypes.h"
 #include "Actors/Tools/Tool.h"
-#include "Components/InventoryComponent.h"
+#include "Components/ToolInventoryComponent.h"
+#include "Components/ItemInventoryComponent.h"
 #include "Interfaces/Collectable.h"
 #include "Interfaces/Throwable.h"
 #include "Interfaces/Interactable.h"
+#include "Interfaces/PickupItem.h"
 
 bool isUpPressed = false;
 bool isDownPressed = false;
@@ -52,7 +54,8 @@ AFarmer::AFarmer()
 	PickupComponent = CreateDefaultSubobject<USceneComponent>(TEXT("PickupComponent"));
 	PickupComponent->SetupAttachment(RootComponent);
 
-	Inventory = CreateDefaultSubobject<UInventoryComponent>(TEXT("Inventory"));
+	ToolInventory = CreateDefaultSubobject<UToolInventoryComponent>(TEXT("ToolInventory"));
+	ItemInventory = CreateDefaultSubobject<UItemInventoryComponent>(TEXT("ItemInventory"));
 
 	bUseControllerRotationYaw = false;
 	GetMesh()->bReceivesDecals = false;
@@ -99,6 +102,8 @@ void AFarmer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	InputComponent->BindAction("UseTool", IE_Released, this, &AFarmer::OnUseToolReleased);
 	InputComponent->BindAction("NextTool", IE_Pressed, this, &AFarmer::OnNextToolPressed);
 	InputComponent->BindAction("Interact", IE_Pressed, this, &AFarmer::OnInteractPressed);
+
+	InputComponent->BindAction("NextItem", IE_Pressed, this, &AFarmer::OnNextItemPressed);
 
 	InputComponent->BindAction("ResetLevel", IE_Pressed, this, &AFarmer::OnResetLevelPressed);
 	InputComponent->BindAction("NextDay", IE_Pressed, this, &AFarmer::OnNextDayPressed);
@@ -255,11 +260,32 @@ void AFarmer::OnNextToolPressed()
 			CurrentTool->Destroy();
 		}
 
-		Inventory->NextTool();
+		ToolInventory->NextTool();
 		CurrentTool = SpawnTool();
 		if (CurrentTool && GetMesh())
 		{
 			CurrentTool->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, FName("ToolSocket"));
+		}
+	}
+}
+
+void AFarmer::OnNextItemPressed()
+{
+	if (ItemInHands)
+	{
+		if (IPickupItem* Item = Cast<IPickupItem>(ItemInHands))
+		{
+			ItemInventory->AddItem(Item->GetItemInfo());
+			ItemInHands->Destroy();
+			ItemInHands = nullptr;
+		}
+	}
+	else
+	{
+		ItemInHands = GetItemFromInventory();
+		if (ItemInHands)
+		{
+			ItemInHands->AttachToComponent(PickupComponent, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
 		}
 	}
 }
@@ -307,10 +333,27 @@ void AFarmer::OnInteractPressed()
 
 ATool* AFarmer::SpawnTool()
 {
-	TSubclassOf<ATool> ToolClass = Inventory->GetCurrentTool();
+	FToolInfo ToolInfo = ToolInventory->GetCurrentTool();
+	if (!ToolInfo.Class)
+	{
+		return nullptr;
+	}
 	FActorSpawnParameters SpawnInfo;
 	SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-	return GetWorld()->SpawnActor<ATool>(ToolClass, SpawnInfo);
+	return GetWorld()->SpawnActor<ATool>(ToolInfo.Class, SpawnInfo);
+}
+
+// TEMPORARY
+AActor* AFarmer::GetItemFromInventory()
+{
+	FItemInfo ItemInfo = ItemInventory->TakeOut();
+	if (!ItemInfo.Class)
+	{
+		return nullptr;
+	}
+	FActorSpawnParameters SpawnInfo;
+	SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	return GetWorld()->SpawnActor<AActor>(ItemInfo.Class, SpawnInfo);
 }
 
 void AFarmer::OnResetLevelPressed()
