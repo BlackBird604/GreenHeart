@@ -145,6 +145,18 @@ void AFarmer::SetToolHidden(bool bNewHidden)
 	}
 }
 
+void AFarmer::OnUseToolEnd()
+{
+	bIsUsingTool = false;
+	SetToolHidden(true);
+	if (CurrentTool && CurrentTool->IsSingleUse())
+	{
+		ToolInventory->RemoveCurrentTool();
+		CurrentTool->Destroy();
+		CurrentTool = nullptr;
+	}
+}
+
 void AFarmer::OnMoveUpPressed()
 {
 	MovementInputs.AddUnique(EMovementDirection::Up);
@@ -205,6 +217,7 @@ void AFarmer::OnUseToolPressed()
 	}
 
 	bIsUsingTool = true;
+	SetToolHidden(false);
 	UpdateChargePose();
 	GetWorld()->GetTimerManager().SetTimer(ToolChargeTimer, this, &AFarmer::ChargeTool, 1.0f, true, 1.0f);
 }
@@ -241,7 +254,9 @@ void AFarmer::OnUseToolReleased()
 	{
 		UAnimMontage* UseMontage = CurrentTool->GetUseMontage();
 		PlayAnimMontage(UseMontage);
-		CurrentTool->Use(this);
+		int32 EnergyDrain = CurrentTool->Use(this);
+		Energy -= EnergyDrain;
+		UE_LOG(LogTemp, Warning, TEXT("Energy left: %d"), Energy);
 	}
 }
 
@@ -382,4 +397,10 @@ AActor* AFarmer::GetItemFromInventory()
 	FActorSpawnParameters SpawnInfo;
 	SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	return GetWorld()->SpawnActor<AActor>(ItemInfo.Class, SpawnInfo);
+}
+
+void AFarmer::AddMoney(int32 Amount)
+{
+	MoneyAmount += Amount;
+	UE_LOG(LogTemp, Warning, TEXT("Current Money: %d"), MoneyAmount);
 }

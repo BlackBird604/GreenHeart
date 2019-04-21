@@ -53,13 +53,14 @@ UAnimMontage* ATool::GetUseMontage()
 }
 
 //REFACTORING
-void ATool::Use(const AActor* User)
+int32 ATool::Use(const AActor* User)
 {
 	if (!User || CurrentCharge >= ChargeInfo.Num())
 	{
-		return;
+		return 0;
 	}
 
+	int32 EnergyDrain = CurrentCharge + 1;
 	TArray<FVector2D> TraceOffsets = ChargeInfo[CurrentCharge].TraceOffsets;
 	for (FVector2D TraceOffset : TraceOffsets)
 	{
@@ -80,12 +81,18 @@ void ATool::Use(const AActor* User)
 				AffectableActor->UseTool(this, CurrentCharge);
 			}
 		}
-
 	}
+
 	CurrentCharge = 0;
+	return EnergyDrain;
 }
 
 EToolType ATool::GetType() const
 {
 	return ToolType;
+}
+
+bool ATool::IsSingleUse()
+{
+	return bIsSingleUse;
 }

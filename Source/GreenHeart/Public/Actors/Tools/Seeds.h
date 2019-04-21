@@ -14,6 +14,8 @@ class GREENHEART_API ASeeds : public ATool
 	GENERATED_BODY()
 	
 public:
+	ASeeds();
+
 	TSubclassOf<APlant> GetPlantClass() const;
 
 private:

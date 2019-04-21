@@ -3,8 +3,10 @@
 #include "SalesContainer.h"
 #include "Components/BoxComponent.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 #include "Interfaces/Sellable.h"
+#include "Characters/Farmer.h"
 
 ASalesContainer::ASalesContainer()
 {
@@ -32,6 +34,11 @@ void ASalesContainer::OnBoxBeginOverlap(UPrimitiveComponent* OverlappedComp,
 {
 	if (ISellable* Sellable = Cast<ISellable>(OtherActor))
 	{
+		if (AFarmer* Farmer = Cast<AFarmer>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)))
+		{
+			int32 SellPrice = Sellable->GetPrice();
+			Farmer->AddMoney(SellPrice);
+		}
 		OtherActor->Destroy();
 	}
 }

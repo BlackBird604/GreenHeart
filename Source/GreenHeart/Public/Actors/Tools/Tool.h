@@ -37,7 +37,7 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
-	void Use(const AActor* User);
+	int32 Use(const AActor* User);
 
 	bool Charge();
 
@@ -47,12 +47,17 @@ public:
 
 	UAnimMontage* GetUseMontage();
 
+	bool IsSingleUse();
+
 protected:
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	USceneComponent* SceneRoot;
 
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	USkeletalMeshComponent* ToolMesh;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	bool bIsSingleUse = false;
 
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")

@@ -33,14 +33,16 @@ public:
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	void OnSprintPressed();
-
-	UFUNCTION(BlueprintCallable, Category = "AnimNotifies")
-	void SetToolHidden(bool bNewHidden);
-
 protected:
 	virtual void BeginPlay() override;
 
+public:
+	UFUNCTION(BlueprintCallable, Category = "AnimNotifies")
+	void OnUseToolEnd();
+
+	void AddMoney(int32 Amount);
+
+protected:
 	UFUNCTION(BlueprintImplementableEvent)
 	void PlayPickupTimeline();
 
@@ -53,6 +55,7 @@ protected:
 	void OnMoveLeftReleased();
 	void OnMoveRightReleased();
 
+	void OnSprintPressed();
 	void OnSprintReleased();
 
 	void OnUseToolPressed();
@@ -93,11 +96,7 @@ private:
 
 	void ChargeTool();
 
-	bool bIsSprinting = false;
-
-	bool bIsUsingTool = false;
-
-	FTimerHandle ToolChargeTimer;
+	void SetToolHidden(bool bNewHidden);
 
 	UPROPERTY()
 	ATool* CurrentTool;
@@ -106,4 +105,14 @@ private:
 	AActor* ItemInHands;
 
 	TArray<EMovementDirection> MovementInputs;
+
+	bool bIsSprinting = false;
+
+	bool bIsUsingTool = false;
+
+	FTimerHandle ToolChargeTimer;
+
+	int32 Energy = 150;
+
+	int32 MoneyAmount = 0;
 };
