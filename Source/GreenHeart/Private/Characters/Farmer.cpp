@@ -22,16 +22,6 @@
 #include "Interfaces/Interactable.h"
 #include "Interfaces/PickupItem.h"
 
-bool isUpPressed = false;
-bool isDownPressed = false;
-bool isLeftPressed = false;
-bool isRightPressed = false;
-bool isSprint = false;
-bool isMovementDisabled = false;
-bool doMovement = false;
-
-
-UAnimMontage* UseMontage;
 
 AFarmer::AFarmer()
 {
@@ -71,17 +61,6 @@ void AFarmer::BeginPlay()
 	}
 }
 
-void AFarmer::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-	Move();
-	if (doMovement)
-	{
-		FVector MovementDirection = GetActorForwardVector();
-		AddMovementInput(MovementDirection);
-	}
-}
-
 void AFarmer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
@@ -104,40 +83,51 @@ void AFarmer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	InputComponent->BindAction("Interact", IE_Pressed, this, &AFarmer::OnInteractPressed);
 
 	InputComponent->BindAction("NextItem", IE_Pressed, this, &AFarmer::OnNextItemPressed);
-
-	InputComponent->BindAction("ResetLevel", IE_Pressed, this, &AFarmer::OnResetLevelPressed);
-	InputComponent->BindAction("NextDay", IE_Pressed, this, &AFarmer::OnNextDayPressed);
 }
 
-void AFarmer::Move()
+void AFarmer::Tick(float DeltaTime)
 {
-	doMovement = true;
-	if (GetMesh()->GetAnimInstance()->Montage_IsPlaying(UseMontage) || isMovementDisabled)
-		doMovement = false;
-	else if (isUpPressed && !isDownPressed && !isLeftPressed && !isRightPressed)
-		SetActorRotation(FRotator(0, 0, 0));
-	else if (isRightPressed && !isLeftPressed && !isUpPressed && !isDownPressed)
-		SetActorRotation(FRotator(0, 90, 0));
-	else if (isDownPressed && !isUpPressed && !isLeftPressed && !isRightPressed)
-		SetActorRotation(FRotator(0, 180, 0));
-	else if (isLeftPressed && !isRightPressed && !isUpPressed && !isDownPressed)
-		SetActorRotation(FRotator(0, -90, 0));
-	else if (!isSprint)
-		doMovement = false;
+	Super::Tick(DeltaTime);
+	if (ShouldMove())
+	{
+		FVector MovementDirection = GetActorForwardVector();
+		AddMovementInput(MovementDirection);
+	}
 }
 
-
-void AFarmer::DisableMovement()
+bool AFarmer::ShouldMove()
 {
-	isMovementDisabled = true;
-	UE_LOG(LogTemp, Warning, TEXT("Movement disabled"))
+	bool bIsMontagePlaying = IsMontagePlaying();
+	bool bHasMovementInputs = MovementInputs.Num() > 0;
+
+	return (!bIsMontagePlaying && (bIsSprinting || bHasMovementInputs));
 }
 
-
-void AFarmer::EnableMovement()
+bool AFarmer::IsMontagePlaying()
 {
-	isMovementDisabled = false;
-	UE_LOG(LogTemp, Warning, TEXT("Movement enabled"))
+	return GetMesh()->GetAnimInstance()->Montage_IsPlaying(nullptr);
+}
+
+void AFarmer::UpdateRotation()
+{
+	if (MovementInputs.Num() > 0)
+	{
+		switch (MovementInputs.Last())
+		{
+		case EMovementDirection::Up:
+			SetActorRotation(FRotator(0, 0, 0));
+			break;
+		case EMovementDirection::Down:
+			SetActorRotation(FRotator(0, 180, 0));
+			break;
+		case EMovementDirection::Left:
+			SetActorRotation(FRotator(0, -90, 0));
+			break;
+		case EMovementDirection::Right:
+			SetActorRotation(FRotator(0, 90, 0));
+			break;
+		}
+	}
 }
 
 void AFarmer::SetToolHidden(bool bNewHidden)
@@ -148,71 +138,76 @@ void AFarmer::SetToolHidden(bool bNewHidden)
 	}
 }
 
-
 void AFarmer::OnMoveUpPressed()
 {
-	isUpPressed = true;
+	MovementInputs.AddUnique(EMovementDirection::Up);
+	UpdateRotation();
 }
 
 void AFarmer::OnMoveDownPressed()
 {
-	isDownPressed = true;
+	MovementInputs.AddUnique(EMovementDirection::Down);
+	UpdateRotation();
 }
 
 void AFarmer::OnMoveLeftPressed()
 {
-	isLeftPressed = true;
+	MovementInputs.AddUnique(EMovementDirection::Left);
+	UpdateRotation();
 }
 
 void AFarmer::OnMoveRightPressed()
 {
-	isRightPressed = true;
+	MovementInputs.AddUnique(EMovementDirection::Right);
+	UpdateRotation();
 }
 
 void AFarmer::OnSprintPressed()
 {
 	GetCharacterMovement()->MaxWalkSpeed = 400;
-	isSprint = true;
+	bIsSprinting = true;
 }
 
 void AFarmer::OnMoveUpReleased()
 {
-	isUpPressed = false;
+	MovementInputs.Remove(EMovementDirection::Up);
+	UpdateRotation();
 }
 
 void AFarmer::OnMoveDownReleased()
 {
-	isDownPressed = false;
+	MovementInputs.Remove(EMovementDirection::Down);
+	UpdateRotation();
 }
 
 void AFarmer::OnMoveLeftReleased()
 {
-	isLeftPressed = false;
+	MovementInputs.Remove(EMovementDirection::Left);
+	UpdateRotation();
 }
 
 void AFarmer::OnMoveRightReleased()
 {
-	isRightPressed = false;
+	MovementInputs.Remove(EMovementDirection::Right);
+	UpdateRotation();
 }
 
 void AFarmer::OnSprintReleased()
 {
 	GetCharacterMovement()->MaxWalkSpeed = 200;
-	isSprint = false;
+	bIsSprinting = false;
 }
 
 void AFarmer::OnUseToolPressed()
 {
-	if (!GetMesh()->GetAnimInstance()->Montage_IsPlaying(UseMontage) || !isMovementDisabled)
+	if (IsMontagePlaying() || ItemInHands)
 	{
-		if (ItemInHands)
-		{
-			return;
-		}
-
-		UpdateChargePose();
-		GetWorld()->GetTimerManager().SetTimer(ToolChargeTimer, this, &AFarmer::ChargeTool, 1.0f, true, 1.0f);
+		return;
 	}
+
+	bIsUsingTool = true;
+	UpdateChargePose();
+	GetWorld()->GetTimerManager().SetTimer(ToolChargeTimer, this, &AFarmer::ChargeTool, 1.0f, true, 1.0f);
 }
 
 void AFarmer::UpdateChargePose()
@@ -237,7 +232,7 @@ void AFarmer::ChargeTool()
 
 void AFarmer::OnUseToolReleased()
 {
-	if (ItemInHands)
+	if (ItemInHands || !bIsUsingTool)
 	{
 		return;
 	}
@@ -245,7 +240,7 @@ void AFarmer::OnUseToolReleased()
 	GetWorld()->GetTimerManager().ClearTimer(ToolChargeTimer);
 	if (CurrentTool)
 	{
-		UseMontage = CurrentTool->GetUseMontage();
+		UAnimMontage* UseMontage = CurrentTool->GetUseMontage();
 		PlayAnimMontage(UseMontage);
 		CurrentTool->Use(this);
 	}
@@ -253,24 +248,31 @@ void AFarmer::OnUseToolReleased()
 
 void AFarmer::OnNextToolPressed()
 {
-	if (!GetMesh()->GetAnimInstance()->Montage_IsPlaying(UseMontage) || !isMovementDisabled)
+	if (IsMontagePlaying())
 	{
-		if (CurrentTool)
-		{
-			CurrentTool->Destroy();
-		}
+		return;
+	}
 
-		ToolInventory->NextTool();
-		CurrentTool = SpawnTool();
-		if (CurrentTool && GetMesh())
-		{
-			CurrentTool->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, FName("ToolSocket"));
-		}
+	if (CurrentTool)
+	{
+		CurrentTool->Destroy();
+	}
+
+	ToolInventory->NextTool();
+	CurrentTool = SpawnTool();
+	if (CurrentTool && GetMesh())
+	{
+		CurrentTool->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, FName("ToolSocket"));
 	}
 }
 
 void AFarmer::OnNextItemPressed()
 {
+	if (IsMontagePlaying())
+	{
+		return;
+	}
+
 	if (ItemInHands)
 	{
 		if (IPickupItem* Item = Cast<IPickupItem>(ItemInHands))
@@ -292,42 +294,44 @@ void AFarmer::OnNextItemPressed()
 
 void AFarmer::OnInteractPressed()
 {
-	if (!GetMesh()->GetAnimInstance()->Montage_IsPlaying(UseMontage) || !isMovementDisabled)
+	if (IsMontagePlaying())
 	{
-		if (IThrowable* ThrowableActor = Cast<IThrowable>(ItemInHands))
+		return;
+	}
+
+	if (IThrowable* ThrowableActor = Cast<IThrowable>(ItemInHands))
+	{
+		if (ThrowableActor->CanBeThrown(GetActorForwardVector()))
 		{
-			if (ThrowableActor->CanBeThrown(GetActorForwardVector()))
+			ThrowableActor->Throw(GetActorForwardVector());
+			ItemInHands = nullptr;
+			return;
+		}
+	}
+
+	float TileSize = ProjectDefaults::TileSize;
+	float TraceLength = 100.0f;
+	FVector TraceStart = GetActorLocation();
+	TraceStart += GetActorForwardVector() * TileSize;
+	FVector TraceEnd = TraceStart + FVector(0.0f, 0.0f, -TraceLength);
+
+	FHitResult HitResult;
+	GetWorld()->LineTraceSingleByChannel(HitResult, TraceStart, TraceEnd, ECC_InteractionTrace);
+	if (ICollectable* CollectableActor = Cast<ICollectable>(HitResult.Actor))
+	{
+		if (CollectableActor->CanBeCollected())
+		{
+			ItemInHands = CollectableActor->Collect();
+			if (ItemInHands)
 			{
-				ThrowableActor->Throw(GetActorForwardVector());
-				ItemInHands = nullptr;
-				return;
+				PlayPickupTimeline();
+				ItemInHands->AttachToComponent(PickupComponent, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
 			}
 		}
-
-		float TileSize = ProjectDefaults::TileSize;
-		float TraceLength = 100.0f;
-		FVector TraceStart = GetActorLocation();
-		TraceStart += GetActorForwardVector() * TileSize;
-		FVector TraceEnd = TraceStart + FVector(0.0f, 0.0f, -TraceLength);
-
-		FHitResult HitResult;
-		GetWorld()->LineTraceSingleByChannel(HitResult, TraceStart, TraceEnd, ECC_InteractionTrace);
-		if (ICollectable* CollectableActor = Cast<ICollectable>(HitResult.Actor))
-		{
-			if (CollectableActor->CanBeCollected())
-			{
-				ItemInHands = CollectableActor->Collect();
-				if (ItemInHands)
-				{
-					PlayPickupTimeline();
-					ItemInHands->AttachToComponent(PickupComponent, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
-				}
-			}
-		}
-		else if (IInteractable* InteractableActor = Cast<IInteractable>(HitResult.Actor))
-		{
-			InteractableActor->Interact();
-		}
+	}
+	else if (IInteractable* InteractableActor = Cast<IInteractable>(HitResult.Actor))
+	{
+		InteractableActor->Interact();
 	}
 }
 
@@ -354,14 +358,4 @@ AActor* AFarmer::GetItemFromInventory()
 	FActorSpawnParameters SpawnInfo;
 	SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	return GetWorld()->SpawnActor<AActor>(ItemInfo.Class, SpawnInfo);
-}
-
-void AFarmer::OnResetLevelPressed()
-{
-	UGameplayStatics::OpenLevel(this, FName(*GetWorld()->GetName()), false);
-}
-
-void AFarmer::OnNextDayPressed()
-{
-	UGameplayStatics::OpenLevel(this, "Testing", false);
 }

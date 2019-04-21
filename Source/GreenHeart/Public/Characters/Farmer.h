@@ -6,6 +6,15 @@
 #include "GameFramework/Character.h"
 #include "Farmer.generated.h"
 
+UENUM(BlueprintType)
+enum class EMovementDirection : uint8
+{
+	Up,
+	Down,
+	Left,
+	Right
+};
+
 class USpringArmComponent;
 class UCameraComponent;
 class UToolInventoryComponent;
@@ -24,15 +33,7 @@ public:
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	void Move();
-
 	void OnSprintPressed();
-
-	UFUNCTION(BlueprintCallable, Category = "AnimNotifies")
-	void DisableMovement();
-
-	UFUNCTION(BlueprintCallable, Category = "AnimNotifies")
-	void EnableMovement();
 
 	UFUNCTION(BlueprintCallable, Category = "AnimNotifies")
 	void SetToolHidden(bool bNewHidden);
@@ -58,12 +59,7 @@ protected:
 	void OnUseToolReleased();
 	void OnNextToolPressed();
 	void OnInteractPressed();
-
 	void OnNextItemPressed();
-
-	// Temporary
-	void OnResetLevelPressed();
-	void OnNextDayPressed();
 
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	USpringArmComponent* SpringArm;
@@ -81,6 +77,12 @@ protected:
 	USceneComponent* PickupComponent;
 
 private:
+	bool ShouldMove();
+
+	bool IsMontagePlaying();
+
+	void UpdateRotation();
+
 	ATool* SpawnTool();
 
 	AActor* GetItemFromInventory();
@@ -89,9 +91,17 @@ private:
 
 	void ChargeTool();
 
+	bool bIsSprinting = false;
+
+	bool bIsUsingTool = false;
+
 	FTimerHandle ToolChargeTimer;
 
+	UPROPERTY()
 	ATool* CurrentTool;
 
+	UPROPERTY()
 	AActor* ItemInHands;
+
+	TArray<EMovementDirection> MovementInputs;
 };
