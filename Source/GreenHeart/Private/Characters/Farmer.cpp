@@ -21,6 +21,7 @@
 #include "Interfaces/Throwable.h"
 #include "Interfaces/Interactable.h"
 #include "Interfaces/PickupItem.h"
+#include "ItemInteractable.h"
 
 
 AFarmer::AFarmer()
@@ -90,6 +91,7 @@ void AFarmer::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	if (ShouldMove())
 	{
+		UpdateRotation();
 		FVector MovementDirection = GetActorForwardVector();
 		AddMovementInput(MovementDirection);
 	}
@@ -103,13 +105,13 @@ bool AFarmer::ShouldMove()
 	return (!bIsMontagePlaying && (bIsSprinting || bHasMovementInputs));
 }
 
-bool AFarmer::IsMontagePlaying()
-{
-	return GetMesh()->GetAnimInstance()->Montage_IsPlaying(nullptr);
-}
-
 void AFarmer::UpdateRotation()
 {
+	if (IsMontagePlaying())
+	{
+		return;
+	}
+
 	if (MovementInputs.Num() > 0)
 	{
 		switch (MovementInputs.Last())
@@ -130,6 +132,11 @@ void AFarmer::UpdateRotation()
 	}
 }
 
+bool AFarmer::IsMontagePlaying()
+{
+	return GetMesh()->GetAnimInstance()->Montage_IsPlaying(nullptr);
+}
+
 void AFarmer::SetToolHidden(bool bNewHidden)
 {
 	if (CurrentTool)
@@ -141,25 +148,21 @@ void AFarmer::SetToolHidden(bool bNewHidden)
 void AFarmer::OnMoveUpPressed()
 {
 	MovementInputs.AddUnique(EMovementDirection::Up);
-	UpdateRotation();
 }
 
 void AFarmer::OnMoveDownPressed()
 {
 	MovementInputs.AddUnique(EMovementDirection::Down);
-	UpdateRotation();
 }
 
 void AFarmer::OnMoveLeftPressed()
 {
 	MovementInputs.AddUnique(EMovementDirection::Left);
-	UpdateRotation();
 }
 
 void AFarmer::OnMoveRightPressed()
 {
 	MovementInputs.AddUnique(EMovementDirection::Right);
-	UpdateRotation();
 }
 
 void AFarmer::OnSprintPressed()
@@ -171,25 +174,21 @@ void AFarmer::OnSprintPressed()
 void AFarmer::OnMoveUpReleased()
 {
 	MovementInputs.Remove(EMovementDirection::Up);
-	UpdateRotation();
 }
 
 void AFarmer::OnMoveDownReleased()
 {
 	MovementInputs.Remove(EMovementDirection::Down);
-	UpdateRotation();
 }
 
 void AFarmer::OnMoveLeftReleased()
 {
 	MovementInputs.Remove(EMovementDirection::Left);
-	UpdateRotation();
 }
 
 void AFarmer::OnMoveRightReleased()
 {
 	MovementInputs.Remove(EMovementDirection::Right);
-	UpdateRotation();
 }
 
 void AFarmer::OnSprintReleased()
@@ -299,16 +298,56 @@ void AFarmer::OnInteractPressed()
 		return;
 	}
 
-	if (IThrowable* ThrowableActor = Cast<IThrowable>(ItemInHands))
+	if (ItemInHands)
 	{
-		if (ThrowableActor->CanBeThrown(GetActorForwardVector()))
+		AActor* FoundActor = GetActorByTraceChannel(ECC_InteractionTrace);
+		if (IItemInteractable* InteractableActor = Cast<IItemInteractable>(FoundActor))
 		{
-			ThrowableActor->Throw(GetActorForwardVector());
-			ItemInHands = nullptr;
-			return;
+			if (InteractableActor->CanInteract(ItemInHands))
+			{
+				InteractableActor->Interact(ItemInHands);
+				ItemInHands->Destroy();
+				ItemInHands = nullptr;
+				return;
+			}
+		}
+
+		if (IThrowable* ThrowableActor = Cast<IThrowable>(ItemInHands))
+		{
+			if (ThrowableActor->CanBeThrown(GetActorForwardVector()))
+			{
+				ThrowableActor->Throw(GetActorForwardVector());
+				ItemInHands = nullptr;
+				return;
+			}
 		}
 	}
 
+	else
+	{
+		AActor* FoundActor = GetActorByTraceChannel(ECC_InteractionTrace);
+		if (ICollectable* CollectableActor = Cast<ICollectable>(FoundActor))
+		{
+			if (CollectableActor->CanBeCollected())
+			{
+				ItemInHands = CollectableActor->Collect();
+				if (ItemInHands)
+				{
+					PlayPickupTimeline();
+					ItemInHands->AttachToComponent(PickupComponent, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+				}
+			}
+		}
+
+		else if (IInteractable* InteractableActor = Cast<IInteractable>(FoundActor))
+		{
+			InteractableActor->Interact();
+		}
+	}
+}
+
+AActor* AFarmer::GetActorByTraceChannel(ECollisionChannel CollisionChannel)
+{
 	float TileSize = ProjectDefaults::TileSize;
 	float TraceLength = 100.0f;
 	FVector TraceStart = GetActorLocation();
@@ -316,23 +355,8 @@ void AFarmer::OnInteractPressed()
 	FVector TraceEnd = TraceStart + FVector(0.0f, 0.0f, -TraceLength);
 
 	FHitResult HitResult;
-	GetWorld()->LineTraceSingleByChannel(HitResult, TraceStart, TraceEnd, ECC_InteractionTrace);
-	if (ICollectable* CollectableActor = Cast<ICollectable>(HitResult.Actor))
-	{
-		if (CollectableActor->CanBeCollected())
-		{
-			ItemInHands = CollectableActor->Collect();
-			if (ItemInHands)
-			{
-				PlayPickupTimeline();
-				ItemInHands->AttachToComponent(PickupComponent, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
-			}
-		}
-	}
-	else if (IInteractable* InteractableActor = Cast<IInteractable>(HitResult.Actor))
-	{
-		InteractableActor->Interact();
-	}
+	GetWorld()->LineTraceSingleByChannel(HitResult, TraceStart, TraceEnd, CollisionChannel);
+	return HitResult.GetActor();
 }
 
 ATool* AFarmer::SpawnTool()

@@ -83,6 +83,8 @@ private:
 
 	void UpdateRotation();
 
+	AActor* GetActorByTraceChannel(ECollisionChannel CollisionChannel);
+
 	ATool* SpawnTool();
 
 	AActor* GetItemFromInventory();

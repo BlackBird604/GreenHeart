@@ -3,11 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "Actors/Others/BaseItem.h"
 #include "Feed.generated.h"
 
 UCLASS()
-class GREENHEART_API AFeed : public AActor
+class GREENHEART_API AFeed : public ABaseItem
 {
 	GENERATED_BODY()
 	
@@ -16,9 +16,5 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
-
-protected:
-
-
 
 };
