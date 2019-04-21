@@ -9,4 +9,5 @@ namespace CollisionPresets
 	const FName Plant("Plant");
 	const FName Field("Field");
 	const FName Obstacle("Obstacle");
+	const FName Throwable("Throwable");
 }
