@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "Structs/ToolInfo.h"
+#include "Structs/ToolInventoryState.h"
 #include "ToolInventoryComponent.generated.h"
 
 class ATool;
@@ -21,6 +21,10 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
+	FToolInventoryState GetState();
+
+	void RestoreState(FToolInventoryState InventoryState);
+
 	void NextTool();
 
 	FToolInfo GetCurrentTool();
@@ -28,7 +32,6 @@ public:
 	void RemoveCurrentTool();
 
 private:
-	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	TArray<FToolInfo> ToolInfos;
 
 	int32 MinimumSize = 3;

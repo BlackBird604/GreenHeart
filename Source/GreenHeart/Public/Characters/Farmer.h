@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Structs/FarmerState.h"
 #include "Farmer.generated.h"
 
 UENUM(BlueprintType)
@@ -35,6 +36,8 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "AnimNotifies")
@@ -91,6 +94,12 @@ protected:
 	USceneComponent* PickupComponent;
 
 private:
+	void SaveState();
+
+	void RestoreState();
+
+	void RestoreItemInHands(TSubclassOf<AActor> ItemClass);
+
 	bool ShouldMove();
 
 	void SetSprint(bool bActive);
@@ -106,6 +115,8 @@ private:
 	FRotator GetLookAtXYRotation(const FVector& TargetLocation);
 
 	AActor* GetActorByTraceChannel(ECollisionChannel CollisionChannel);
+
+	void AttachActorToItemSocket(AActor* Item);
 
 	ATool* SpawnTool();
 
@@ -143,7 +154,7 @@ private:
 
 	float SprintSpeed = 400.0f;
 
-	int32 Energy = 150;
+	int32 Energy;
 
-	int32 MoneyAmount = 0;
+	int32 MoneyAmount;
 };

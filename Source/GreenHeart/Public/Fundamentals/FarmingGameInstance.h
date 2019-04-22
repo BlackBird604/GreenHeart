@@ -6,6 +6,7 @@
 #include "Engine/GameInstance.h"
 #include "Structs/FieldGridState.h"
 #include "Structs/ObstacleState.h"
+#include "Structs/FarmerState.h"
 #include "FarmingGameInstance.generated.h"
 
 class UDataTable;
@@ -27,6 +28,10 @@ public:
 
 	TArray<FObstacleState> GetObstacleStates();
 
+	void SetFarmerState(FFarmerState NewState);
+
+	FFarmerState GetFarmerState();
+
 	void OpenLevel(FName LevelName, int32 SpawnPoint);
 
 	void StartNextDay();
@@ -39,9 +44,15 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	UDataTable* InitialObstacleStates;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	FFarmerState InitialFarmerState;
+
 	UPROPERTY()
 	FFieldGridState FieldGridState;
 
 	UPROPERTY()
 	TArray<FObstacleState> ObstacleStates;
+
+	UPROPERTY()
+	FFarmerState FarmerState;
 };

@@ -1,6 +1,8 @@
 // The Green Heart @Politechnika Opolska
 
 #include "ItemInventoryComponent.h"
+#include "GameFramework/Actor.h"
+
 
 UItemInventoryComponent::UItemInventoryComponent()
 {
@@ -12,6 +14,18 @@ void UItemInventoryComponent::BeginPlay()
 {
 	Super::BeginPlay();
 	
+}
+
+FItemInventoryState UItemInventoryComponent::GetState()
+{
+	FItemInventoryState InventoryState = FItemInventoryState();
+	InventoryState.ItemInfos = ItemInfos;
+	return InventoryState;
+}
+
+void UItemInventoryComponent::RestoreState(FItemInventoryState InventoryState)
+{
+	ItemInfos = InventoryState.ItemInfos;
 }
 
 void UItemInventoryComponent::AddItem(FItemInfo ItemInfo)

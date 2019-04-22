@@ -18,6 +18,18 @@ void UToolInventoryComponent::BeginPlay()
 	Super::BeginPlay();
 }
 
+FToolInventoryState UToolInventoryComponent::GetState()
+{
+	FToolInventoryState InventoryState = FToolInventoryState();
+	InventoryState.ToolInfos = ToolInfos;
+	return InventoryState;
+}
+
+void UToolInventoryComponent::RestoreState(FToolInventoryState InventoryState)
+{
+	ToolInfos = InventoryState.ToolInfos;
+}
+
 void UToolInventoryComponent::NextTool()
 {
 	for (int32 i = ToolInfos.Num() - 1; i >= 0; i--)

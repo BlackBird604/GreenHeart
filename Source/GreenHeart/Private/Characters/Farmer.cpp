@@ -24,6 +24,7 @@
 #include "Interfaces/PickupItem.h"
 #include "Interfaces/ItemInteractable.h"
 #include "Interfaces/Consumable.h"
+#include "Fundamentals/FarmingGameInstance.h"
 
 
 AFarmer::AFarmer()
@@ -57,11 +58,19 @@ AFarmer::AFarmer()
 void AFarmer::BeginPlay()
 {
 	Super::BeginPlay();
+	RestoreState();
+
 	CurrentTool = SpawnTool();
 	if (CurrentTool && GetMesh())
 	{
 		CurrentTool->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, FName("ToolSocket"));
 	}
+}
+
+void AFarmer::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+	SaveState();
 }
 
 void AFarmer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -96,6 +105,38 @@ void AFarmer::Tick(float DeltaTime)
 		UpdateRotation();
 		FVector MovementDirection = GetActorForwardVector();
 		AddMovementInput(MovementDirection);
+	}
+}
+
+void AFarmer::SaveState()
+{
+	UFarmingGameInstance* GameInstance = Cast<UFarmingGameInstance>(GetGameInstance());
+	if (GameInstance)
+	{
+		FFarmerState FarmerState = FFarmerState();
+		FarmerState.ToolInventoryState = ToolInventory->GetState();
+		FarmerState.ItemInventoryState = ItemInventory->GetState();
+		if (ItemInHands)
+		{
+			FarmerState.ItemInHandsClass = ItemInHands->GetClass();
+		}
+		FarmerState.Energy = Energy;
+		FarmerState.MoneyAmount = MoneyAmount;
+		GameInstance->SetFarmerState(FarmerState);
+	}
+}
+
+void AFarmer::RestoreState()
+{
+	UFarmingGameInstance* GameInstance = Cast<UFarmingGameInstance>(GetGameInstance());
+	if (GameInstance)
+	{
+		FFarmerState FarmerState = GameInstance->GetFarmerState();
+		ToolInventory->RestoreState(FarmerState.ToolInventoryState);
+		ItemInventory->RestoreState(FarmerState.ItemInventoryState);
+		RestoreItemInHands(FarmerState.ItemInHandsClass);
+		Energy = FarmerState.Energy;
+		MoneyAmount = FarmerState.MoneyAmount;
 	}
 }
 
@@ -155,7 +196,6 @@ void AFarmer::SetToolHidden(bool bNewHidden)
 
 void AFarmer::OnUseToolEnd()
 {
-	bIsUsingTool = false;
 	SetToolHidden(true);
 	if (CurrentTool && CurrentTool->IsSingleUse())
 	{
@@ -269,6 +309,7 @@ void AFarmer::OnUseToolReleased()
 		return;
 	}
 
+	bIsUsingTool = false;
 	GetWorld()->GetTimerManager().ClearTimer(ToolChargeTimer);
 	if (CurrentTool)
 	{
@@ -318,10 +359,7 @@ void AFarmer::OnNextItemPressed()
 	else
 	{
 		ItemInHands = GetItemFromInventory();
-		if (ItemInHands)
-		{
-			ItemInHands->AttachToComponent(PickupComponent, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
-		}
+		AttachActorToItemSocket(ItemInHands);
 	}
 }
 
@@ -367,7 +405,7 @@ void AFarmer::OnInteractPressed()
 				if (ItemInHands)
 				{
 					PlayPickupTimeline();
-					ItemInHands->AttachToComponent(PickupComponent, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+					AttachActorToItemSocket(ItemInHands);
 				}
 			}
 		}
@@ -402,6 +440,26 @@ ATool* AFarmer::SpawnTool()
 	FActorSpawnParameters SpawnInfo;
 	SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	return GetWorld()->SpawnActor<ATool>(ToolInfo.Class, SpawnInfo);
+}
+
+void AFarmer::RestoreItemInHands(TSubclassOf<AActor> ItemClass)
+{
+	if (!ItemClass)
+	{
+		return;
+	}
+	FActorSpawnParameters SpawnInfo;
+	SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	ItemInHands = GetWorld()->SpawnActor<AActor>(ItemClass, SpawnInfo);
+	AttachActorToItemSocket(ItemInHands);
+}
+
+void AFarmer::AttachActorToItemSocket(AActor* Item)
+{
+	if (Item)
+	{
+		Item->AttachToComponent(PickupComponent, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+	}
 }
 
 // TEMPORARY

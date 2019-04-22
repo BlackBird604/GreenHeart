@@ -21,6 +21,7 @@ void UFarmingGameInstance::StartNewGame()
 		FObstacleState* ObstacleState = (FObstacleState*)ObstacleStateRow.Value;
 		ObstacleStates.Add(*ObstacleState);
 	}
+	FarmerState = InitialFarmerState;
 }
 
 void UFarmingGameInstance::ApplyNextDayChanges()
@@ -47,6 +48,16 @@ void UFarmingGameInstance::SetObstacleStates(TArray<FObstacleState> NewObstacleS
 TArray<FObstacleState> UFarmingGameInstance::GetObstacleStates()
 {
 	return ObstacleStates;
+}
+
+void UFarmingGameInstance::SetFarmerState(FFarmerState NewState)
+{
+	FarmerState = NewState;
+}
+
+FFarmerState UFarmingGameInstance::GetFarmerState()
+{
+	return FarmerState;
 }
 
 void UFarmingGameInstance::OpenLevel(FName LevelName, int32 SpawnPoint)

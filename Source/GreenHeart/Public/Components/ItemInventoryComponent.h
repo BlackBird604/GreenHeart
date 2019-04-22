@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "Structs/ItemInfo.h"
+#include "Structs/ItemInventoryState.h"
 #include "ItemInventoryComponent.generated.h"
 
 
@@ -20,6 +20,10 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
+	FItemInventoryState GetState();
+
+	void RestoreState(FItemInventoryState ItemState);
+
 	void AddItem(FItemInfo ItemInfo);
 
 	FItemInfo TakeOut();
