@@ -10,4 +10,6 @@ struct FPlantState
 	GENERATED_USTRUCT_BODY()
 
 	int32 GrowthValue;
+
+	int32 CollectionsLeft;
 };

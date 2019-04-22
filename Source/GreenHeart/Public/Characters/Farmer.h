@@ -63,6 +63,7 @@ protected:
 	void OnNextToolPressed();
 	void OnInteractPressed();
 	void OnNextItemPressed();
+	void OnEatPressed();
 
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	USpringArmComponent* SpringArm;
@@ -97,6 +98,8 @@ private:
 	void ChargeTool();
 
 	void SetToolHidden(bool bNewHidden);
+
+	void DestroyItemInHands();
 
 	UPROPERTY()
 	ATool* CurrentTool;

@@ -79,7 +79,17 @@ AActor* APlant::Collect()
 	SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	AActor* CropActor = GetWorld()->SpawnActor<AActor>(CropClass, SpawnInfo);
 
-	HandleDestroy();
+	NumberOfCollections--;
+	if (NumberOfCollections <= 0)
+	{
+		HandleDestroy();
+	}
+	else
+	{
+		GrowthValue = GrowthValueAfterCollecting;
+		UpdateMesh();
+	}
+
 	return CropActor;
 }
 
@@ -88,12 +98,14 @@ FPlantState APlant::GetState()
 {
 	FPlantState State;
 	State.GrowthValue = GrowthValue;
+	State.CollectionsLeft = NumberOfCollections;
 	return State;
 }
 
 void APlant::RestoreState(const FPlantState& PlantState)
 {
 	GrowthValue = PlantState.GrowthValue;
+	NumberOfCollections = PlantState.CollectionsLeft;
 	UpdateMesh();
 }
 

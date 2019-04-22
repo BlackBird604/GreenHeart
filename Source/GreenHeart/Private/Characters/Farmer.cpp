@@ -21,7 +21,8 @@
 #include "Interfaces/Throwable.h"
 #include "Interfaces/Interactable.h"
 #include "Interfaces/PickupItem.h"
-#include "ItemInteractable.h"
+#include "Interfaces/ItemInteractable.h"
+#include "Interfaces/Consumable.h"
 
 
 AFarmer::AFarmer()
@@ -82,8 +83,8 @@ void AFarmer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	InputComponent->BindAction("UseTool", IE_Released, this, &AFarmer::OnUseToolReleased);
 	InputComponent->BindAction("NextTool", IE_Pressed, this, &AFarmer::OnNextToolPressed);
 	InputComponent->BindAction("Interact", IE_Pressed, this, &AFarmer::OnInteractPressed);
-
 	InputComponent->BindAction("NextItem", IE_Pressed, this, &AFarmer::OnNextItemPressed);
+	InputComponent->BindAction("Eat", IE_Pressed, this, &AFarmer::OnEatPressed);
 }
 
 void AFarmer::Tick(float DeltaTime)
@@ -222,6 +223,20 @@ void AFarmer::OnUseToolPressed()
 	GetWorld()->GetTimerManager().SetTimer(ToolChargeTimer, this, &AFarmer::ChargeTool, 1.0f, true, 1.0f);
 }
 
+void AFarmer::OnEatPressed()
+{
+	if (IsMontagePlaying() || !ItemInHands)
+	{
+		return;
+	}
+
+	if (IConsumable* Consumable = Cast<IConsumable>(ItemInHands))
+	{
+		Energy += Consumable->GetEnergyPoints();
+		DestroyItemInHands();
+	}
+}
+
 void AFarmer::UpdateChargePose()
 {
 	if (!CurrentTool)
@@ -292,8 +307,7 @@ void AFarmer::OnNextItemPressed()
 		if (IPickupItem* Item = Cast<IPickupItem>(ItemInHands))
 		{
 			ItemInventory->AddItem(Item->GetItemInfo());
-			ItemInHands->Destroy();
-			ItemInHands = nullptr;
+			DestroyItemInHands();
 		}
 	}
 	else
@@ -321,8 +335,7 @@ void AFarmer::OnInteractPressed()
 			if (InteractableActor->CanInteract(ItemInHands))
 			{
 				InteractableActor->Interact(ItemInHands);
-				ItemInHands->Destroy();
-				ItemInHands = nullptr;
+				DestroyItemInHands();
 				return;
 			}
 		}
@@ -403,4 +416,10 @@ void AFarmer::AddMoney(int32 Amount)
 {
 	MoneyAmount += Amount;
 	UE_LOG(LogTemp, Warning, TEXT("Current Money: %d"), MoneyAmount);
+}
+
+void AFarmer::DestroyItemInHands()
+{
+	ItemInHands->Destroy();
+	ItemInHands = nullptr;
 }

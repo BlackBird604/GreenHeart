@@ -23,4 +23,8 @@ int32 ACrop::GetPrice()
 	return SellPrice;
 }
 
+int32 ACrop::GetEnergyPoints()
+{
+	return EnergyPoints;
+}
 

@@ -66,16 +66,22 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	UStaticMeshComponent* PlantMesh;
 
-private:
-	void UpdateMesh();
-
-	void HandleDestroy();
-
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	TArray<FGrowthInfo> GrowthInfos;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	TSubclassOf<ACrop> CropClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Setup", meta = (ClampMin = "1"))
+	int32 NumberOfCollections = 1;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Setup", meta = (ClampMin = "0"))
+	int32 GrowthValueAfterCollecting = 0;
+
+private:
+	void UpdateMesh();
+
+	void HandleDestroy();
 
 	int32 GrowthValue = 0;
 };
