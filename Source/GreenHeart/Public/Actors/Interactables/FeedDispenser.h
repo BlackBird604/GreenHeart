@@ -34,9 +34,10 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	UStaticMeshComponent* DispenserMesh;
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	TSubclassOf<AFeed> FeedClass;
 
 private:
+	UPROPERTY(EditAnywhere, Category = "Temporary")
 	int32 FeedAmount = 0;
 };

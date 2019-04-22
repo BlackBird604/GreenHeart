@@ -41,6 +41,7 @@ bool ABaseItem::CanBeStored()
 
 void ABaseItem::Throw(const FVector& Direction)
 {
+	DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
 	CollisionSphere->SetNotifyRigidBodyCollision(true);
 	CollisionSphere->OnComponentHit.AddDynamic(this, &ABaseItem::OnHit);
 	ProjectileMovement->Velocity = Direction * HorizontalSpeed;

@@ -37,7 +37,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	UStaticMeshComponent* FeedMesh;
 
-	UPROPERTY(VisibleAnywhere, Category = "Setup")
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	TSubclassOf<AFeed> AcceptedFeedClass;
 
 private:

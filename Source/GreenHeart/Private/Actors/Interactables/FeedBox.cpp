@@ -45,7 +45,11 @@ bool AFeedBox::CanInteract(AActor* Item)
 
 void AFeedBox::Interact(AActor* Item)
 {
-
+	if (CanInteract(Item))
+	{
+		bHasFeed = true;
+		FeedMesh->SetHiddenInGame(false);
+	}
 }
 
 
