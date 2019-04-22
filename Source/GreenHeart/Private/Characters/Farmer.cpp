@@ -13,6 +13,7 @@
 #include "Animation/AnimInstance.h"
 
 #include "Defaults/ProjectDefaults.h"
+#include "Defaults/GHFuncLib.h"
 #include "Types/CollisionTypes.h"
 #include "Actors/Tools/Tool.h"
 #include "Components/ToolInventoryComponent.h"
@@ -106,6 +107,12 @@ bool AFarmer::ShouldMove()
 	return (!bIsMontagePlaying && (bIsSprinting || bHasMovementInputs));
 }
 
+void AFarmer::SetSprint(bool bActive)
+{
+	GetCharacterMovement()->MaxWalkSpeed = bActive ? SprintSpeed : WalkSpeed;
+	bIsSprinting = bActive;
+}
+
 void AFarmer::UpdateRotation()
 {
 	if (IsMontagePlaying())
@@ -180,8 +187,7 @@ void AFarmer::OnMoveRightPressed()
 
 void AFarmer::OnSprintPressed()
 {
-	GetCharacterMovement()->MaxWalkSpeed = 400;
-	bIsSprinting = true;
+	SetSprint(true);
 }
 
 void AFarmer::OnMoveUpReleased()
@@ -206,8 +212,7 @@ void AFarmer::OnMoveRightReleased()
 
 void AFarmer::OnSprintReleased()
 {
-	GetCharacterMovement()->MaxWalkSpeed = 200;
-	bIsSprinting = false;
+	SetSprint(false);
 }
 
 void AFarmer::OnUseToolPressed()
@@ -422,4 +427,87 @@ void AFarmer::DestroyItemInHands()
 {
 	ItemInHands->Destroy();
 	ItemInHands = nullptr;
+}
+
+void AFarmer::AutomaticMoveTo(TArray<FVector> TargetLocations)
+{
+	for (FVector Location : TargetLocations)
+	{
+		AutomaticMovementLocations.Add(Location);
+	}
+	if (!bIsAutomaticMovement)
+	{
+		StartAutomaticMovement();
+	}
+}
+
+void AFarmer::AutomaticMoveTo(FVector TargetLocation)
+{
+	AutomaticMovementLocations.Add(TargetLocation);
+	if (!bIsAutomaticMovement)
+	{
+		StartAutomaticMovement();
+	}
+}
+
+void AFarmer::MoveToNextPoint()
+{
+	if (AutomaticMovementLocations.Num() == 0)
+	{
+		return;
+	}
+	
+	FVector TargetLocation = AutomaticMovementLocations[0];
+	AutomaticMovementLocations.RemoveAt(0);
+
+	float XYDistance = UGHFuncLib::XYVectorLength(GetActorLocation(), TargetLocation);
+	if (XYDistance == 0.0f)
+	{
+		OnMovementTimelineFinished();
+		return;
+	}
+
+	FRotator MovementRotation = GetLookAtXYRotation(TargetLocation);
+	SetActorRotation(MovementRotation);
+
+	float Duration = XYDistance / GetCharacterMovement()->MaxWalkSpeed;
+	PlayMovementTimeline(Duration);
+}
+
+FRotator AFarmer::GetLookAtXYRotation(const FVector& TargetLocation)
+{
+	FVector ActorLocation = GetActorLocation();
+	FVector LookAtVector = TargetLocation - ActorLocation;
+	float LookAtYaw = (LookAtVector).Rotation().Yaw;
+	FRotator LookAtRotation = GetActorRotation();
+	LookAtRotation.Yaw = LookAtYaw;
+	return LookAtRotation;
+}
+
+void AFarmer::OnMovementTimelineFinished()
+{
+	if (AutomaticMovementLocations.Num() > 0)
+	{
+		MoveToNextPoint();
+	}
+	else
+	{
+		EndAutomaticMovement();
+	}
+}
+
+void AFarmer::StartAutomaticMovement()
+{
+	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	DisableInput(PlayerController);
+	MovementInputs.Empty();
+	SetSprint(false);
+	MoveToNextPoint();
+}
+
+void AFarmer::EndAutomaticMovement()
+{
+	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	EnableInput(PlayerController);
+	bIsAutomaticMovement = false;
 }

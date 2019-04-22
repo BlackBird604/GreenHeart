@@ -42,9 +42,19 @@ public:
 
 	void AddMoney(int32 Amount);
 
+	void AutomaticMoveTo(TArray<FVector> TargetLocations);
+
+	void AutomaticMoveTo(FVector TargetLocation);
+
 protected:
 	UFUNCTION(BlueprintImplementableEvent)
 	void PlayPickupTimeline();
+
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+	void PlayMovementTimeline(float Duration);
+
+	UFUNCTION(BlueprintCallable)
+	void OnMovementTimelineFinished();
 
 	void OnMoveUpPressed();
 	void OnMoveDownPressed();
@@ -83,9 +93,17 @@ protected:
 private:
 	bool ShouldMove();
 
+	void SetSprint(bool bActive);
+
+	void StartAutomaticMovement();
+
+	void EndAutomaticMovement();
+
 	bool IsMontagePlaying();
 
 	void UpdateRotation();
+
+	FRotator GetLookAtXYRotation(const FVector& TargetLocation);
 
 	AActor* GetActorByTraceChannel(ECollisionChannel CollisionChannel);
 
@@ -101,6 +119,8 @@ private:
 
 	void DestroyItemInHands();
 
+	void MoveToNextPoint();
+
 	UPROPERTY()
 	ATool* CurrentTool;
 
@@ -114,6 +134,14 @@ private:
 	bool bIsUsingTool = false;
 
 	FTimerHandle ToolChargeTimer;
+
+	TArray<FVector> AutomaticMovementLocations;
+
+	bool bIsAutomaticMovement = false;
+
+	float WalkSpeed = 200.0f;
+
+	float SprintSpeed = 400.0f;
 
 	int32 Energy = 150;
 
