@@ -33,8 +33,19 @@ void AObstacle::UseTool(const ATool* Instigator, int32 Strength)
 {
 	if (Instigator->GetType() == AffectedByTool)
 	{
-		OnObstacleDestroyed.Broadcast(this);
-		Destroy();
+		ApplyDamage(Strength);
+		
+		if (HealthPoints <= 0)
+		{
+			OnObstacleDestroyed.Broadcast(this);
+			Destroy();
+		}
 	}
 }
 
+void AObstacle::ApplyDamage(int32 Strength)
+{
+	int32 Power = Strength - RequiredStrength;
+	int32 Damage = FMath::Pow(2, Power);
+	HealthPoints -= Damage;
+}

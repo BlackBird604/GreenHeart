@@ -39,4 +39,13 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	EToolType AffectedByTool;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	int32 HealthPoints = 1;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	int32 RequiredStrength = 1;
+
+private:
+	void ApplyDamage(int32 Strength);
 };

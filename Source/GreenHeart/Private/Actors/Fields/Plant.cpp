@@ -7,6 +7,7 @@
 #include "Types/CollisionTypes.h"
 #include "Defaults/ProjectDefaults.h"
 #include "Actors/Fields/Crop.h"
+#include "Actors/Tools/Tool.h"
 
 APlant::APlant()
 {
@@ -56,7 +57,15 @@ void APlant::UpdateMesh()
 
 void APlant::UseTool(const ATool* Instigator, int32 Strength)
 {
-	UE_LOG(LogTemp, Warning, TEXT("PLANT AFFECTED!"));
+	if (!Instigator)
+	{
+		return;
+	}
+
+	if (Instigator->GetType() == EToolType::Scythe)
+	{
+		HandleDestroy();
+	}
 }
 
 bool APlant::CanBeCollected()
@@ -70,8 +79,7 @@ AActor* APlant::Collect()
 	SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	AActor* CropActor = GetWorld()->SpawnActor<AActor>(CropClass, SpawnInfo);
 
-	OnDepleted.Broadcast();
-	Destroy();
+	HandleDestroy();
 	return CropActor;
 }
 
@@ -109,4 +117,10 @@ bool APlant::HasMesh(int32 CheckedValue)
 		}
 	}
 	return false;
+}
+
+void APlant::HandleDestroy()
+{
+	OnDepleted.Broadcast();
+	Destroy();
 }

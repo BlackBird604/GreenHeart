@@ -69,6 +69,8 @@ protected:
 private:
 	void UpdateMesh();
 
+	void HandleDestroy();
+
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	TArray<FGrowthInfo> GrowthInfos;
 

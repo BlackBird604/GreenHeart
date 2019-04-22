@@ -262,7 +262,7 @@ void AFarmer::OnUseToolReleased()
 
 void AFarmer::OnNextToolPressed()
 {
-	if (IsMontagePlaying())
+	if (IsMontagePlaying() || ItemInHands)
 	{
 		return;
 	}
