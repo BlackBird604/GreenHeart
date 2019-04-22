@@ -11,4 +11,5 @@ namespace CollisionPresets
 	const FName Obstacle("Obstacle");
 	const FName Throwable("Throwable");
 	const FName Interactable("Interactable");
+	const FName Pawn("Pawn");
 }

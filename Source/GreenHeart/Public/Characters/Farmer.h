@@ -4,17 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Enums/MovementDirections.h"
 #include "Structs/FarmerState.h"
 #include "Farmer.generated.h"
-
-UENUM(BlueprintType)
-enum class EMovementDirection : uint8
-{
-	Up,
-	Down,
-	Left,
-	Right
-};
 
 class USpringArmComponent;
 class UCameraComponent;

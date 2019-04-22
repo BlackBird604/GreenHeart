@@ -7,6 +7,7 @@
 #include "Interfaces/Interactable.h"
 #include "Door.generated.h"
 
+class USceneComponent;
 class UBoxComponent;
 class USceneComponent;
 
@@ -24,8 +25,20 @@ protected:
 	virtual void BeginPlay() override;
 
 protected:
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+	void PlayOpenTimeline();
+
+	UFUNCTION(BlueprintCallable)
+	void OnClosed();
+
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	USceneComponent* SceneRoot;
+
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	UBoxComponent* CollisionBox;
+
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	UBoxComponent* PawnBlockingVolume;
 
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	USceneComponent* FirstMovementPoint;
