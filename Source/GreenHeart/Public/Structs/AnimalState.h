@@ -2,12 +2,16 @@
 
 #pragma once
 
-#include "ChickenState.generated.h"
+#include "AnimalState.generated.h"
 
 USTRUCT(BlueprintType)
-struct FChickenState
+struct FAnimalState
 {
 	GENERATED_USTRUCT_BODY()
+
+	int32 ID;
+
+	bool bHasItem;
 
 	int32 Happiness;
 };

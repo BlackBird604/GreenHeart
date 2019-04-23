@@ -2,13 +2,25 @@
 
 #include "FarmingGameMode.h"
 #include "Kismet/GameplayStatics.h"
+#include "Actors/Managers/ManagerBase.h"
 #include "Actors/Others/FarmerSpawnPoint.h"
 
 #include "Fundamentals/FarmingGameInstance.h"
 
+void AFarmingGameMode::StartPlay()
+{
+	Super::StartPlay();
+	TArray<AActor*> FoundActors;
+	UGameplayStatics::GetAllActorsOfClass(this, AManagerBase::StaticClass(), FoundActors);
+	for (AActor* FoundActor : FoundActors)
+	{
+		AManagerBase* Manager = Cast<AManagerBase>(FoundActor);
+		Manager->StartPlay();
+	}
+}
+
 AActor* AFarmingGameMode::ChoosePlayerStart(AController* Player)
 {
-	Super::ChoosePlayerStart(Player);
 	if (UFarmingGameInstance* GameInstance = Cast<UFarmingGameInstance>(GetGameInstance()))
 	{
 		int32 SpawnPointIndex = GameInstance->GetSpawnPointIndex();

@@ -19,9 +19,8 @@ ABarnManager::ABarnManager()
 	RootComponent = SpawnBox;
 }
 
-void ABarnManager::BeginPlay()
+void ABarnManager::StartPlay()
 {
-	Super::BeginPlay();
 	if (!AnimalClass->IsChildOf(AAnimal::StaticClass()))
 	{
 		AnimalClass = AAnimal::StaticClass();
@@ -69,7 +68,11 @@ void ABarnManager::SpawnAnimals()
 		{
 			FVector SpawnLocation = GetRandomSpawnLocation();
 			FRotator SpawnRotation = GetRandomSpawnRotation();
-			GetWorld()->SpawnActor<AAnimal>(AnimalClass, SpawnLocation, SpawnRotation, SpawnInfo);
+			AAnimal* SpawnedAnimal = GetWorld()->SpawnActor<AAnimal>(AnimalClass, SpawnLocation, SpawnRotation, SpawnInfo);
+			if (SpawnedAnimal)
+			{
+				SpawnedAnimal->RestoreStateByID(i);
+			}
 		}
 	}
 }

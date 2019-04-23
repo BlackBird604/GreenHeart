@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "Actors/Managers/ManagerBase.h"
 #include "BarnManager.generated.h"
 
 class UBoxComponent;
 class AAnimal;
 
 UCLASS()
-class GREENHEART_API ABarnManager : public AActor
+class GREENHEART_API ABarnManager : public AManagerBase
 {
 	GENERATED_BODY()
 	
@@ -18,7 +18,7 @@ public:
 	ABarnManager();
 
 protected:
-	virtual void BeginPlay() override;
+	virtual void StartPlay() override;
 
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 

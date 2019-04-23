@@ -4,8 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameStateBase.h"
-#include "Structs/ChickenState.h"
-#include "Structs/CowState.h"
+#include "Structs/GameStateInfo.h"
 #include "Structs/ResourceInfo.h"
 #include "FarmingGameState.generated.h"
 
@@ -15,15 +14,24 @@ class GREENHEART_API AFarmingGameState : public AGameStateBase
 {
 	GENERATED_BODY()
 	
+protected:
+	virtual void BeginPlay() override;
+
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+
 public:
 	void AddCow();
 
-	void AddChcicken();
-
 	int32 GetCowAmount();
 
-private:
-	TArray<FCowState> CowStates;
+	FAnimalState GetCowStateByID(int32 ID);
 
-	TArray<FChickenState> ChickenStates;
+	void UpdateCowState(FAnimalState NewState);
+	
+	void AddChcicken();
+	
+private:
+	TArray<FAnimalState> CowStates;
+
+	TArray<FAnimalState> ChickenStates;
 };

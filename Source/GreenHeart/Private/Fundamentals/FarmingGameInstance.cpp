@@ -70,6 +70,16 @@ FBarnState UFarmingGameInstance::GetBarnState()
 	return BarnState;
 }
 
+void UFarmingGameInstance::SetGameStateInfo(FGameStateInfo NewState)
+{
+	GameStateInfo = NewState;
+}
+
+FGameStateInfo UFarmingGameInstance::GetGameStateInfo()
+{
+	return GameStateInfo;
+}
+
 void UFarmingGameInstance::StartNextDay()
 {
 	ApplyNextDayChanges();
