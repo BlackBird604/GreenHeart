@@ -60,6 +60,16 @@ FFarmerState UFarmingGameInstance::GetFarmerState()
 	return FarmerState;
 }
 
+void UFarmingGameInstance::SetBarnState(FBarnState NewState)
+{
+	BarnState = NewState;
+}
+
+FBarnState UFarmingGameInstance::GetBarnState()
+{
+	return BarnState;
+}
+
 void UFarmingGameInstance::StartNextDay()
 {
 	ApplyNextDayChanges();

@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Interfaces/ItemInteractable.h"
+#include "Structs/FeedBoxState.h"
 #include "FeedBox.generated.h"
 
 class UBoxComponent;
@@ -23,6 +24,12 @@ protected:
 	virtual void BeginPlay() override;
 
 public:	
+	int32 GetID();
+
+	FFeedBoxState GetState();
+
+	void RestoreState(FFeedBoxState BoxState);
+
 	virtual bool CanInteract(AActor* Item) override;
 
 	virtual void Interact(AActor* Item) override;
@@ -36,6 +43,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	UStaticMeshComponent* FeedMesh;
+
+	UPROPERTY(EditAnywhere, Category = "Setup")
+	int32 ID;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	TSubclassOf<AFeed> AcceptedFeedClass;

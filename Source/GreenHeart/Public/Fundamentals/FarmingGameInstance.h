@@ -7,6 +7,7 @@
 #include "Structs/FieldGridState.h"
 #include "Structs/ObstacleState.h"
 #include "Structs/FarmerState.h"
+#include "Structs/BarnState.h"
 #include "FarmingGameInstance.generated.h"
 
 class UDataTable;
@@ -31,6 +32,10 @@ public:
 	void SetFarmerState(FFarmerState NewState);
 
 	FFarmerState GetFarmerState();
+
+	void SetBarnState(FBarnState NewState);
+
+	FBarnState GetBarnState();
 
 	void OpenLevel(FName LevelName, int32 SpawnPoint);
 
@@ -57,6 +62,9 @@ private:
 
 	UPROPERTY()
 	FFarmerState FarmerState;
+
+	UPROPERTY()
+	FBarnState BarnState;
 
 	int32 SpawnPointIndex = 0;
 };

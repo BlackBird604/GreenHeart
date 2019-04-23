@@ -32,6 +32,25 @@ void AFeedBox::BeginPlay()
 	}
 }
 
+int32 AFeedBox::GetID()
+{
+	return ID;
+}
+
+FFeedBoxState AFeedBox::GetState()
+{
+	FFeedBoxState BoxState = FFeedBoxState();
+	BoxState.ID = ID;
+	BoxState.bHasFeed = bHasFeed;
+	return BoxState;
+}
+
+void AFeedBox::RestoreState(FFeedBoxState BoxState)
+{
+	bHasFeed = BoxState.bHasFeed;
+	FeedMesh->SetHiddenInGame(!bHasFeed);
+}
+
 bool AFeedBox::CanInteract(AActor* Item)
 {
 	if (!Item)
