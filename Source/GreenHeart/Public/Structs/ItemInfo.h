@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "Runtime/CoreUObject/Public/Templates/SubclassOf.h"
 #include "ItemInfo.generated.h"
 
 USTRUCT(BlueprintType)

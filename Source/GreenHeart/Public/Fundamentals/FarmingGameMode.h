@@ -17,7 +17,6 @@ protected:
 	virtual void StartPlay() override;
 
 private:
-	AActor* ChoosePlayerStart(AController* Player);
-
+	virtual AActor* ChoosePlayerStart_Implementation(AController* Player) override;
 
 };

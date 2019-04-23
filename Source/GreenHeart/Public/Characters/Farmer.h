@@ -110,8 +110,6 @@ private:
 
 	ATool* SpawnTool();
 
-	AActor* GetItemFromInventory();
-
 	void UpdateChargePose();
 
 	void ChargeTool();

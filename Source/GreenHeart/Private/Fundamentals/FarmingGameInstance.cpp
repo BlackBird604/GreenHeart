@@ -5,6 +5,7 @@
 
 #include "Objects/FarmUpdater.h"
 #include "Objects/AnimalUpdater.h"
+#include "Objects/FarmerUpdater.h"
 
 void UFarmingGameInstance::Init()
 {
@@ -35,6 +36,9 @@ void UFarmingGameInstance::ApplyNextDayChanges()
 
 	UAnimalUpdater* AnimalUpdater = NewObject<UAnimalUpdater>();
 	AnimalUpdater->ApplyNextDay(GameStateInfo, BarnState);
+
+	UFarmerUpdater* FarmerUpdater = NewObject<UFarmerUpdater>();
+	FarmerUpdater->ApplyNextDay(GameStateInfo, FarmerState);
 }
 
 void UFarmingGameInstance::SetGridState(FFieldGridState NewState)

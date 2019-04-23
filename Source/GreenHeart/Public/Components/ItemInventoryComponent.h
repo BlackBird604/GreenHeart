@@ -3,8 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Components/ActorComponent.h"
 #include "Structs/ItemInventoryState.h"
+#include "Components/ActorComponent.h"
 #include "ItemInventoryComponent.generated.h"
 
 
@@ -24,10 +24,20 @@ public:
 
 	void RestoreState(FItemInventoryState ItemState);
 
+	bool HasPlace();
+
 	void AddItem(FItemInfo ItemInfo);
 
-	FItemInfo TakeOut();
+	AActor* TakeOut();
 
 private:
+	AActor* SpawnItem(FItemInfo ItemInfo);
+
+	void RestoreSize(int32 Level);
+
+	void RestoreItems(const TArray<FItemInfo>& SavedItemInfos);
+
 	TArray<FItemInfo> ItemInfos;
+
+	int32 CurrentLevel;
 };

@@ -19,8 +19,9 @@ void AFarmingGameMode::StartPlay()
 	}
 }
 
-AActor* AFarmingGameMode::ChoosePlayerStart(AController* Player)
+AActor* AFarmingGameMode::ChoosePlayerStart_Implementation(AController* Player)
 {
+	Super::ChoosePlayerStart_Implementation(Player);
 	if (UFarmingGameInstance* GameInstance = Cast<UFarmingGameInstance>(GetGameInstance()))
 	{
 		int32 SpawnPointIndex = GameInstance->GetSpawnPointIndex();

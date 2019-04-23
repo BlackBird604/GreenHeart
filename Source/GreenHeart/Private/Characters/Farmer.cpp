@@ -350,14 +350,20 @@ void AFarmer::OnNextItemPressed()
 	{
 		if (IPickupItem* Item = Cast<IPickupItem>(ItemInHands))
 		{
-			ItemInventory->AddItem(Item->GetItemInfo());
-			DestroyItemInHands();
+			if (ItemInventory->HasPlace())
+			{
+				ItemInventory->AddItem(Item->GetItemInfo());
+				DestroyItemInHands();
+			}
 		}
 	}
 	else
 	{
-		ItemInHands = GetItemFromInventory();
-		AttachActorToItemSocket(ItemInHands);
+		ItemInHands = ItemInventory->TakeOut();
+		if (ItemInHands)
+		{
+			AttachActorToItemSocket(ItemInHands);
+		}
 	}
 }
 
@@ -458,19 +464,6 @@ void AFarmer::AttachActorToItemSocket(AActor* Item)
 	{
 		Item->AttachToComponent(PickupComponent, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
 	}
-}
-
-// TEMPORARY
-AActor* AFarmer::GetItemFromInventory()
-{
-	FItemInfo ItemInfo = ItemInventory->TakeOut();
-	if (!ItemInfo.Class)
-	{
-		return nullptr;
-	}
-	FActorSpawnParameters SpawnInfo;
-	SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-	return GetWorld()->SpawnActor<AActor>(ItemInfo.Class, SpawnInfo);
 }
 
 void AFarmer::DestroyItemInHands()
