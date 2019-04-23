@@ -60,14 +60,19 @@ FFarmerState UFarmingGameInstance::GetFarmerState()
 	return FarmerState;
 }
 
-void UFarmingGameInstance::OpenLevel(FName LevelName, int32 SpawnPoint)
-{
-	UGameplayStatics::OpenLevel(this, LevelName, false);
-}
-
 void UFarmingGameInstance::StartNextDay()
 {
 	ApplyNextDayChanges();
 	OpenLevel("Farm", 0); // TEMPORARY
+}
 
+void UFarmingGameInstance::OpenLevel(FName LevelName, int32 SpawnPoint)
+{
+	SpawnPointIndex = SpawnPoint;
+	UGameplayStatics::OpenLevel(this, LevelName, false);
+}
+
+int32 UFarmingGameInstance::GetSpawnPointIndex()
+{
+	return SpawnPointIndex;
 }

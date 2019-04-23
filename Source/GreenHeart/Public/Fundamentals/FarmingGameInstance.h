@@ -34,6 +34,8 @@ public:
 
 	void OpenLevel(FName LevelName, int32 SpawnPoint);
 
+	int32 GetSpawnPointIndex();
+
 	void StartNextDay();
 
 private:
@@ -55,4 +57,6 @@ private:
 
 	UPROPERTY()
 	FFarmerState FarmerState;
+
+	int32 SpawnPointIndex = 0;
 };

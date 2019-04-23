@@ -14,4 +14,5 @@ class GREENHEART_API AFarmingGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
 	
+	AActor* ChoosePlayerStart(AController* Player);
 };
