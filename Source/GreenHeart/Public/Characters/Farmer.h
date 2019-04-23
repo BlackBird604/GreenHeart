@@ -35,8 +35,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "AnimNotifies")
 	void OnUseToolEnd();
 
-	void AddMoney(int32 Amount);
-
 	void AutomaticMoveTo(TArray<FVector> TargetLocations);
 
 	void AutomaticMoveTo(FVector TargetLocation);
@@ -147,6 +145,4 @@ private:
 	float SprintSpeed = 400.0f;
 
 	int32 Energy;
-
-	int32 MoneyAmount;
 };

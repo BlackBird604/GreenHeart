@@ -4,6 +4,7 @@
 #include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
 
+#include "Fundamentals/FarmingGameState.h"
 #include "Types/CollisionTypes.h"
 #include "Actors/Others/Feed.h"
 
@@ -26,11 +27,18 @@ void AFeedDispenser::BeginPlay()
 	{
 		FeedClass = AFeed::StaticClass();
 	}
-	
+
+	GameState = GetWorld()->GetGameState<AFarmingGameState>();
 }
 
 bool AFeedDispenser::CanBeCollected()
 {
+	if (!GameState)
+	{
+		return false;
+	}
+
+	int32 FeedAmount = GameState->GetResourceAmount(ResourceType);
 	return FeedAmount > 0;
 }
 
@@ -41,7 +49,7 @@ AActor* AFeedDispenser::Collect()
 		return nullptr;
 	}
 
-	FeedAmount--;
+	GameState->RemoveResource(ResourceType, 1);
 	FActorSpawnParameters SpawnInfo;
 	SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	AActor* FeedActor = GetWorld()->SpawnActor<AActor>(FeedClass, SpawnInfo);

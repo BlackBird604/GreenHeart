@@ -23,8 +23,9 @@ void UFarmingGameInstance::StartNewGame()
 		ObstacleStates.Add(*ObstacleState);
 	}
 	FarmerState = InitialFarmerState;
+	GameStateInfo = InitialGameStateInfo;
 
-	GameStateInfo.CowStates.Add(FAnimalState());
+	GameStateInfo.CowStates.Add(FAnimalState()); // TEMPORARY
 }
 
 void UFarmingGameInstance::ApplyNextDayChanges()
@@ -101,3 +102,4 @@ int32 UFarmingGameInstance::GetSpawnPointIndex()
 {
 	return SpawnPointIndex;
 }
+

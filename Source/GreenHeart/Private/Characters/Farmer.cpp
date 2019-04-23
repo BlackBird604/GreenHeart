@@ -121,7 +121,6 @@ void AFarmer::SaveState()
 			FarmerState.ItemInHandsClass = ItemInHands->GetClass();
 		}
 		FarmerState.Energy = Energy;
-		FarmerState.MoneyAmount = MoneyAmount;
 		GameInstance->SetFarmerState(FarmerState);
 	}
 }
@@ -136,7 +135,6 @@ void AFarmer::RestoreState()
 		ItemInventory->RestoreState(FarmerState.ItemInventoryState);
 		RestoreItemInHands(FarmerState.ItemInHandsClass);
 		Energy = FarmerState.Energy;
-		MoneyAmount = FarmerState.MoneyAmount;
 	}
 }
 
@@ -473,12 +471,6 @@ AActor* AFarmer::GetItemFromInventory()
 	FActorSpawnParameters SpawnInfo;
 	SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	return GetWorld()->SpawnActor<AActor>(ItemInfo.Class, SpawnInfo);
-}
-
-void AFarmer::AddMoney(int32 Amount)
-{
-	MoneyAmount += Amount;
-	UE_LOG(LogTemp, Warning, TEXT("Current Money: %d"), MoneyAmount);
 }
 
 void AFarmer::DestroyItemInHands()

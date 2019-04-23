@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "Enums/ResourceTypes.h"
+#include "Structs/ResourceInfo.h"
 #include "Structs/AnimalState.h"
 #include "GameStateInfo.generated.h"
 
@@ -15,4 +17,7 @@ struct FGameStateInfo
 
 	UPROPERTY()
 	TArray<FAnimalState> ChickenStates;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	TMap<EResourceType, FResourceInfo> ResourceInfos;
 };

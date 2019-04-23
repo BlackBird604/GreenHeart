@@ -9,5 +9,6 @@ struct FResourceInfo
 {
 	GENERATED_USTRUCT_BODY()
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	int32 Amount;
 };

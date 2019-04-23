@@ -59,6 +59,9 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	FFarmerState InitialFarmerState;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	FGameStateInfo InitialGameStateInfo;
+
 	UPROPERTY()
 	FFieldGridState FieldGridState;
 
@@ -69,9 +72,8 @@ private:
 	FFarmerState FarmerState;
 
 	UPROPERTY()
-	FBarnState BarnState;
+	FBarnState BarnState;	
 
-	UPROPERTY()
 	FGameStateInfo GameStateInfo;
 
 	int32 SpawnPointIndex = 0;

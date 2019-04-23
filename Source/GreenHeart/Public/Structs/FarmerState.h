@@ -13,9 +13,6 @@ struct FFarmerState
 	int32 Energy;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-	int32 MoneyAmount;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	FToolInventoryState ToolInventoryState;
 
 	FItemInventoryState ItemInventoryState;

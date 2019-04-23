@@ -4,12 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Enums/ResourceTypes.h"
 #include "Interfaces/Collectable.h"
 #include "FeedDispenser.generated.h"
 
 class UBoxComponent;
 class UStaticMeshComponent;
 class AFeed;
+class AFarmingGameState;
 
 UCLASS()
 class GREENHEART_API AFeedDispenser : public AActor, public ICollectable
@@ -37,7 +39,10 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	TSubclassOf<AFeed> FeedClass;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	EResourceType ResourceType;
+
 private:
-	UPROPERTY(EditAnywhere, Category = "Temporary")
-	int32 FeedAmount = 0;
+	UPROPERTY()
+	AFarmingGameState* GameState;
 };
