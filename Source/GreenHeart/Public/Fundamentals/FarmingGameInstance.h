@@ -22,6 +22,8 @@ protected:
 	virtual void Init() override;
 
 public:
+	void ApplyNextDayChanges();
+
 	void SetGridState(FFieldGridState NewState);
 
 	FFieldGridState GetGridState();
@@ -50,8 +52,6 @@ public:
 
 private:
 	void StartNewGame();
-
-	void ApplyNextDayChanges();
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	UDataTable* InitialObstacleStates;

@@ -4,6 +4,7 @@
 #include "Kismet/GameplayStatics.h"
 
 #include "Objects/FarmUpdater.h"
+#include "Objects/AnimalUpdater.h"
 
 void UFarmingGameInstance::Init()
 {
@@ -22,12 +23,17 @@ void UFarmingGameInstance::StartNewGame()
 		ObstacleStates.Add(*ObstacleState);
 	}
 	FarmerState = InitialFarmerState;
+
+	GameStateInfo.CowStates.Add(FAnimalState());
 }
 
 void UFarmingGameInstance::ApplyNextDayChanges()
 {
 	UFarmUpdater* FieldUpdater = NewObject<UFarmUpdater>();
 	FieldUpdater->ApplyNextDay(FieldGridState, ObstacleStates);
+
+	UAnimalUpdater* AnimalUpdater = NewObject<UAnimalUpdater>();
+	AnimalUpdater->ApplyNextDay(GameStateInfo, BarnState);
 }
 
 void UFarmingGameInstance::SetGridState(FFieldGridState NewState)
@@ -82,8 +88,7 @@ FGameStateInfo UFarmingGameInstance::GetGameStateInfo()
 
 void UFarmingGameInstance::StartNextDay()
 {
-	ApplyNextDayChanges();
-	OpenLevel("Farm", 0); // TEMPORARY
+	OpenLevel("NextDayLevel", 0);
 }
 
 void UFarmingGameInstance::OpenLevel(FName LevelName, int32 SpawnPoint)
