@@ -1,23 +1,14 @@
 // The Green Heart @Politechnika Opolska
 
 #include "FarmingGameMode.h"
+#include "Engine/World.h"
 #include "Kismet/GameplayStatics.h"
-#include "Actors/Managers/ManagerBase.h"
-#include "Actors/Others/FarmerSpawnPoint.h"
+#include "TimerManager.h"
 
 #include "Fundamentals/FarmingGameInstance.h"
-
-void AFarmingGameMode::StartPlay()
-{
-	Super::StartPlay();
-	TArray<AActor*> FoundActors;
-	UGameplayStatics::GetAllActorsOfClass(this, AManagerBase::StaticClass(), FoundActors);
-	for (AActor* FoundActor : FoundActors)
-	{
-		AManagerBase* Manager = Cast<AManagerBase>(FoundActor);
-		Manager->StartPlay();
-	}
-}
+#include "Fundamentals/FarmingGameState.h"
+#include "Actors/Managers/ManagerBase.h"
+#include "Actors/Others/FarmerSpawnPoint.h"
 
 AActor* AFarmingGameMode::ChoosePlayerStart_Implementation(AController* Player)
 {
@@ -38,4 +29,44 @@ AActor* AFarmingGameMode::ChoosePlayerStart_Implementation(AController* Player)
 		}
 	}
 	return nullptr;
+}
+
+void AFarmingGameMode::StartPlay()
+{
+	Super::StartPlay();
+	GameState = GetWorld()->GetGameState<AFarmingGameState>();
+
+	InitializeManagers();
+	InitializeClock();
+}
+
+void AFarmingGameMode::InitializeManagers()
+{
+	TArray<AActor*> FoundActors;
+	UGameplayStatics::GetAllActorsOfClass(this, AManagerBase::StaticClass(), FoundActors);
+	for (AActor* FoundActor : FoundActors)
+	{
+		AManagerBase* Manager = Cast<AManagerBase>(FoundActor);
+		Manager->StartPlay();
+	}
+}
+
+void AFarmingGameMode::InitializeClock()
+{
+	if (GameState)
+	{
+		ClockInfo = GameState->GetClockInfo();
+		GetWorldTimerManager().SetTimer(ClockTimer, this, &AFarmingGameMode::UpdateClock, ClockMinuteTick, true, ClockMinuteTick);
+	}
+}
+
+void AFarmingGameMode::UpdateClock()
+{
+	ClockInfo.AddMinutes(1);
+}
+
+void AFarmingGameMode::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+	GameState->SetClockInfo(ClockInfo);
 }

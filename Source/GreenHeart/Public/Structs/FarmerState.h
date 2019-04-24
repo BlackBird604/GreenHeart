@@ -1,3 +1,5 @@
+// The Green Heart @Politechnika Opolska
+
 #pragma once
 
 #include "Structs/ItemInventoryState.h"

@@ -12,6 +12,7 @@ void AFarmingGameState::BeginPlay()
 		CowStates = SavedState.CowStates;
 		ChickenStates = SavedState.ChickenStates;
 		ResourceInfos = SavedState.ResourceInfos;
+		ClockInfo = SavedState.ClockInfo;
 	}
 }
 
@@ -24,6 +25,7 @@ void AFarmingGameState::EndPlay(const EEndPlayReason::Type EndPlayReason)
 		GameStateInfo.CowStates = CowStates;
 		GameStateInfo.ChickenStates = ChickenStates;
 		GameStateInfo.ResourceInfos = ResourceInfos;
+		GameStateInfo.ClockInfo = ClockInfo;
 		GameInstance->SetGameStateInfo(GameStateInfo);
 	}
 }
@@ -120,4 +122,14 @@ void AFarmingGameState::SetResourceAmount(EResourceType ResourceType, int32 Amou
 	FResourceInfo ResourceInfo = ResourceInfos.FindRef(ResourceType);
 	ResourceInfo.Amount = Amount;
 	ResourceInfos.Add(ResourceType, ResourceInfo);
+}
+
+FClockInfo AFarmingGameState::GetClockInfo()
+{
+	return ClockInfo;
+}
+
+void AFarmingGameState::SetClockInfo(FClockInfo NewClockInfo)
+{
+	ClockInfo = NewClockInfo;
 }

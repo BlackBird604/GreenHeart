@@ -41,6 +41,10 @@ public:
 
 	void RemoveResource(EResourceType ResourceType, int32 Amount);
 
+	FClockInfo GetClockInfo();
+
+	void  SetClockInfo(FClockInfo NewClockInfo);
+
 private:
 	void SetResourceAmount(EResourceType ResourceType, int32 Amount);
 
@@ -49,4 +53,6 @@ private:
 	TArray<FAnimalState> ChickenStates;
 
 	TMap<EResourceType, FResourceInfo> ResourceInfos;
+
+	FClockInfo ClockInfo;
 };
