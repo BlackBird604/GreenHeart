@@ -45,6 +45,11 @@ int32 AFarmingGameState::GetCowAmount()
 	return CowStates.Num();
 }
 
+int32 AFarmingGameState::GetChickenAmount()
+{
+	return ChickenStates.Num();
+}
+
 FAnimalState AFarmingGameState::GetCowStateByID(int32 ID)
 {
 	for (FAnimalState& CowState : CowStates)
@@ -54,7 +59,18 @@ FAnimalState AFarmingGameState::GetCowStateByID(int32 ID)
 			return CowState;
 		}
 	}
+	return FAnimalState();
+}
 
+FAnimalState AFarmingGameState::GetChickenStateByID(int32 ID)
+{
+	for (FAnimalState& ChickenState : ChickenStates)
+	{
+		if (ChickenState.ID == ID)
+		{
+			return ChickenState;
+		}
+	}
 	return FAnimalState();
 }
 
@@ -65,6 +81,18 @@ void AFarmingGameState::UpdateCowState(FAnimalState NewState)
 		if (CowStates[i].ID == NewState.ID)
 		{
 			CowStates[i] = NewState;
+			break;
+		}
+	}
+}
+
+void AFarmingGameState::UpdateChickenState(FAnimalState NewState)
+{
+	for (int32 i = 0; i < ChickenStates.Num(); i++)
+	{
+		if (ChickenStates[i].ID == NewState.ID)
+		{
+			ChickenStates[i] = NewState;
 			break;
 		}
 	}

@@ -29,6 +29,12 @@ public:
 	
 	void AddChcicken();
 
+	int32 GetChickenAmount();
+
+	FAnimalState GetChickenStateByID(int32 ID);
+
+	void UpdateChickenState(FAnimalState NewState);
+
 	int32 GetResourceAmount(EResourceType ResourceType);
 
 	void AddResource(EResourceType ResourceType, int32 Amount);

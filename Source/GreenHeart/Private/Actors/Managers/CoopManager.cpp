@@ -1,22 +1,22 @@
 // The Green Heart @Politechnika Opolska
 
-#include "BarnManager.h"
+#include "CoopManager.h"
 
 #include "Fundamentals/FarmingGameInstance.h"
 
-FAnimalBuildingState ABarnManager::GetSavedBuildingState()
+FAnimalBuildingState ACoopManager::GetSavedBuildingState()
 {
 	if (UFarmingGameInstance* GameInstance = Cast<UFarmingGameInstance>(GetGameInstance()))
 	{
-		return GameInstance->GetBarnState();
+		return GameInstance->GetCoopState();
 	}
 	return FAnimalBuildingState();
 }
 
-void ABarnManager::SaveState(const FAnimalBuildingState& CurrentBuildingState)
+void ACoopManager::SaveState(const FAnimalBuildingState& CurrentBuildingState)
 {
 	if (UFarmingGameInstance* GameInstance = Cast<UFarmingGameInstance>(GetGameInstance()))
 	{
-		GameInstance->SetBarnState(CurrentBuildingState);
+		GameInstance->SetCoopState(CurrentBuildingState);
 	}
 }

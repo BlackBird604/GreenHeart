@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "Structs/GameStateInfo.h"
-#include "Structs/BarnState.h"
+#include "Structs/AnimalBuildingState.h"
 #include "AnimalUpdater.generated.h"
 
 
@@ -15,9 +15,8 @@ class GREENHEART_API UAnimalUpdater : public UObject
 	GENERATED_BODY()
 	
 public:
-	void ApplyNextDay(FGameStateInfo& GameStateInfo, FBarnState& BarnState);
+	void ApplyNextDay(FGameStateInfo& GameStateInfo, FAnimalBuildingState& BarnState, FAnimalBuildingState& CoopState);
 
-	void UpdateBarn(TArray<FAnimalState>& CowStates, TArray<FFeedBoxState>& FeedBoxStates);
+	void UpdateAnimalBuilding(TArray<FAnimalState>& CowStates, TArray<FFeedBoxState>& FeedBoxStates);
 
-	
 };

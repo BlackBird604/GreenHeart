@@ -3,10 +3,10 @@
 #pragma once
 
 #include "Structs/FeedBoxState.h"
-#include "BarnState.generated.h"
+#include "AnimalBuildingState.generated.h"
 
 USTRUCT(BlueprintType)
-struct FBarnState
+struct FAnimalBuildingState
 {
 	GENERATED_USTRUCT_BODY()
 

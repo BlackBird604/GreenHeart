@@ -4,12 +4,13 @@
 
 #include "Defaults/ProjectDefaults.h"
 
-void UAnimalUpdater::ApplyNextDay(FGameStateInfo& GameStateInfo, FBarnState& BarnState)
+void UAnimalUpdater::ApplyNextDay(FGameStateInfo& GameStateInfo, FAnimalBuildingState& BarnState, FAnimalBuildingState& CoopState)
 {
-	UpdateBarn(GameStateInfo.CowStates, BarnState.FeedBoxStates);
+	UpdateAnimalBuilding(GameStateInfo.CowStates, BarnState.FeedBoxStates);
+	UpdateAnimalBuilding(GameStateInfo.ChickenStates, CoopState.FeedBoxStates);
 }
 
-void UAnimalUpdater::UpdateBarn(TArray<FAnimalState>& CowStates, TArray<FFeedBoxState>& FeedBoxStates)
+void UAnimalUpdater::UpdateAnimalBuilding(TArray<FAnimalState>& AnimalStates, TArray<FFeedBoxState>& FeedBoxStates)
 {
 	int32 BoxesFilled = 0;
 	for (FFeedBoxState& FeedBoxState : FeedBoxStates)
@@ -21,22 +22,22 @@ void UAnimalUpdater::UpdateBarn(TArray<FAnimalState>& CowStates, TArray<FFeedBox
 		FeedBoxState.bHasFeed = false;
 	}
 
-	for (FAnimalState& CowState : CowStates)
+	for (FAnimalState& AnimalState : AnimalStates)
 	{
-		if (!CowState.bHasItem && BoxesFilled > 0)
+		if (!AnimalState.bHasItem && BoxesFilled > 0)
 		{
-			CowState.bHasItem = true;
-			if (CowState.Happiness < ProjectDefaults::MaxHappiness)
+			AnimalState.bHasItem = true;
+			if (AnimalState.Happiness < ProjectDefaults::MaxHappiness)
 			{
-				CowState.Happiness++;
+				AnimalState.Happiness++;
 			}
 			BoxesFilled--;
 		}
 		else
 		{
-			if (CowState.Happiness > ProjectDefaults::MinHappiness)
+			if (AnimalState.Happiness > ProjectDefaults::MinHappiness)
 			{
-				CowState.Happiness--;
+				AnimalState.Happiness--;
 			}
 		}
 

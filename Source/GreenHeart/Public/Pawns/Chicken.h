@@ -4,13 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "Pawns/Animal.h"
-#include "Cow.generated.h"
+#include "Chicken.generated.h"
+
 
 UCLASS()
-class GREENHEART_API ACow : public AAnimal
+class GREENHEART_API AChicken : public AAnimal
 {
 	GENERATED_BODY()
-
+	
 public:
 	virtual void RestoreStateByID(int32 AnimalID) override;
 

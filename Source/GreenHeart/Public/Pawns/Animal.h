@@ -45,5 +45,7 @@ protected:
 private:
 	FAnimalState CurrentState;
 
+	bool bHasItem = false;
+
 	void ApplyDamage();
 };

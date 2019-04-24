@@ -7,7 +7,7 @@
 #include "Structs/FieldGridState.h"
 #include "Structs/ObstacleState.h"
 #include "Structs/FarmerState.h"
-#include "Structs/BarnState.h"
+#include "Structs/AnimalBuildingState.h"
 #include "Structs/GameStateInfo.h"
 #include "FarmingGameInstance.generated.h"
 
@@ -36,9 +36,13 @@ public:
 
 	FFarmerState GetFarmerState();
 
-	void SetBarnState(FBarnState NewState);
+	void SetBarnState(FAnimalBuildingState NewState);
 
-	FBarnState GetBarnState();
+	FAnimalBuildingState GetBarnState();
+
+	void SetCoopState(FAnimalBuildingState NewState);
+
+	FAnimalBuildingState GetCoopState();
 
 	void SetGameStateInfo(FGameStateInfo NewState);
 
@@ -72,7 +76,10 @@ private:
 	FFarmerState FarmerState;
 
 	UPROPERTY()
-	FBarnState BarnState;	
+	FAnimalBuildingState BarnState;
+
+	UPROPERTY()
+	FAnimalBuildingState CoopState;
 
 	FGameStateInfo GameStateInfo;
 

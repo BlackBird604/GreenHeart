@@ -27,6 +27,7 @@ void UFarmingGameInstance::StartNewGame()
 	GameStateInfo = InitialGameStateInfo;
 
 	GameStateInfo.CowStates.Add(FAnimalState()); // TEMPORARY
+	GameStateInfo.ChickenStates.Add(FAnimalState()); // TEMPORARY
 }
 
 void UFarmingGameInstance::ApplyNextDayChanges()
@@ -35,7 +36,7 @@ void UFarmingGameInstance::ApplyNextDayChanges()
 	FieldUpdater->ApplyNextDay(FieldGridState, ObstacleStates);
 
 	UAnimalUpdater* AnimalUpdater = NewObject<UAnimalUpdater>();
-	AnimalUpdater->ApplyNextDay(GameStateInfo, BarnState);
+	AnimalUpdater->ApplyNextDay(GameStateInfo, BarnState, CoopState);
 
 	UFarmerUpdater* FarmerUpdater = NewObject<UFarmerUpdater>();
 	FarmerUpdater->ApplyNextDay(GameStateInfo, FarmerState);
@@ -71,14 +72,24 @@ FFarmerState UFarmingGameInstance::GetFarmerState()
 	return FarmerState;
 }
 
-void UFarmingGameInstance::SetBarnState(FBarnState NewState)
+void UFarmingGameInstance::SetBarnState(FAnimalBuildingState NewState)
 {
 	BarnState = NewState;
 }
 
-FBarnState UFarmingGameInstance::GetBarnState()
+FAnimalBuildingState UFarmingGameInstance::GetBarnState()
 {
 	return BarnState;
+}
+
+void UFarmingGameInstance::SetCoopState(FAnimalBuildingState NewState)
+{
+	CoopState = NewState;
+}
+
+FAnimalBuildingState UFarmingGameInstance::GetCoopState()
+{
+	return CoopState;
 }
 
 void UFarmingGameInstance::SetGameStateInfo(FGameStateInfo NewState)
