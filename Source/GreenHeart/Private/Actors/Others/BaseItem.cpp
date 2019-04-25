@@ -51,9 +51,6 @@ void ABaseItem::Throw(const FVector& Direction)
 
 FItemInfo ABaseItem::GetItemInfo()
 {
-	FItemInfo ItemInfo = FItemInfo();
-	ItemInfo.Class = GetClass();
-	ItemInfo.Thumbnail = Thumbnail;
 	return ItemInfo;
 }
 

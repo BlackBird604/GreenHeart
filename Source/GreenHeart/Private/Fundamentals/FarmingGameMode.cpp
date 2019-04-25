@@ -116,6 +116,7 @@ void AFarmingGameMode::TogglePlayerInventory()
 	{
 		PlayerInventoryWidget->AddToViewport(2);
 		PlayerController->SetInputMode(FInputModeGameAndUI());
+		PlayerController->bShowMouseCursor = true;
 		PlayerCharacter->ClearMovementInput();
 		PlayerInventoryWidget->PopulateSlots(PlayerCharacter->GetCurrentState());
 	}

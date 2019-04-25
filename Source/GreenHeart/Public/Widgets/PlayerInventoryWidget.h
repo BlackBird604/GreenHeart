@@ -8,7 +8,8 @@
 #include "PlayerInventoryWidget.generated.h"
 
 class UUniformGridPanel;
-class UInventorySlotWidget;
+class UInventoryItemSlotWidget;
+class UInventoryToolSlotWidget;
 class UDescriptionWidget;
 
 
@@ -22,10 +23,10 @@ public:
 
 protected:
 	UPROPERTY(meta = (BindWidget))
-	UInventorySlotWidget* CurrentToolSlot;
+	UInventoryToolSlotWidget* CurrentToolSlot;
 
 	UPROPERTY(meta = (BindWidget))
-	UInventorySlotWidget* CurrentItemSlot;
+	UInventoryItemSlotWidget* CurrentItemSlot;
 
 	UPROPERTY(meta = (BindWidget))
 	UUniformGridPanel* ToolGrid;
@@ -37,7 +38,10 @@ protected:
 	UDescriptionWidget* DescriptionBox;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
-	TSubclassOf<UInventorySlotWidget> SlotClass;
+	TSubclassOf<UInventoryToolSlotWidget> ToolSlotClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	TSubclassOf<UInventoryItemSlotWidget> ItemSlotClass;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	int32 SlotsInRow = 1;
@@ -46,4 +50,17 @@ private:
 	void PopulateToolSlots(const TArray<FToolInfo>& ToolInfos);
 
 	void PopulateItemSlots(const FItemInfo& ItemInHands, const TArray<FItemInfo>& ToolInfos);
+
+	void BindHoverFuntions(UInventoryToolSlotWidget* ToolSlotWidget);
+
+	void BindHoverFuntions(UInventoryItemSlotWidget* ItemSlotWidget);
+
+	UFUNCTION()
+	void OnToolSlotHovered(const FToolInfo& ToolInfo);
+
+	UFUNCTION()
+	void OnItemSlotHovered(const FItemInfo& ToolInfo);
+
+	UFUNCTION()
+	void OnSlotUnhovered();
 };

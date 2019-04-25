@@ -33,7 +33,7 @@ void UItemInventoryComponent::RestoreState(FItemInventoryState InventoryState)
 void UItemInventoryComponent::RestoreSize(int32 Level)
 {
 	int32 NewSize = FMath::Pow(2, Level);
-	ItemInfos.SetNumZeroed(NewSize);
+	ItemInfos.SetNum(NewSize);
 }
 
 void UItemInventoryComponent::RestoreItems(const TArray<FItemInfo>& SavedItemInfos)

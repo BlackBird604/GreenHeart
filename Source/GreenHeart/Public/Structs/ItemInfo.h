@@ -11,6 +11,12 @@ struct FItemInfo
 	GENERATED_USTRUCT_BODY()
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	FText Name = FText();
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	FText Description = FText();
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	TSubclassOf<class AActor> Class;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

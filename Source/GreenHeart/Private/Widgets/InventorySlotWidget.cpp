@@ -2,8 +2,21 @@
 
 #include "InventorySlotWidget.h"
 #include "Components/Image.h"
+#include "Components/Button.h"
 
-void UInventorySlotWidget::SetThumbnail(UTexture2D* NewThumbnail)
+bool UInventorySlotWidget::Initialize()
 {
-	Thumbnail->SetBrushFromTexture(NewThumbnail);
+	bool b = Super::Initialize();
+	Button->OnUnhovered.AddDynamic(this, &UInventorySlotWidget::OnButtonUnhovered);
+	return b;
+}
+
+void UInventorySlotWidget::OnButtonUnhovered()
+{
+	OnUnhovered.Broadcast();
+}
+
+void UInventorySlotWidget::SetThumbnail(UTexture2D* NewTexture)
+{
+	Thumbnail->SetBrushFromTexture(NewTexture);
 }
