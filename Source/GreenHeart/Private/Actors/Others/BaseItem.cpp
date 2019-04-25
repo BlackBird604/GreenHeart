@@ -53,6 +53,7 @@ FItemInfo ABaseItem::GetItemInfo()
 {
 	FItemInfo ItemInfo = FItemInfo();
 	ItemInfo.Class = GetClass();
+	ItemInfo.Thumbnail = Thumbnail;
 	return ItemInfo;
 }
 

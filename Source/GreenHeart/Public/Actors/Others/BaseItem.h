@@ -47,6 +47,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	UProjectileMovementComponent* ProjectileMovement;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	UTexture2D* Thumbnail;
+
 private:
 	float HorizontalSpeed = 300.0f;
 

@@ -41,6 +41,8 @@ public:
 
 	void AutomaticMoveTo(FVector TargetLocation);
 
+	FFarmerState GetCurrentState();
+
 protected:
 	UFUNCTION(BlueprintImplementableEvent)
 	void PlayPickupTimeline();

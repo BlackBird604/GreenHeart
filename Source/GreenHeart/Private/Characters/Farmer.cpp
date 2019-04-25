@@ -116,16 +116,29 @@ void AFarmer::SaveState()
 	UFarmingGameInstance* GameInstance = Cast<UFarmingGameInstance>(GetGameInstance());
 	if (GameInstance)
 	{
-		FFarmerState FarmerState = FFarmerState();
+		GameInstance->SetFarmerState(GetCurrentState());
+	}
+}
+
+FFarmerState AFarmer::GetCurrentState()
+{
+	FFarmerState FarmerState = FFarmerState();
+	UFarmingGameInstance* GameInstance = Cast<UFarmingGameInstance>(GetGameInstance());
+	if (GameInstance)
+	{
 		FarmerState.ToolInventoryState = ToolInventory->GetState();
 		FarmerState.ItemInventoryState = ItemInventory->GetState();
-		if (ItemInHands)
+		if (IPickupItem* PickupItem = Cast<IPickupItem>(ItemInHands))
 		{
-			FarmerState.ItemInHandsClass = ItemInHands->GetClass();
+			FarmerState.ItemInHandsInfo = PickupItem->GetItemInfo();
+		}
+		else
+		{
+			FarmerState.ItemInHandsInfo = FItemInfo();
 		}
 		FarmerState.Energy = Energy;
-		GameInstance->SetFarmerState(FarmerState);
 	}
+	return FarmerState;
 }
 
 void AFarmer::RestoreState()
@@ -136,7 +149,7 @@ void AFarmer::RestoreState()
 		FFarmerState FarmerState = GameInstance->GetFarmerState();
 		ToolInventory->RestoreState(FarmerState.ToolInventoryState);
 		ItemInventory->RestoreState(FarmerState.ItemInventoryState);
-		RestoreItemInHands(FarmerState.ItemInHandsClass);
+		RestoreItemInHands(FarmerState.ItemInHandsInfo.Class);
 		Energy = FarmerState.Energy;
 	}
 }

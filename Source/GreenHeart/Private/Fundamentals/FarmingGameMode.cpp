@@ -105,10 +105,11 @@ void AFarmingGameMode::UpdateMoney()
 
 void AFarmingGameMode::TogglePlayerInventory()
 {
-	if (!PlayerController)
+	if (!PlayerController || !PlayerCharacter)
 	{
 		return;
 	}
+
 
 	PlayerInventoryWidget = CreateWidget<UPlayerInventoryWidget>(GetWorld(), PlayerInventoryWidgetClass);
 	if (PlayerInventoryWidget)
@@ -116,6 +117,7 @@ void AFarmingGameMode::TogglePlayerInventory()
 		PlayerInventoryWidget->AddToViewport(2);
 		PlayerController->SetInputMode(FInputModeGameAndUI());
 		PlayerCharacter->ClearMovementInput();
+		PlayerInventoryWidget->PopulateSlots(PlayerCharacter->GetCurrentState());
 	}
 }
 

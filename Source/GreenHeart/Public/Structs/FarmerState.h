@@ -19,5 +19,5 @@ struct FFarmerState
 
 	FItemInventoryState ItemInventoryState;
 
-	TSubclassOf<class AActor> ItemInHandsClass;
+	FItemInfo ItemInHandsInfo;
 };

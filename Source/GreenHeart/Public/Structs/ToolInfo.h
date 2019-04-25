@@ -12,6 +12,9 @@ struct FToolInfo
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	TSubclassOf<class ATool> Class;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UTexture2D* Thumbnail;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	int32 Level;
 };

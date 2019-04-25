@@ -59,7 +59,6 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	bool bIsSingleUse = false;
 
-private:
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	EToolType ToolType;
 
@@ -70,7 +69,11 @@ private:
 	UAnimMontage* UseMontage;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	class UTexture2D* Thumbnail;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	int32 MaxCharge = 0;
 
+private:
 	int32 CurrentCharge = 0;
 };

@@ -13,4 +13,6 @@ struct FItemInfo
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	TSubclassOf<class AActor> Class;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UTexture2D* Thumbnail;
 };
