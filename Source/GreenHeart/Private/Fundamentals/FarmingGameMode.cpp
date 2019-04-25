@@ -9,6 +9,7 @@
 #include "Fundamentals/FarmingGameState.h"
 #include "Actors/Managers/ManagerBase.h"
 #include "Actors/Others/FarmerSpawnPoint.h"
+#include "Widgets/GameHUDWidget.h"
 
 AActor* AFarmingGameMode::ChoosePlayerStart_Implementation(AController* Player)
 {
@@ -29,6 +30,21 @@ AActor* AFarmingGameMode::ChoosePlayerStart_Implementation(AController* Player)
 		}
 	}
 	return nullptr;
+}
+
+void AFarmingGameMode::BeginPlay()
+{
+	Super::BeginPlay();
+	AFarmingGameMode::CreateHUD();
+}
+
+void AFarmingGameMode::CreateHUD()
+{
+	GameHUD = CreateWidget<UGameHUDWidget>(GetWorld(), GameHUDClass);
+	if (GameHUD)
+	{
+		GameHUD->AddToViewport(1);
+	}
 }
 
 void AFarmingGameMode::StartPlay()
@@ -53,16 +69,18 @@ void AFarmingGameMode::InitializeManagers()
 
 void AFarmingGameMode::InitializeClock()
 {
-	if (GameState)
+	if (GameState && GameHUD)
 	{
 		ClockInfo = GameState->GetClockInfo();
 		GetWorldTimerManager().SetTimer(ClockTimer, this, &AFarmingGameMode::UpdateClock, ClockMinuteTick, true, ClockMinuteTick);
+		GameHUD->UpdateClock(ClockInfo);
 	}
 }
 
 void AFarmingGameMode::UpdateClock()
 {
 	ClockInfo.AddMinutes(1);
+	GameHUD->UpdateClock(ClockInfo);
 }
 
 void AFarmingGameMode::EndPlay(const EEndPlayReason::Type EndPlayReason)

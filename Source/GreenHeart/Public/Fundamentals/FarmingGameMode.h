@@ -8,6 +8,7 @@
 #include "FarmingGameMode.generated.h"
 
 class AFarmingGameState;
+class UGameHUDWidget;
 
 UCLASS()
 class GREENHEART_API AFarmingGameMode : public AGameModeBase
@@ -15,15 +16,22 @@ class GREENHEART_API AFarmingGameMode : public AGameModeBase
 	GENERATED_BODY()
 	
 protected:
+	virtual AActor* ChoosePlayerStart_Implementation(AController* Player) override;
+
+	virtual void BeginPlay() override;
+
 	virtual void StartPlay() override;
 
 	void EndPlay(const EEndPlayReason::Type EndPlayReason);
+
+	UPROPERTY(EditDefaultsOnly, Category = "Setup|UMG")
+	TSubclassOf<UGameHUDWidget> GameHUDClass;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	float ClockMinuteTick = 1.0f;
 
 private:
-	virtual AActor* ChoosePlayerStart_Implementation(AController* Player) override;
+	void CreateHUD();
 
 	void InitializeManagers();
 
@@ -32,6 +40,8 @@ private:
 	void UpdateClock();
 
 	AFarmingGameState* GameState;
+
+	UGameHUDWidget* GameHUD;
 
 	FTimerHandle ClockTimer;
 
