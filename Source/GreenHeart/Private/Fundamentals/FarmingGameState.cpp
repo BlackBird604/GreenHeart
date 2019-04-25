@@ -110,6 +110,11 @@ void AFarmingGameState::AddResource(EResourceType ResourceType, int32 Amount)
 	int32 CurrentAmount = GetResourceAmount(ResourceType);
 	int32 NewAmount = CurrentAmount + Amount;
 	SetResourceAmount(ResourceType, NewAmount);
+
+	if (ResourceType == EResourceType::Money)
+	{
+		OnMoneyChanged.Broadcast();
+	}
 }
 
 void AFarmingGameState::RemoveResource(EResourceType ResourceType, int32 Amount)

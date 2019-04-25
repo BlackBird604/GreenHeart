@@ -25,6 +25,7 @@
 #include "Interfaces/ItemInteractable.h"
 #include "Interfaces/Consumable.h"
 #include "Fundamentals/FarmingGameInstance.h"
+#include "Fundamentals/FarmingGameMode.h"
 
 
 AFarmer::AFarmer()
@@ -95,6 +96,8 @@ void AFarmer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	InputComponent->BindAction("Interact", IE_Pressed, this, &AFarmer::OnInteractPressed);
 	InputComponent->BindAction("NextItem", IE_Pressed, this, &AFarmer::OnNextItemPressed);
 	InputComponent->BindAction("Eat", IE_Pressed, this, &AFarmer::OnEatPressed);
+
+	InputComponent->BindAction("ToggleInventory", IE_Pressed, this, &AFarmer::OnToggleInventory);
 }
 
 void AFarmer::Tick(float DeltaTime)
@@ -177,6 +180,12 @@ void AFarmer::UpdateRotation()
 			break;
 		}
 	}
+}
+
+void AFarmer::ClearMovementInput()
+{
+	MovementInputs.Empty();
+	SetSprint(false);
 }
 
 bool AFarmer::IsMontagePlaying()
@@ -277,6 +286,14 @@ void AFarmer::OnEatPressed()
 	{
 		Energy += Consumable->GetEnergyPoints();
 		DestroyItemInHands();
+	}
+}
+
+void AFarmer::OnToggleInventory()
+{
+	if (AFarmingGameMode* GameMode = GetWorld()->GetAuthGameMode<AFarmingGameMode>())
+	{
+		GameMode->TogglePlayerInventory();
 	}
 }
 
@@ -543,8 +560,7 @@ void AFarmer::StartAutomaticMovement()
 {
 	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	DisableInput(PlayerController);
-	MovementInputs.Empty();
-	SetSprint(false);
+	ClearMovementInput();
 	MoveToNextPoint();
 }
 

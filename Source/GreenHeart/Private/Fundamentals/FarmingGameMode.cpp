@@ -4,12 +4,15 @@
 #include "Engine/World.h"
 #include "Kismet/GameplayStatics.h"
 #include "TimerManager.h"
+#include "GameFramework/PlayerController.h"
 
 #include "Fundamentals/FarmingGameInstance.h"
 #include "Fundamentals/FarmingGameState.h"
 #include "Actors/Managers/ManagerBase.h"
 #include "Actors/Others/FarmerSpawnPoint.h"
 #include "Widgets/GameHUDWidget.h"
+#include "Widgets/PlayerInventoryWidget.h"
+#include "Characters/Farmer.h"
 
 AActor* AFarmingGameMode::ChoosePlayerStart_Implementation(AController* Player)
 {
@@ -50,7 +53,13 @@ void AFarmingGameMode::CreateHUD()
 void AFarmingGameMode::StartPlay()
 {
 	Super::StartPlay();
+	PlayerController = GetWorld()->GetFirstPlayerController();
+	PlayerCharacter = Cast<AFarmer>(UGameplayStatics::GetPlayerCharacter(this, 0));
 	GameState = GetWorld()->GetGameState<AFarmingGameState>();
+	if (GameState)
+	{
+		GameState->OnMoneyChanged.AddDynamic(this, &AFarmingGameMode::UpdateMoney);
+	}
 
 	InitializeManagers();
 	InitializeClockWidget();
@@ -75,8 +84,7 @@ void AFarmingGameMode::InitializeClockWidget()
 		GetWorldTimerManager().SetTimer(ClockTimer, this, &AFarmingGameMode::UpdateClock, ClockMinuteTick, true, ClockMinuteTick);
 		GameHUD->UpdateClock(ClockInfo);
 
-		int32 CurrentMoneyAmount = GameState->GetResourceAmount(EResourceType::Money);
-		GameHUD->UpdateMoney(CurrentMoneyAmount);
+		UpdateMoney();
 	}
 }
 
@@ -86,13 +94,28 @@ void AFarmingGameMode::UpdateClock()
 	GameHUD->UpdateClock(ClockInfo);
 }
 
-void AFarmingGameMode::AddMoney(int32 Amount)
+void AFarmingGameMode::UpdateMoney()
 {
 	if (GameState && GameHUD)
 	{
-		GameState->AddResource(EResourceType::Money, Amount);
 		int32 CurrentMoneyAmount = GameState->GetResourceAmount(EResourceType::Money);
 		GameHUD->UpdateMoney(CurrentMoneyAmount);
+	}
+}
+
+void AFarmingGameMode::TogglePlayerInventory()
+{
+	if (!PlayerController)
+	{
+		return;
+	}
+
+	PlayerInventoryWidget = CreateWidget<UPlayerInventoryWidget>(GetWorld(), PlayerInventoryWidgetClass);
+	if (PlayerInventoryWidget)
+	{
+		PlayerInventoryWidget->AddToViewport(2);
+		PlayerController->SetInputMode(FInputModeGameAndUI());
+		PlayerCharacter->ClearMovementInput();
 	}
 }
 

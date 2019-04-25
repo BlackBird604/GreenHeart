@@ -35,6 +35,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "AnimNotifies")
 	void OnUseToolEnd();
 
+	void ClearMovementInput();
+
 	void AutomaticMoveTo(TArray<FVector> TargetLocations);
 
 	void AutomaticMoveTo(FVector TargetLocation);
@@ -67,6 +69,8 @@ protected:
 	void OnInteractPressed();
 	void OnNextItemPressed();
 	void OnEatPressed();
+
+	void OnToggleInventory();
 
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	USpringArmComponent* SpringArm;

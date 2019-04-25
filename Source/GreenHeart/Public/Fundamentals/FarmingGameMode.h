@@ -9,14 +9,14 @@
 
 class AFarmingGameState;
 class UGameHUDWidget;
+class UPlayerInventoryWidget;
+class APlayerController;
+class AFarmer;
 
 UCLASS()
 class GREENHEART_API AFarmingGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
-	
-public:
-	void AddMoney(int32 Amount);
 
 protected:
 	virtual AActor* ChoosePlayerStart_Implementation(AController* Player) override;
@@ -27,8 +27,15 @@ protected:
 
 	void EndPlay(const EEndPlayReason::Type EndPlayReason);
 
+public:
+	void TogglePlayerInventory();
+
+protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Setup|UMG")
 	TSubclassOf<UGameHUDWidget> GameHUDClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Setup|UMG")
+	TSubclassOf<UPlayerInventoryWidget> PlayerInventoryWidgetClass;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	float ClockMinuteTick = 1.0f;
@@ -42,9 +49,18 @@ private:
 
 	void UpdateClock();
 
+	UFUNCTION()
+	void UpdateMoney();
+
 	AFarmingGameState* GameState;
 
+	APlayerController* PlayerController;
+
+	AFarmer* PlayerCharacter;
+
 	UGameHUDWidget* GameHUD;
+
+	UPlayerInventoryWidget* PlayerInventoryWidget;
 
 	FTimerHandle ClockTimer;
 

@@ -8,6 +8,8 @@
 #include "FarmingGameState.generated.h"
 
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnMoneyChangedSignature);
+
 UCLASS()
 class GREENHEART_API AFarmingGameState : public AGameStateBase
 {
@@ -19,6 +21,8 @@ protected:
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 public:
+	FOnMoneyChangedSignature OnMoneyChanged;
+
 	void AddCow();
 
 	int32 GetCowAmount();
