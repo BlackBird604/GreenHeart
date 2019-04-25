@@ -18,3 +18,12 @@ void UClockWidget::SetClockText(const FClockInfo& NewClockInfo)
 		MinuteText->SetText(NewMinuteText);
 	}
 }
+
+void UClockWidget::SetMoneyText(int32 NewAmount)
+{
+	if (MoneyText)
+	{
+		FText NewMoneyText = FText::AsNumber(NewAmount);
+		MoneyText->SetText(NewMoneyText);
+	}
+}

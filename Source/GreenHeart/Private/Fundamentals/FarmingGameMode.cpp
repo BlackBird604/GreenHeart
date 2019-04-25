@@ -53,7 +53,7 @@ void AFarmingGameMode::StartPlay()
 	GameState = GetWorld()->GetGameState<AFarmingGameState>();
 
 	InitializeManagers();
-	InitializeClock();
+	InitializeClockWidget();
 }
 
 void AFarmingGameMode::InitializeManagers()
@@ -67,13 +67,16 @@ void AFarmingGameMode::InitializeManagers()
 	}
 }
 
-void AFarmingGameMode::InitializeClock()
+void AFarmingGameMode::InitializeClockWidget()
 {
 	if (GameState && GameHUD)
 	{
 		ClockInfo = GameState->GetClockInfo();
 		GetWorldTimerManager().SetTimer(ClockTimer, this, &AFarmingGameMode::UpdateClock, ClockMinuteTick, true, ClockMinuteTick);
 		GameHUD->UpdateClock(ClockInfo);
+
+		int32 CurrentMoneyAmount = GameState->GetResourceAmount(EResourceType::Money);
+		GameHUD->UpdateMoney(CurrentMoneyAmount);
 	}
 }
 
@@ -81,6 +84,16 @@ void AFarmingGameMode::UpdateClock()
 {
 	ClockInfo.AddMinutes(1);
 	GameHUD->UpdateClock(ClockInfo);
+}
+
+void AFarmingGameMode::AddMoney(int32 Amount)
+{
+	if (GameState && GameHUD)
+	{
+		GameState->AddResource(EResourceType::Money, Amount);
+		int32 CurrentMoneyAmount = GameState->GetResourceAmount(EResourceType::Money);
+		GameHUD->UpdateMoney(CurrentMoneyAmount);
+	}
 }
 
 void AFarmingGameMode::EndPlay(const EEndPlayReason::Type EndPlayReason)

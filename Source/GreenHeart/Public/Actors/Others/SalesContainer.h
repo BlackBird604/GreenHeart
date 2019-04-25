@@ -28,9 +28,6 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	USkeletalMeshComponent* ContainerMesh;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Setup")
-	EResourceType ResourceType;
-
 	UFUNCTION()
 	void OnBoxBeginOverlap(UPrimitiveComponent* OverlappedComp, 
 		AActor* OtherActor, UPrimitiveComponent* OtherComp, 

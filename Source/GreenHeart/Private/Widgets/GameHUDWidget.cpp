@@ -10,3 +10,11 @@ void UGameHUDWidget::UpdateClock(const FClockInfo& ClockInfo)
 		ClockWidget->SetClockText(ClockInfo);
 	}
 }
+
+void UGameHUDWidget::UpdateMoney(const int32 NewAmount)
+{
+	if (ClockWidget)
+	{
+		ClockWidget->SetMoneyText(NewAmount);
+	}
+}

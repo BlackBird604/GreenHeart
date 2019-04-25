@@ -6,7 +6,7 @@
 #include "Kismet/GameplayStatics.h"
 
 #include "Interfaces/Sellable.h"
-#include "Fundamentals/FarmingGameState.h"
+#include "Fundamentals/FarmingGameMode.h"
 
 ASalesContainer::ASalesContainer()
 {
@@ -34,10 +34,10 @@ void ASalesContainer::OnBoxBeginOverlap(UPrimitiveComponent* OverlappedComp,
 {
 	if (ISellable* Sellable = Cast<ISellable>(OtherActor))
 	{
-		if (AFarmingGameState* GameState = GetWorld()->GetGameState<AFarmingGameState>())
+		if (AFarmingGameMode* GameMode = GetWorld()->GetAuthGameMode<AFarmingGameMode>())
 		{
 			int32 SellPrice = Sellable->GetPrice();
-			GameState->AddResource(ResourceType, SellPrice);
+			GameMode->AddMoney(SellPrice);
 		}
 		OtherActor->Destroy();
 	}

@@ -15,6 +15,9 @@ class GREENHEART_API AFarmingGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
 	
+public:
+	void AddMoney(int32 Amount);
+
 protected:
 	virtual AActor* ChoosePlayerStart_Implementation(AController* Player) override;
 
@@ -35,7 +38,7 @@ private:
 
 	void InitializeManagers();
 
-	void InitializeClock();
+	void InitializeClockWidget();
 
 	void UpdateClock();
 

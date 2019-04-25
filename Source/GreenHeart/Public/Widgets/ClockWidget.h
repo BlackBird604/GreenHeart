@@ -18,12 +18,17 @@ class GREENHEART_API UClockWidget : public UUserWidget
 public:
 	void SetClockText(const FClockInfo& NewClockInfo);
 
+	void SetMoneyText(int32 NewAmount);
+
 protected:
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* HourText;
 
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* MinuteText;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* MoneyText;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	int32 DisplayedMinuteIncrements = 1;
