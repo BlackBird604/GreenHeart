@@ -9,9 +9,17 @@ struct FClockInfo
 {
 	GENERATED_USTRUCT_BODY()
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	int32 Hour;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	int32 Minute;
+
+	FClockInfo(int32 NewHour = 0, int32 NewMinute = 0)
+	{
+		Hour = NewHour;
+		Minute = NewMinute;
+	}
 
 	void AddMinutes(int32 Amount)
 	{

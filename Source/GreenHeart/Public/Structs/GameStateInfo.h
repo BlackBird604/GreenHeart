@@ -22,6 +22,6 @@ struct FGameStateInfo
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	TMap<EResourceType, FResourceInfo> ResourceInfos;
 
-	UPROPERTY()
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	FClockInfo ClockInfo;
 };

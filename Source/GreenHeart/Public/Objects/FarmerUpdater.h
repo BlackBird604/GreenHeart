@@ -28,4 +28,10 @@ private:
 
 	const int32 EnergyAfterHighFatigue = 100;
 
+	const FClockInfo NormalClockInfo = FClockInfo(8, 0);
+
+	const FClockInfo ClockInfoAfterFatigue = FClockInfo(10, 0);
+
+	const FClockInfo ClockInfoAfterHighFatigue = FClockInfo(12, 0);
+
 };
