@@ -11,7 +11,7 @@ class UUniformGridPanel;
 class UInventoryItemSlotWidget;
 class UInventoryToolSlotWidget;
 class UDescriptionWidget;
-
+class AFarmer;
 
 UCLASS()
 class GREENHEART_API UPlayerInventoryWidget : public UUserWidget
@@ -19,7 +19,9 @@ class GREENHEART_API UPlayerInventoryWidget : public UUserWidget
 	GENERATED_BODY()
 	
 public:
-	void PopulateSlots(const FFarmerState& FarmerState);
+	virtual bool Initialize() override;
+
+	void PopulateSlots(AFarmer* Farmer);
 
 protected:
 	UPROPERTY(meta = (BindWidget))
@@ -51,16 +53,37 @@ private:
 
 	void PopulateItemSlots(const FItemInfo& ItemInHands, const TArray<FItemInfo>& ToolInfos);
 
-	void BindHoverFuntions(UInventoryToolSlotWidget* ToolSlotWidget);
+	void CreateSlotBindings(UInventoryToolSlotWidget* ToolSlotWidget);
 
-	void BindHoverFuntions(UInventoryItemSlotWidget* ItemSlotWidget);
-
-	UFUNCTION()
-	void OnToolSlotHovered(const FToolInfo& ToolInfo);
+	void CreateSlotBindings(UInventoryItemSlotWidget* ItemSlotWidget);
 
 	UFUNCTION()
-	void OnItemSlotHovered(const FItemInfo& ToolInfo);
+	void OnToolSlotClicked(UInventorySlotWidget* ClickedSlot);
+
+	UFUNCTION()
+	void OnItemSlotClicked(UInventorySlotWidget* ClickedSlot);
+
+	UFUNCTION()
+	void OnToolSlotHovered(UInventorySlotWidget* HoveredSlot);
+
+	UFUNCTION()
+	void OnItemSlotHovered(UInventorySlotWidget* HoveredSlot);
 
 	UFUNCTION()
 	void OnSlotUnhovered();
+
+	UFUNCTION()
+	void CloseWidget();
+
+	void UpdatePlayerInventory();
+
+	void RestoreGame();
+
+	TArray<UInventoryToolSlotWidget*> ToolSlots;
+
+	TArray<UInventoryItemSlotWidget*> ItemSlots;
+
+	UInventorySlotWidget* ActiveSlot = nullptr;
+
+	AFarmer* PlayerRef;
 };

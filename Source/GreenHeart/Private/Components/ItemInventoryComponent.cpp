@@ -97,3 +97,12 @@ AActor* UItemInventoryComponent::SpawnItem(FItemInfo ItemInfo)
 	SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	return GetWorld()->SpawnActor<AActor>(ItemInfo.Class, SpawnInfo);
 }
+
+void UItemInventoryComponent::Update(TArray<FItemInfo> NewItemInfos)
+{
+	int32 ItemsToUpdate = FMath::Min(NewItemInfos.Num(), ItemInfos.Num());
+	for (int32 i = 0; i < ItemsToUpdate; i++)
+	{
+		ItemInfos[i] = NewItemInfos[i];
+	}
+}

@@ -310,6 +310,26 @@ void AFarmer::OnToggleInventory()
 	}
 }
 
+void AFarmer::UpdateToolInventory(TArray<FToolInfo> NewToolInfos)
+{
+	ToolInventory->Update(NewToolInfos);
+	if (CurrentTool)
+	{
+		CurrentTool->Destroy();
+	}
+	CurrentTool = SpawnTool();
+	if (CurrentTool && GetMesh())
+	{
+		CurrentTool->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, FName("ToolSocket"));
+	}
+}
+
+void AFarmer::UpdateItemInventory(FItemInfo NewItemInHands, TArray<FItemInfo> NewItemInfos)
+{
+	RestoreItemInHands(NewItemInHands.Class);
+	ItemInventory->Update(NewItemInfos);
+}
+
 void AFarmer::UpdateChargePose()
 {
 	if (!CurrentTool)
@@ -485,6 +505,7 @@ void AFarmer::RestoreItemInHands(TSubclassOf<AActor> ItemClass)
 {
 	if (!ItemClass)
 	{
+		DestroyItemInHands();
 		return;
 	}
 	FActorSpawnParameters SpawnInfo;
@@ -503,7 +524,10 @@ void AFarmer::AttachActorToItemSocket(AActor* Item)
 
 void AFarmer::DestroyItemInHands()
 {
-	ItemInHands->Destroy();
+	if (ItemInHands)
+	{
+		ItemInHands->Destroy();
+	}
 	ItemInHands = nullptr;
 }
 

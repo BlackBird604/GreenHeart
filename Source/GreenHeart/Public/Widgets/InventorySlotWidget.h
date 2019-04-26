@@ -9,8 +9,11 @@
 
 class UButton;
 class UImage;
+class UInventorySlotWidget;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnUnhoveredSignature);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSlotClickedSignature, UInventorySlotWidget*, ClickedSlot);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSlotHoveredSignature, UInventorySlotWidget*, HoveredSlot);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSlotUnhoveredSignature);
 
 UCLASS()
 class GREENHEART_API UInventorySlotWidget : public UUserWidget
@@ -21,7 +24,11 @@ protected:
 	bool Initialize();
 
 public:
-	FOnUnhoveredSignature OnUnhovered;
+	FOnSlotClickedSignature OnClicked;
+
+	FOnSlotHoveredSignature OnHovered;
+
+	FOnSlotUnhoveredSignature OnUnhovered;
 
 protected:
 	void SetThumbnail(UTexture2D* NewTexture);
@@ -34,7 +41,15 @@ protected:
 
 private:
 	UFUNCTION()
+	void OnButtonClicked();
+
+	UFUNCTION()
+	void OnButtonHovered();
+
+	UFUNCTION()
 	void OnButtonUnhovered();
+
+	int32 ID;
 
 };
 

@@ -118,7 +118,7 @@ void AFarmingGameMode::TogglePlayerInventory()
 		PlayerController->SetInputMode(FInputModeGameAndUI());
 		PlayerController->bShowMouseCursor = true;
 		PlayerCharacter->ClearMovementInput();
-		PlayerInventoryWidget->PopulateSlots(PlayerCharacter->GetCurrentState());
+		PlayerInventoryWidget->PopulateSlots(PlayerCharacter);
 	}
 }
 
@@ -126,4 +126,13 @@ void AFarmingGameMode::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	Super::EndPlay(EndPlayReason);
 	GameState->SetClockInfo(ClockInfo);
+}
+
+void AFarmingGameMode::RestoreGame()
+{
+	if (PlayerController)
+	{
+		PlayerController->SetInputMode(FInputModeGameOnly());
+		PlayerController->bShowMouseCursor = false;
+	}
 }

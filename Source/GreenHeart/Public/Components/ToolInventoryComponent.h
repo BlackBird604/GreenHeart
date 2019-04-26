@@ -31,6 +31,8 @@ public:
 
 	void RemoveCurrentTool();
 
+	void Update(TArray<FToolInfo> NewToolInfos);
+
 private:
 	void RestoreSize(int32 Level);
 

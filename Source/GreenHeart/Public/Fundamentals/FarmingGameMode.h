@@ -30,6 +30,8 @@ protected:
 public:
 	void TogglePlayerInventory();
 
+	void RestoreGame();
+
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Setup|UMG")
 	TSubclassOf<UGameHUDWidget> GameHUDClass;

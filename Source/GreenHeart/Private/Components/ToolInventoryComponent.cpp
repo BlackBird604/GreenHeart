@@ -81,3 +81,12 @@ void UToolInventoryComponent::RemoveCurrentTool()
 	}
 }
 
+void UToolInventoryComponent::Update(TArray<FToolInfo> NewToolInfos)
+{
+	int32 ToolsToUpdate = FMath::Min(NewToolInfos.Num(), ToolInfos.Num());
+	for (int32 i = 0; i < ToolsToUpdate; i++)
+	{
+		ToolInfos[i] = NewToolInfos[i];
+	}
+}
+

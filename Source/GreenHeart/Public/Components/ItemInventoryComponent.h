@@ -30,6 +30,8 @@ public:
 
 	AActor* TakeOut();
 
+	void Update(TArray<FItemInfo> NewItemInfos);
+
 private:
 	AActor* SpawnItem(FItemInfo ItemInfo);
 

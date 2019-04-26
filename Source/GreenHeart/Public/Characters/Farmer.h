@@ -43,6 +43,10 @@ public:
 
 	FFarmerState GetCurrentState();
 
+	void UpdateToolInventory(TArray<FToolInfo> NewToolInfos);
+
+	void UpdateItemInventory(FItemInfo NewItemInHands, TArray<FItemInfo> NewItemInfos);
+
 protected:
 	UFUNCTION(BlueprintImplementableEvent)
 	void PlayPickupTimeline();

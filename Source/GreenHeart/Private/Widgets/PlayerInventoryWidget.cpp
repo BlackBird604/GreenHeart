@@ -7,9 +7,22 @@
 #include "Widgets/InventoryToolSlotWidget.h"
 #include "Widgets/InventoryItemSlotWidget.h"
 #include "Widgets/DescriptionWidget.h"
+#include "Fundamentals/FarmingGameMode.h"
+#include "Characters/Farmer.h"
 
-void UPlayerInventoryWidget::PopulateSlots(const FFarmerState& FarmerState)
+bool UPlayerInventoryWidget::Initialize()
 {
+	bool b = Super::Initialize();
+	FOnInputAction Callback;
+	Callback.BindUFunction(this, FName("CloseWidget"));
+	ListenForInputAction("ToggleInventory", EInputEvent::IE_Pressed, false, Callback);
+	return b;
+}
+
+void UPlayerInventoryWidget::PopulateSlots(AFarmer* Farmer)
+{
+	PlayerRef = Farmer;
+	FFarmerState FarmerState = Farmer->GetCurrentState();
 	const TArray<FToolInfo>& ToolInfos = FarmerState.ToolInventoryState.ToolInfos;
 	const TArray<FItemInfo>& ItemInfos = FarmerState.ItemInventoryState.ItemInfos;
 	const FItemInfo& ItemInHands = FarmerState.ItemInHandsInfo;
@@ -26,13 +39,14 @@ void UPlayerInventoryWidget::PopulateToolSlots(const TArray<FToolInfo>& ToolInfo
 	}
 
 	CurrentToolSlot->SetToolInfo(ToolInfos[0]);
-	BindHoverFuntions(CurrentToolSlot);
+	CreateSlotBindings(CurrentToolSlot);
 
 	for (int i = 1; i < ToolInfos.Num(); i++)
 	{
 		UInventoryToolSlotWidget* InventoryToolSlot = CreateWidget<UInventoryToolSlotWidget>(this, ToolSlotClass);
 		InventoryToolSlot->SetToolInfo(ToolInfos[i]);
-		BindHoverFuntions(InventoryToolSlot);
+		CreateSlotBindings(InventoryToolSlot);
+		ToolSlots.Add(InventoryToolSlot);
 
 		ToolGrid->AddChild(InventoryToolSlot);
 		if (UUniformGridSlot* GridSlot = Cast<UUniformGridSlot>(InventoryToolSlot->Slot))
@@ -51,13 +65,14 @@ void UPlayerInventoryWidget::PopulateItemSlots(const FItemInfo& ItemInHands, con
 	}
 
 	CurrentItemSlot->SetItemInfo(ItemInHands);
-	BindHoverFuntions(CurrentItemSlot);
+	CreateSlotBindings(CurrentItemSlot);
 
 	for (int i = 0; i < ItemInfos.Num(); i++)
 	{
 		UInventoryItemSlotWidget* InventoryItemSlot = CreateWidget<UInventoryItemSlotWidget>(this, ItemSlotClass);
 		InventoryItemSlot->SetItemInfo(ItemInfos[i]);
-		BindHoverFuntions(InventoryItemSlot);
+		CreateSlotBindings(InventoryItemSlot);
+		ItemSlots.Add(InventoryItemSlot);
 
 		ItemGrid->AddChild(InventoryItemSlot);
 		if (UUniformGridSlot* GridSlot = Cast<UUniformGridSlot>(InventoryItemSlot->Slot))
@@ -68,31 +83,104 @@ void UPlayerInventoryWidget::PopulateItemSlots(const FItemInfo& ItemInHands, con
 	}
 }
 
-void UPlayerInventoryWidget::BindHoverFuntions(UInventoryToolSlotWidget* ToolSlotWidget)
+
+void UPlayerInventoryWidget::CreateSlotBindings(UInventoryToolSlotWidget* ToolSlotWidget)
 {
+	ToolSlotWidget->OnClicked.AddDynamic(this, &UPlayerInventoryWidget::OnToolSlotClicked);
 	ToolSlotWidget->OnHovered.AddDynamic(this, &UPlayerInventoryWidget::OnToolSlotHovered);
 	ToolSlotWidget->OnUnhovered.AddDynamic(this, &UPlayerInventoryWidget::OnSlotUnhovered);
 }
 
-void UPlayerInventoryWidget::BindHoverFuntions(UInventoryItemSlotWidget* ItemSlotWidget)
+void UPlayerInventoryWidget::CreateSlotBindings(UInventoryItemSlotWidget* ItemSlotWidget)
 {
+	ItemSlotWidget->OnClicked.AddDynamic(this, &UPlayerInventoryWidget::OnItemSlotClicked);
 	ItemSlotWidget->OnHovered.AddDynamic(this, &UPlayerInventoryWidget::OnItemSlotHovered);
 	ItemSlotWidget->OnUnhovered.AddDynamic(this, &UPlayerInventoryWidget::OnSlotUnhovered);
 }
 
-void UPlayerInventoryWidget::OnToolSlotHovered(const FToolInfo& ToolInfo)
+void UPlayerInventoryWidget::OnToolSlotClicked(UInventorySlotWidget* ClickedSlot)
 {
-	if (DescriptionBox)
+	if (!ActiveSlot)
 	{
-		DescriptionBox->SetText(ToolInfo.Name, ToolInfo.Description);
+		ActiveSlot = ClickedSlot;
+	}
+	else
+	{
+		if (UInventoryToolSlotWidget* ActiveToolSlot = Cast<UInventoryToolSlotWidget>(ActiveSlot))
+		{
+			if (UInventoryToolSlotWidget* ClickedToolSlot = Cast<UInventoryToolSlotWidget>(ClickedSlot))
+			{
+				FToolInfo ActiveToolInfo = ActiveToolSlot->GetToolInfo();
+				FToolInfo ClickedToolInfo = ClickedToolSlot->GetToolInfo();
+				ActiveToolSlot->SetToolInfo(ClickedToolInfo);
+				ClickedToolSlot->SetToolInfo(ActiveToolInfo);
+				OnToolSlotHovered(ClickedSlot);
+				ActiveSlot = nullptr;
+			}
+			else
+			{
+				ActiveSlot = ClickedSlot;
+			}
+		}
+		else
+		{
+			ActiveSlot = ClickedSlot;
+		}
 	}
 }
 
-void UPlayerInventoryWidget::OnItemSlotHovered(const FItemInfo& ItemInfo)
+void UPlayerInventoryWidget::OnItemSlotClicked(UInventorySlotWidget* ClickedSlot)
 {
-	if (DescriptionBox)
+	if (!ActiveSlot)
 	{
-		DescriptionBox->SetText(ItemInfo.Name, ItemInfo.Description);
+		ActiveSlot = ClickedSlot;
+	}
+	else
+	{
+		if (UInventoryItemSlotWidget* ActiveItemSlot = Cast<UInventoryItemSlotWidget>(ActiveSlot))
+		{
+			if (UInventoryItemSlotWidget* ClickedItemSlot = Cast<UInventoryItemSlotWidget>(ClickedSlot))
+			{
+				FItemInfo ActiveItemInfo = ActiveItemSlot->GetItemInfo();
+				FItemInfo ClickedItemInfo = ClickedItemSlot->GetItemInfo();
+				ActiveItemSlot->SetItemInfo(ClickedItemInfo);
+				ClickedItemSlot->SetItemInfo(ActiveItemInfo);
+				OnItemSlotHovered(ClickedSlot);
+				ActiveSlot = nullptr;
+			}
+			else
+			{
+				ActiveSlot = ClickedSlot;
+			}
+		}
+		else
+		{
+			ActiveSlot = ClickedSlot;
+		}
+	}
+}
+
+void UPlayerInventoryWidget::OnToolSlotHovered(UInventorySlotWidget* HoveredSlot)
+{
+	if (UInventoryToolSlotWidget* ToolSlot = Cast<UInventoryToolSlotWidget>(HoveredSlot))
+	{
+		if (DescriptionBox)
+		{
+			FToolInfo ToolInfo = ToolSlot->GetToolInfo();
+			DescriptionBox->SetText(ToolInfo.Name, ToolInfo.Description);
+		}
+	}
+}
+
+void UPlayerInventoryWidget::OnItemSlotHovered(UInventorySlotWidget* HoveredSlot)
+{
+	if (UInventoryItemSlotWidget* ItemSlot = Cast<UInventoryItemSlotWidget>(HoveredSlot))
+	{
+		if (DescriptionBox)
+		{
+			FItemInfo ItemInfo = ItemSlot->GetItemInfo();
+			DescriptionBox->SetText(ItemInfo.Name, ItemInfo.Description);
+		}
 	}
 }
 
@@ -101,5 +189,44 @@ void UPlayerInventoryWidget::OnSlotUnhovered()
 	if (DescriptionBox)
 	{
 		DescriptionBox->ClearText();
+	}
+}
+
+void UPlayerInventoryWidget::CloseWidget()
+{
+	UpdatePlayerInventory();
+	RestoreGame();
+	RemoveFromParent();
+}
+
+void UPlayerInventoryWidget::UpdatePlayerInventory()
+{
+	if (!PlayerRef)
+	{
+		return;
+	}
+
+	TArray<FToolInfo> ToolInfos;
+	ToolInfos.Add(CurrentToolSlot->GetToolInfo());
+	for (UInventoryToolSlotWidget* ToolSlot : ToolSlots)
+	{
+		ToolInfos.Add(ToolSlot->GetToolInfo());
+	}
+
+	TArray<FItemInfo> ItemInfos;
+	for (UInventoryItemSlotWidget* ItemSlot : ItemSlots)
+	{
+		ItemInfos.Add(ItemSlot->GetItemInfo());
+	}
+
+	PlayerRef->UpdateToolInventory(ToolInfos);
+	PlayerRef->UpdateItemInventory(CurrentItemSlot->GetItemInfo(), ItemInfos);
+}
+
+void UPlayerInventoryWidget::RestoreGame()
+{
+	if (AFarmingGameMode* GameMode = Cast<AFarmingGameMode>(GetWorld()->GetAuthGameMode()))
+	{
+		GameMode->RestoreGame();
 	}
 }
