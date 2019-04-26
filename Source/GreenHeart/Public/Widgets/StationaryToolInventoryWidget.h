@@ -39,7 +39,7 @@ protected:
 	TSubclassOf<UInventoryToolSlotWidget> ToolSlotClass;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
-	int32 SlotsInRow = 1;
+	int32 SlotsInRow = 4;
 
 private:
 	void PopulateEquippedToolSlots(const TArray<FToolInfo>& ToolInfos);

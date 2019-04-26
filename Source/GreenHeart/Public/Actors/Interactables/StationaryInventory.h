@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Interfaces/Interactable.h"
+#include "Enums/StationaryInventoryTypes.h"
 #include "StationaryInventory.generated.h"
 
 class UBoxComponent;
@@ -30,4 +31,7 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	UStaticMeshComponent* InventoryMesh;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	EStationaryInventoryType InventoryType;
 };

@@ -4,43 +4,36 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "Structs/FarmerState.h"
-#include "PlayerInventoryWidget.generated.h"
+#include "Structs/ItemInfo.h"
+#include "StationaryItemInventoryWidget.generated.h"
 
 class UUniformGridPanel;
 class UInventoryItemSlotWidget;
-class UInventoryToolSlotWidget;
 class UDescriptionWidget;
 class AFarmer;
 
 UCLASS()
-class GREENHEART_API UPlayerInventoryWidget : public UUserWidget
+class GREENHEART_API UStationaryItemInventoryWidget : public UUserWidget
 {
 	GENERATED_BODY()
-	
+
 public:
 	virtual bool Initialize() override;
 
-	void PopulateSlots(AFarmer* Farmer);
+	void PopulateSlots(AFarmer* Farmer, const TArray<FItemInfo>& StoredItems);
 
 protected:
-	UPROPERTY(meta = (BindWidget))
-	UInventoryToolSlotWidget* CurrentToolSlot;
-
 	UPROPERTY(meta = (BindWidget))
 	UInventoryItemSlotWidget* CurrentItemSlot;
 
 	UPROPERTY(meta = (BindWidget))
-	UUniformGridPanel* ToolGrid;
+	UUniformGridPanel* EquippedItemGrid;
 
 	UPROPERTY(meta = (BindWidget))
-	UUniformGridPanel* ItemGrid;
+	UUniformGridPanel* StoredItemGrid;
 
 	UPROPERTY(meta = (BindWidget))
 	UDescriptionWidget* DescriptionBox;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Setup")
-	TSubclassOf<UInventoryToolSlotWidget> ToolSlotClass;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	TSubclassOf<UInventoryItemSlotWidget> ItemSlotClass;
@@ -49,22 +42,16 @@ protected:
 	int32 SlotsInRow = 4;
 
 private:
-	void PopulateToolSlots(const TArray<FToolInfo>& ToolInfos);
+	void PopulateEquippedItemSlots(const FItemInfo& ItemInHands, const TArray<FItemInfo>& ItemInfos);
 
-	void PopulateItemSlots(const FItemInfo& ItemInHands, const TArray<FItemInfo>& ToolInfos);
+	void PopulateStoredItemSlots(const TArray<FItemInfo>& ItemInfos);
 
-	void CreateSlotBindings(UInventoryToolSlotWidget* ToolSlotWidget);
+	UInventoryItemSlotWidget* GenerateItemSlot(UUniformGridPanel* GridPanel, const FItemInfo& ItemInfo, int32 Index);
 
 	void CreateSlotBindings(UInventoryItemSlotWidget* ItemSlotWidget);
 
 	UFUNCTION()
-	void OnToolSlotClicked(UInventorySlotWidget* ClickedSlot);
-
-	UFUNCTION()
 	void OnItemSlotClicked(UInventorySlotWidget* ClickedSlot);
-
-	UFUNCTION()
-	void OnToolSlotHovered(UInventorySlotWidget* HoveredSlot);
 
 	UFUNCTION()
 	void OnItemSlotHovered(UInventorySlotWidget* HoveredSlot);
@@ -77,13 +64,16 @@ private:
 
 	void UpdatePlayerInventory();
 
+	void UpdateStationaryInventory();
+
 	void RestoreGame();
 
-	TArray<UInventoryToolSlotWidget*> ToolSlots;
+	TArray<UInventoryItemSlotWidget*> EquippedItemSlots;
 
-	TArray<UInventoryItemSlotWidget*> ItemSlots;
+	TArray<UInventoryItemSlotWidget*> StoredItemSlots;
 
 	UInventorySlotWidget* ActiveSlot = nullptr;
 
 	AFarmer* PlayerRef;
+
 };

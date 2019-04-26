@@ -17,6 +17,7 @@ class UStationaryInventoryWidget;
 class APlayerController;
 class AFarmer;
 class UStationaryToolInventoryWidget;
+class UStationaryItemInventoryWidget;
 
 UCLASS()
 class GREENHEART_API AFarmingGameMode : public AGameModeBase
@@ -52,6 +53,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup|UMG")
 	TSubclassOf<UStationaryToolInventoryWidget> StationaryToolInventoryWidgetClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Setup|UMG")
+	TSubclassOf<UStationaryItemInventoryWidget> StationaryItemInventoryWidgetClass;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	float ClockMinuteTick = 1.0f;

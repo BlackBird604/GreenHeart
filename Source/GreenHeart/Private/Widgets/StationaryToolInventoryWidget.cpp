@@ -15,7 +15,7 @@ bool UStationaryToolInventoryWidget::Initialize()
 	bStopAction = true;
 	FOnInputAction Callback;
 	Callback.BindUFunction(this, FName("CloseWidget"));
-	ListenForInputAction("ToggleInventory", EInputEvent::IE_Pressed, false, Callback);
+	ListenForInputAction("Interact", EInputEvent::IE_Pressed, false, Callback);
 	return b;
 }
 

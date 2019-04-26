@@ -30,6 +30,7 @@ void UFarmingGameInstance::StartNewGame()
 	GameStateInfo.CowStates.Add(FAnimalState()); // TEMPORARY
 	GameStateInfo.ChickenStates.Add(FAnimalState()); // TEMPORARY
 	GameStateInfo.StationaryTools.SetNum(8);
+	GameStateInfo.StationaryItems.SetNum(8);
 }
 
 FFarmerState UFarmingGameInstance::GetInitialFarmerState()

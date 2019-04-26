@@ -14,6 +14,7 @@
 #include "Widgets/PlayerInventoryWidget.h"
 #include "Characters/Farmer.h"
 #include "Widgets/StationaryToolInventoryWidget.h"
+#include "Widgets/StationaryItemInventoryWidget.h"
 
 AActor* AFarmingGameMode::ChoosePlayerStart_Implementation(AController* Player)
 {
@@ -150,13 +151,13 @@ void AFarmingGameMode::OpenStationaryToolInventory()
 
 void AFarmingGameMode::OpenStationaryItemInventory()
 {
-	//UStationaryToolInventoryWidget* StationaryInventoryWidget = CreateWidget<UStationaryToolInventoryWidget>(GetWorld(), StationaryToolInventoryWidgetClass);
-	//if (StationaryInventoryWidget)
-	//{
-	//	StationaryInventoryWidget->AddToViewport(2);
-	//	EnableUIMode();
-	//	StationaryInventoryWidget->PopulateSlots(PlayerCharacter, GameState->GetStationaryItemInventoryInfo());
-	//}
+	UStationaryItemInventoryWidget* StationaryInventoryWidget = CreateWidget<UStationaryItemInventoryWidget>(GetWorld(), StationaryItemInventoryWidgetClass);
+	if (StationaryInventoryWidget)
+	{
+		StationaryInventoryWidget->AddToViewport(2);
+		EnableUIMode();
+		StationaryInventoryWidget->PopulateSlots(PlayerCharacter, GameState->GetStationaryItemInventoryInfo());
+	}
 }
 
 void AFarmingGameMode::EndPlay(const EEndPlayReason::Type EndPlayReason)

@@ -326,6 +326,7 @@ void AFarmer::UpdateToolInventory(TArray<FToolInfo> NewToolInfos)
 
 void AFarmer::UpdateItemInventory(FItemInfo NewItemInHands, TArray<FItemInfo> NewItemInfos)
 {
+	DestroyItemInHands();
 	RestoreItemInHands(NewItemInHands.Class);
 	ItemInventory->Update(NewItemInfos);
 }
@@ -505,7 +506,6 @@ void AFarmer::RestoreItemInHands(TSubclassOf<AActor> ItemClass)
 {
 	if (!ItemClass)
 	{
-		DestroyItemInHands();
 		return;
 	}
 	FActorSpawnParameters SpawnInfo;
