@@ -15,6 +15,7 @@
 #include "Characters/Farmer.h"
 #include "Widgets/StationaryToolInventoryWidget.h"
 #include "Widgets/StationaryItemInventoryWidget.h"
+#include "Widgets/BlacksmithWidget.h"
 
 AActor* AFarmingGameMode::ChoosePlayerStart_Implementation(AController* Player)
 {
@@ -157,6 +158,21 @@ void AFarmingGameMode::OpenStationaryItemInventory()
 		StationaryInventoryWidget->AddToViewport(2);
 		EnableUIMode();
 		StationaryInventoryWidget->PopulateSlots(PlayerCharacter, GameState->GetStationaryItemInventoryInfo());
+	}
+}
+
+void AFarmingGameMode::OpenBlacksmith()
+{
+	if (!GameState)
+	{
+		return;
+	}
+	UBlacksmithWidget* BlacksmithWidget = CreateWidget<UBlacksmithWidget>(GetWorld(), BlacksmithWidgetClass);
+	if (BlacksmithWidget)
+	{
+		BlacksmithWidget->AddToViewport(2);
+		EnableUIMode();
+		BlacksmithWidget->SetupWidget(GameState->GetBlacksmithInfo());
 	}
 }
 

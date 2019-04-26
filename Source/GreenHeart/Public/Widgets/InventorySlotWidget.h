@@ -48,8 +48,5 @@ private:
 
 	UFUNCTION()
 	void OnButtonUnhovered();
-
-	int32 ID;
-
 };
 

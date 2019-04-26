@@ -58,6 +58,10 @@ public:
 
 	TArray<FItemInfo> GetStationaryItemInventoryInfo();
 
+	void SetBlacksmithInfo(const FBlacksmithInfo& NewInfo);
+
+	FBlacksmithInfo GetBlacksmithInfo();
+
 private:
 	void SetResourceAmount(EResourceType ResourceType, int32 Amount);
 
@@ -72,4 +76,6 @@ private:
 	TArray<FToolInfo> StationaryTools;
 
 	TArray<FItemInfo> StationaryItems;
+
+	FBlacksmithInfo BlacksmithInfo;
 };

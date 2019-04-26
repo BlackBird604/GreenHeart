@@ -18,6 +18,7 @@ class APlayerController;
 class AFarmer;
 class UStationaryToolInventoryWidget;
 class UStationaryItemInventoryWidget;
+class UBlacksmithWidget;
 
 UCLASS()
 class GREENHEART_API AFarmingGameMode : public AGameModeBase
@@ -38,6 +39,8 @@ public:
 
 	void OpenStationaryInventory(EStationaryInventoryType InventoryType);
 
+	void OpenBlacksmith();
+
 	void RestoreGame();
 
 	void UpdateStationaryInventory(const TArray<FToolInfo>& NewToolInfos);
@@ -56,6 +59,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup|UMG")
 	TSubclassOf<UStationaryItemInventoryWidget> StationaryItemInventoryWidgetClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Setup|UMG")
+	TSubclassOf<UBlacksmithWidget> BlacksmithWidgetClass;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	float ClockMinuteTick = 1.0f;

@@ -8,6 +8,7 @@
 #include "Structs/AnimalState.h"
 #include "Structs/ToolInfo.h"
 #include "Structs/ItemInfo.h"
+#include "Structs/BlacksmithInfo.h"
 #include "GameStateInfo.generated.h"
 
 USTRUCT(BlueprintType)
@@ -32,4 +33,7 @@ struct FGameStateInfo
 
 	UPROPERTY()
 	TArray<FItemInfo> StationaryItems;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	FBlacksmithInfo BlacksmithInfo;
 };
