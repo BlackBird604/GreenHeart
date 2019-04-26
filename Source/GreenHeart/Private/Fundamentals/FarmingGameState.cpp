@@ -13,6 +13,8 @@ void AFarmingGameState::BeginPlay()
 		ChickenStates = SavedState.ChickenStates;
 		ResourceInfos = SavedState.ResourceInfos;
 		ClockInfo = SavedState.ClockInfo;
+		StationaryTools = SavedState.StationaryTools;
+		StationaryItems = SavedState.StationaryItems;
 	}
 }
 
@@ -21,11 +23,13 @@ void AFarmingGameState::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	Super::EndPlay(EndPlayReason);
 	if (UFarmingGameInstance* GameInstance = Cast<UFarmingGameInstance>(GetGameInstance()))
 	{
-		FGameStateInfo GameStateInfo = FGameStateInfo();
+		FGameStateInfo GameStateInfo;
 		GameStateInfo.CowStates = CowStates;
 		GameStateInfo.ChickenStates = ChickenStates;
 		GameStateInfo.ResourceInfos = ResourceInfos;
 		GameStateInfo.ClockInfo = ClockInfo;
+		GameStateInfo.StationaryTools = StationaryTools;
+		GameStateInfo.StationaryItems = StationaryItems;
 		GameInstance->SetGameStateInfo(GameStateInfo);
 	}
 }
@@ -137,4 +141,24 @@ FClockInfo AFarmingGameState::GetClockInfo()
 void AFarmingGameState::SetClockInfo(FClockInfo NewClockInfo)
 {
 	ClockInfo = NewClockInfo;
+}
+
+void AFarmingGameState::SetStationaryInventoryInfo(const TArray<FToolInfo>& NewToolInfos)
+{
+	StationaryTools = NewToolInfos;
+}
+
+void AFarmingGameState::SetStationaryInventoryInfo(const TArray<FItemInfo>& NewItemInfos)
+{
+	StationaryItems = NewItemInfos;
+}
+
+TArray<FToolInfo> AFarmingGameState::GetStationaryToolInventoryInfo()
+{
+	return StationaryTools;
+}
+
+TArray<FItemInfo> AFarmingGameState::GetStationaryItemInventoryInfo()
+{
+	return StationaryItems;
 }

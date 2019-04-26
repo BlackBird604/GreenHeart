@@ -6,6 +6,8 @@
 #include "Structs/ClockInfo.h"
 #include "Structs/ResourceInfo.h"
 #include "Structs/AnimalState.h"
+#include "Structs/ToolInfo.h"
+#include "Structs/ItemInfo.h"
 #include "GameStateInfo.generated.h"
 
 USTRUCT(BlueprintType)
@@ -24,4 +26,10 @@ struct FGameStateInfo
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	FClockInfo ClockInfo;
+
+	UPROPERTY()
+	TArray<FToolInfo> StationaryTools;
+
+	UPROPERTY()
+	TArray<FItemInfo> StationaryItems;
 };

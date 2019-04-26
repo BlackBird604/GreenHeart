@@ -5,18 +5,18 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Interfaces/Interactable.h"
-#include "Bed.generated.h"
+#include "StationaryInventory.generated.h"
 
 class UBoxComponent;
 class UStaticMeshComponent;
 
 UCLASS()
-class GREENHEART_API ABed : public AActor, public IInteractable
+class GREENHEART_API AStationaryInventory : public AActor, public IInteractable
 {
 	GENERATED_BODY()
 	
 public:	
-	ABed();
+	AStationaryInventory();
 
 protected:
 	virtual void BeginPlay() override;
@@ -29,6 +29,5 @@ protected:
 	UBoxComponent* CollisionBox;
 
 	UPROPERTY(VisibleAnywhere, Category = "Components")
-	UStaticMeshComponent* BedMesh;
-
+	UStaticMeshComponent* InventoryMesh;
 };

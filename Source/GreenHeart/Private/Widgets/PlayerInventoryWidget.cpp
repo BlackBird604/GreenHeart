@@ -13,6 +13,7 @@
 bool UPlayerInventoryWidget::Initialize()
 {
 	bool b = Super::Initialize();
+	bStopAction = true;
 	FOnInputAction Callback;
 	Callback.BindUFunction(this, FName("CloseWidget"));
 	ListenForInputAction("ToggleInventory", EInputEvent::IE_Pressed, false, Callback);

@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/GameStateBase.h"
 #include "Structs/GameStateInfo.h"
+#include "Enums/StationaryInventoryTypes.h"
 #include "FarmingGameState.generated.h"
 
 
@@ -49,6 +50,14 @@ public:
 
 	void  SetClockInfo(FClockInfo NewClockInfo);
 
+	void SetStationaryInventoryInfo(const TArray<FToolInfo>& NewToolInfos);
+
+	void SetStationaryInventoryInfo(const TArray<FItemInfo>& NewItemInfos);
+
+	TArray<FToolInfo> GetStationaryToolInventoryInfo();
+
+	TArray<FItemInfo> GetStationaryItemInventoryInfo();
+
 private:
 	void SetResourceAmount(EResourceType ResourceType, int32 Amount);
 
@@ -59,4 +68,8 @@ private:
 	TMap<EResourceType, FResourceInfo> ResourceInfos;
 
 	FClockInfo ClockInfo;
+
+	TArray<FToolInfo> StationaryTools;
+
+	TArray<FItemInfo> StationaryItems;
 };

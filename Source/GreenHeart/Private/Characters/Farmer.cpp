@@ -306,7 +306,7 @@ void AFarmer::OnToggleInventory()
 {
 	if (AFarmingGameMode* GameMode = GetWorld()->GetAuthGameMode<AFarmingGameMode>())
 	{
-		GameMode->TogglePlayerInventory();
+		GameMode->OpenPlayerInventory();
 	}
 }
 

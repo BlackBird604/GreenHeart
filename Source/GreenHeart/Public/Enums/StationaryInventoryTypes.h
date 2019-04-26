@@ -3,13 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "MovementDirections.generated.h"
+#include "StationaryInventoryTypes.generated.h"
 
 UENUM(BlueprintType)
-enum class EMovementDirection : uint8
+enum class EStationaryInventoryType : uint8
 {
-	Up,
-	Down,
-	Left,
-	Right
+	Tool,
+	Item
 };

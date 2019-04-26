@@ -13,6 +13,7 @@
 #include "Widgets/GameHUDWidget.h"
 #include "Widgets/PlayerInventoryWidget.h"
 #include "Characters/Farmer.h"
+#include "Widgets/StationaryToolInventoryWidget.h"
 
 AActor* AFarmingGameMode::ChoosePlayerStart_Implementation(AController* Player)
 {
@@ -103,7 +104,7 @@ void AFarmingGameMode::UpdateMoney()
 	}
 }
 
-void AFarmingGameMode::TogglePlayerInventory()
+void AFarmingGameMode::OpenPlayerInventory()
 {
 	if (!PlayerController || !PlayerCharacter)
 	{
@@ -111,15 +112,51 @@ void AFarmingGameMode::TogglePlayerInventory()
 	}
 
 
-	PlayerInventoryWidget = CreateWidget<UPlayerInventoryWidget>(GetWorld(), PlayerInventoryWidgetClass);
+	UPlayerInventoryWidget* PlayerInventoryWidget = CreateWidget<UPlayerInventoryWidget>(GetWorld(), PlayerInventoryWidgetClass);
 	if (PlayerInventoryWidget)
 	{
 		PlayerInventoryWidget->AddToViewport(2);
-		PlayerController->SetInputMode(FInputModeGameAndUI());
-		PlayerController->bShowMouseCursor = true;
-		PlayerCharacter->ClearMovementInput();
+		EnableUIMode();
 		PlayerInventoryWidget->PopulateSlots(PlayerCharacter);
 	}
+}
+
+void AFarmingGameMode::OpenStationaryInventory(EStationaryInventoryType InventoryType)
+{
+	if (GameState)
+	{
+		switch (InventoryType)
+		{
+		case EStationaryInventoryType::Tool:
+			OpenStationaryToolInventory();
+			break;
+		case EStationaryInventoryType::Item:
+			OpenStationaryItemInventory();
+			break;
+		}
+	}
+}
+
+void AFarmingGameMode::OpenStationaryToolInventory()
+{
+	UStationaryToolInventoryWidget* StationaryInventoryWidget = CreateWidget<UStationaryToolInventoryWidget>(GetWorld(), StationaryToolInventoryWidgetClass);
+	if (StationaryInventoryWidget)
+	{
+		StationaryInventoryWidget->AddToViewport(2);
+		EnableUIMode();
+		StationaryInventoryWidget->PopulateSlots(PlayerCharacter, GameState->GetStationaryToolInventoryInfo());
+	}
+}
+
+void AFarmingGameMode::OpenStationaryItemInventory()
+{
+	//UStationaryToolInventoryWidget* StationaryInventoryWidget = CreateWidget<UStationaryToolInventoryWidget>(GetWorld(), StationaryToolInventoryWidgetClass);
+	//if (StationaryInventoryWidget)
+	//{
+	//	StationaryInventoryWidget->AddToViewport(2);
+	//	EnableUIMode();
+	//	StationaryInventoryWidget->PopulateSlots(PlayerCharacter, GameState->GetStationaryItemInventoryInfo());
+	//}
 }
 
 void AFarmingGameMode::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -130,9 +167,43 @@ void AFarmingGameMode::EndPlay(const EEndPlayReason::Type EndPlayReason)
 
 void AFarmingGameMode::RestoreGame()
 {
+	DisableUIMode();
+}
+
+void AFarmingGameMode::EnableUIMode()
+{
+	if (PlayerController)
+	{
+		PlayerController->SetInputMode(FInputModeGameAndUI());
+		PlayerController->bShowMouseCursor = true;
+	}
+	if (PlayerCharacter)
+	{
+		PlayerCharacter->ClearMovementInput();
+	}
+}
+
+void AFarmingGameMode::DisableUIMode()
+{
 	if (PlayerController)
 	{
 		PlayerController->SetInputMode(FInputModeGameOnly());
 		PlayerController->bShowMouseCursor = false;
+	}
+}
+
+void AFarmingGameMode::UpdateStationaryInventory(const TArray<FToolInfo>& NewToolInfos)
+{
+	if (GameState)
+	{
+		GameState->SetStationaryInventoryInfo(NewToolInfos);
+	}
+}
+
+void AFarmingGameMode::UpdateStationaryInventory(const TArray<FItemInfo>& NewItemInfos)
+{
+	if (GameState)
+	{
+		GameState->SetStationaryInventoryInfo(NewItemInfos);
 	}
 }

@@ -5,13 +5,18 @@
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
 #include "Structs/ClockInfo.h"
+#include "Structs/ToolInfo.h"
+#include "Structs/ItemInfo.h"
+#include "Enums/StationaryInventoryTypes.h"
 #include "FarmingGameMode.generated.h"
 
 class AFarmingGameState;
 class UGameHUDWidget;
 class UPlayerInventoryWidget;
+class UStationaryInventoryWidget;
 class APlayerController;
 class AFarmer;
+class UStationaryToolInventoryWidget;
 
 UCLASS()
 class GREENHEART_API AFarmingGameMode : public AGameModeBase
@@ -28,9 +33,15 @@ protected:
 	void EndPlay(const EEndPlayReason::Type EndPlayReason);
 
 public:
-	void TogglePlayerInventory();
+	void OpenPlayerInventory();
+
+	void OpenStationaryInventory(EStationaryInventoryType InventoryType);
 
 	void RestoreGame();
+
+	void UpdateStationaryInventory(const TArray<FToolInfo>& NewToolInfos);
+
+	void UpdateStationaryInventory(const TArray<FItemInfo>& NewItemInfos);
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Setup|UMG")
@@ -38,6 +49,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup|UMG")
 	TSubclassOf<UPlayerInventoryWidget> PlayerInventoryWidgetClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Setup|UMG")
+	TSubclassOf<UStationaryToolInventoryWidget> StationaryToolInventoryWidgetClass;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	float ClockMinuteTick = 1.0f;
@@ -51,6 +65,14 @@ private:
 
 	void UpdateClock();
 
+	void OpenStationaryToolInventory();
+
+	void OpenStationaryItemInventory();
+
+	void EnableUIMode();
+
+	void DisableUIMode();
+
 	UFUNCTION()
 	void UpdateMoney();
 
@@ -61,8 +83,6 @@ private:
 	AFarmer* PlayerCharacter;
 
 	UGameHUDWidget* GameHUD;
-
-	UPlayerInventoryWidget* PlayerInventoryWidget;
 
 	FTimerHandle ClockTimer;
 
