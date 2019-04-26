@@ -17,10 +17,10 @@ struct FToolInfo
 	FText Description = FText();
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-	TSubclassOf<class ATool> Class;
+	TSubclassOf<class ATool> Class = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	class UTexture2D* Thumbnail;
+	class UTexture2D* Thumbnail = nullptr;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	int32 Level;

@@ -82,7 +82,10 @@ void UPlayerInventoryWidget::BindHoverFuntions(UInventoryItemSlotWidget* ItemSlo
 
 void UPlayerInventoryWidget::OnToolSlotHovered(const FToolInfo& ToolInfo)
 {
-
+	if (DescriptionBox)
+	{
+		DescriptionBox->SetText(ToolInfo.Name, ToolInfo.Description);
+	}
 }
 
 void UPlayerInventoryWidget::OnItemSlotHovered(const FItemInfo& ItemInfo)

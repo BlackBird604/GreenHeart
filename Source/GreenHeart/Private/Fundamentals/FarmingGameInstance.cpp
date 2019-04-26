@@ -6,6 +6,7 @@
 #include "Objects/FarmUpdater.h"
 #include "Objects/AnimalUpdater.h"
 #include "Objects/FarmerUpdater.h"
+#include "Actors/Tools/Tool.h"
 
 void UFarmingGameInstance::Init()
 {
@@ -23,11 +24,29 @@ void UFarmingGameInstance::StartNewGame()
 		FObstacleState* ObstacleState = (FObstacleState*)ObstacleStateRow.Value;
 		ObstacleStates.Add(*ObstacleState);
 	}
-	FarmerState = InitialFarmerState;
+	FarmerState = GetInitialFarmerState();
 	GameStateInfo = InitialGameStateInfo;
 
 	GameStateInfo.CowStates.Add(FAnimalState()); // TEMPORARY
 	GameStateInfo.ChickenStates.Add(FAnimalState()); // TEMPORARY
+}
+
+FFarmerState UFarmingGameInstance::GetInitialFarmerState()
+{
+	FarmerState.Energy = InitialFarmerEnergy;
+	for (TSubclassOf<ATool> ToolClass : InitialToolClasses)
+	{
+		if (ToolClass)
+		{
+			ATool* DefaultTool = Cast<ATool>(ToolClass->GetDefaultObject());
+			FarmerState.ToolInventoryState.ToolInfos.Add(DefaultTool->GetToolInfo());
+		}
+		else
+		{
+			FarmerState.ToolInventoryState.ToolInfos.Add(FToolInfo());
+		}
+	}
+	return FarmerState;
 }
 
 void UFarmingGameInstance::ApplyNextDayChanges()

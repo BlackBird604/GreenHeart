@@ -17,8 +17,9 @@ struct FItemInfo
 	FText Description = FText();
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-	TSubclassOf<class AActor> Class;
+	TSubclassOf<class AActor> Class = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	class UTexture2D* Thumbnail;
+	class UTexture2D* Thumbnail = nullptr;
 };
+

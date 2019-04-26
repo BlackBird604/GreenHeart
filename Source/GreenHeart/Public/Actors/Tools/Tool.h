@@ -37,11 +37,15 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
+	void Restore(const FToolInfo& SavedToolInfo);
+
 	int32 Use(const AActor* User);
 
 	bool Charge();
 
 	EToolType GetType() const;
+
+	FToolInfo GetToolInfo();
 
 	UAnimMontage* GetChargeMontage();
 
@@ -69,10 +73,7 @@ protected:
 	UAnimMontage* UseMontage;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
-	class UTexture2D* Thumbnail;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Setup")
-	int32 MaxCharge = 0;
+	FToolInfo ToolInfo;
 
 private:
 	int32 CurrentCharge = 0;

@@ -28,9 +28,14 @@ void ATool::BeginPlay()
 	
 }
 
+void ATool::Restore(const FToolInfo& SavedToolInfo)
+{
+	ToolInfo = SavedToolInfo;
+}
+
 bool ATool::Charge()
 {
-	if (CurrentCharge < MaxCharge && CurrentCharge < ChargeInfo.Num())
+	if (CurrentCharge < ToolInfo.Level && CurrentCharge < ChargeInfo.Num())
 	{
 		CurrentCharge++;
 		return true;
@@ -90,6 +95,11 @@ int32 ATool::Use(const AActor* User)
 EToolType ATool::GetType() const
 {
 	return ToolType;
+}
+
+FToolInfo ATool::GetToolInfo()
+{
+	return ToolInfo;
 }
 
 bool ATool::IsSingleUse()

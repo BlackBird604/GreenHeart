@@ -32,8 +32,12 @@ public:
 	void RemoveCurrentTool();
 
 private:
+	void RestoreSize(int32 Level);
+
+	void RestoreTools(const TArray<FToolInfo>& SavedToolInfos);
+
 	TArray<FToolInfo> ToolInfos;
 
-	int32 MinimumSize = 3;
+	int32 CurrentLevel;
 		
 };

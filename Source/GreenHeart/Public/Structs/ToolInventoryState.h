@@ -8,6 +8,7 @@ struct FToolInventoryState
 {
 	GENERATED_USTRUCT_BODY()
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	TArray<FToolInfo> ToolInfos;
+
+	int32 Level = 1;
 };

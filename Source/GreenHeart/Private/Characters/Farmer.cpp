@@ -473,7 +473,12 @@ ATool* AFarmer::SpawnTool()
 	}
 	FActorSpawnParameters SpawnInfo;
 	SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-	return GetWorld()->SpawnActor<ATool>(ToolInfo.Class, SpawnInfo);
+	ATool* SpawnedTool = GetWorld()->SpawnActor<ATool>(ToolInfo.Class, SpawnInfo);
+	if (SpawnedTool)
+	{
+		SpawnedTool->Restore(ToolInfo);
+	}
+	return SpawnedTool;
 }
 
 void AFarmer::RestoreItemInHands(TSubclassOf<AActor> ItemClass)
