@@ -47,6 +47,10 @@ public:
 
 	void UpdateItemInventory(FItemInfo NewItemInHands, TArray<FItemInfo> NewItemInfos);
 
+	bool IsToolInventoryFull();
+
+	void AddTool(const FToolInfo& NewToolInfo);
+
 protected:
 	UFUNCTION(BlueprintImplementableEvent)
 	void PlayPickupTimeline();
@@ -129,6 +133,8 @@ private:
 	void DestroyItemInHands();
 
 	void MoveToNextPoint();
+
+	void UpdateCurrentTool();
 
 	UPROPERTY()
 	ATool* CurrentTool;

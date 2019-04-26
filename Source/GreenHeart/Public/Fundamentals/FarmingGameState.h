@@ -62,6 +62,8 @@ public:
 
 	FBlacksmithInfo GetBlacksmithInfo();
 
+	void AddToolToStationaryInventory(const FToolInfo& NewTool);
+
 private:
 	void SetResourceAmount(EResourceType ResourceType, int32 Amount);
 

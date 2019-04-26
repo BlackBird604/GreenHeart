@@ -57,11 +57,6 @@ void UToolInventoryComponent::NextTool()
 	}
 
 	FToolInfo CurrentTool = ToolInfos[0];
-
-	if (CurrentTool.Class)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Current tool: %s"), *CurrentTool.Class->GetDisplayNameText().ToString()) // TEMPORARY
-	}
 }
 
 FToolInfo UToolInventoryComponent::GetCurrentTool()
@@ -90,3 +85,26 @@ void UToolInventoryComponent::Update(TArray<FToolInfo> NewToolInfos)
 	}
 }
 
+bool UToolInventoryComponent::HasPlace()
+{
+	for (FToolInfo ToolInfo : ToolInfos)
+	{
+		if (!ToolInfo.Class)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+void UToolInventoryComponent::InsertNewTool(const FToolInfo& NewToolInfo)
+{
+	for (int32 i = 0; i < ToolInfos.Num(); i++)
+	{
+		if (!ToolInfos[i].Class)
+		{
+			ToolInfos[i] = NewToolInfo;
+			return;
+		}
+	}
+}

@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Runtime/CoreUObject/Public/Templates/SubclassOf.h"
+#include "Templates/SubclassOf.h"
 #include "ToolInfo.generated.h"
 
 USTRUCT(BlueprintType)

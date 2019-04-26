@@ -2,6 +2,7 @@
 
 #include "FarmingGameState.h"
 #include "Fundamentals/FarmingGameInstance.h"
+#include "Actors/Tools/Tool.h"
 
 void AFarmingGameState::BeginPlay()
 {
@@ -173,4 +174,16 @@ void AFarmingGameState::SetBlacksmithInfo(const FBlacksmithInfo& NewInfo)
 FBlacksmithInfo AFarmingGameState::GetBlacksmithInfo()
 {
 	return BlacksmithInfo;
+}
+
+void AFarmingGameState::AddToolToStationaryInventory(const FToolInfo& NewTool)
+{
+	for (int32 i = 0; i < StationaryTools.Num(); i++)
+	{
+		if (!StationaryTools[i].Class)
+		{
+			StationaryTools[i] = NewTool;
+			return;
+		}
+	}
 }

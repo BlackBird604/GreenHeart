@@ -224,3 +224,52 @@ void AFarmingGameMode::UpdateStationaryInventory(const TArray<FItemInfo>& NewIte
 		GameState->SetStationaryInventoryInfo(NewItemInfos);
 	}
 }
+
+bool AFarmingGameMode::HasResource(EResourceType ResourceType, int32 Amount)
+{
+	if (GameState)
+	{
+		int32 OwnedAmount = GameState->GetResourceAmount(ResourceType);
+		return OwnedAmount >= Amount;
+	}
+	return false;
+}
+
+void AFarmingGameMode::AddResource(EResourceType ResourceType, int32 Amount)
+{
+	if (GameState)
+	{
+		GameState->AddResource(ResourceType, Amount);
+	}
+}
+
+void AFarmingGameMode::RemoveResource(EResourceType ResourceType, int32 Amount)
+{
+	if (GameState)
+	{
+		GameState->RemoveResource(ResourceType, Amount);
+	}
+}
+
+void AFarmingGameMode::AddNewTool(const FToolInfo& NewToolInfo)
+{
+	if (GameState && PlayerCharacter)
+	{
+		if (PlayerCharacter->IsToolInventoryFull())
+		{
+			GameState->AddToolToStationaryInventory(NewToolInfo);
+		}
+		else
+		{
+			PlayerCharacter->AddTool(NewToolInfo);
+		}
+	}
+}
+
+void AFarmingGameMode::UpdateBlacksmithInfo(const FBlacksmithInfo NewInfo)
+{
+	if (GameState)
+	{
+		GameState->SetBlacksmithInfo(NewInfo);
+	}
+}

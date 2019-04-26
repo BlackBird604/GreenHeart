@@ -313,6 +313,11 @@ void AFarmer::OnToggleInventory()
 void AFarmer::UpdateToolInventory(TArray<FToolInfo> NewToolInfos)
 {
 	ToolInventory->Update(NewToolInfos);
+	UpdateCurrentTool();
+}
+
+void AFarmer::UpdateCurrentTool()
+{
 	if (CurrentTool)
 	{
 		CurrentTool->Destroy();
@@ -611,4 +616,15 @@ void AFarmer::EndAutomaticMovement()
 	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	EnableInput(PlayerController);
 	bIsAutomaticMovement = false;
+}
+
+bool AFarmer::IsToolInventoryFull()
+{
+	return !ToolInventory->HasPlace();
+}
+
+void AFarmer::AddTool(const FToolInfo& NewToolInfo)
+{
+	ToolInventory->InsertNewTool(NewToolInfo);
+	UpdateCurrentTool();
 }

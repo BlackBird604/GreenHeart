@@ -7,7 +7,9 @@
 #include "Structs/ClockInfo.h"
 #include "Structs/ToolInfo.h"
 #include "Structs/ItemInfo.h"
+#include "Structs/BlacksmithInfo.h"
 #include "Enums/StationaryInventoryTypes.h"
+#include "Enums/ResourceTypes.h"
 #include "FarmingGameMode.generated.h"
 
 class AFarmingGameState;
@@ -46,6 +48,16 @@ public:
 	void UpdateStationaryInventory(const TArray<FToolInfo>& NewToolInfos);
 
 	void UpdateStationaryInventory(const TArray<FItemInfo>& NewItemInfos);
+
+	bool HasResource(EResourceType ResourceType, int32 Amount);
+
+	void AddResource(EResourceType ResourceType, int32 Amount);
+
+	void RemoveResource(EResourceType ResourceType, int32 Amount);
+
+	void AddNewTool(const FToolInfo& NewToolInfo);
+
+	void UpdateBlacksmithInfo(const FBlacksmithInfo NewInfo);
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Setup|UMG")

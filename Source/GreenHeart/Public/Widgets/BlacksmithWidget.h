@@ -53,6 +53,13 @@ private:
 	void CreateOfferBindings(UToolOfferWidget* OfferWidget);
 	
 	UFUNCTION()
+	void CloseWidget();
+
+	void SaveBlacksmithInfo();
+
+	void RestoreGame();
+
+	UFUNCTION()
 	void OnOfferClicked(UToolOfferWidget* ClickedOffer);
 
 	UFUNCTION()
@@ -60,4 +67,10 @@ private:
 
 	UFUNCTION()
 	void OnOfferCanceled();
+
+	TArray<UToolOfferWidget*> OfferWidgets;
+
+	UToolOfferWidget* ActiveOffer = nullptr;
+
+	FBlacksmithInfo BlacksmithInfo;
 };

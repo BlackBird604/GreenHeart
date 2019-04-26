@@ -33,6 +33,10 @@ public:
 
 	void Update(TArray<FToolInfo> NewToolInfos);
 
+	bool HasPlace();
+
+	void InsertNewTool(const FToolInfo& NewToolInfo);
+
 private:
 	void RestoreSize(int32 Level);
 

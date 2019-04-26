@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "Structs/ToolOffer.h"
+#include "Structs/ToolInfo.h"
 #include "ToolOfferWidget.generated.h"
 
 class UButton;
@@ -21,9 +22,25 @@ class GREENHEART_API UToolOfferWidget : public UUserWidget
 public:
 	virtual bool Initialize() override;
 
-	void SetOffer(const FToolOffer& NewOffer);
+	void SetOfferInfo(const FToolOffer& NewOffer);
+
+	FToolOffer GetOfferInfo();
+
+	void UpdateActivation();
+
+	void SetAvailability(bool bNewAvalable);
+
+	void Buy();
 
 	FOnOfferClickedSignature OnClicked;
+
+	FText GetOfferName();
+
+	FText GetOfferDesctiprion();
+
+	int32 GetOfferPrice();
+
+	UTexture2D* GetThumbnail();
 
 protected:
 	UPROPERTY(meta = (BindWidget))
@@ -36,7 +53,9 @@ private:
 	UFUNCTION()
 	void OnButtonClicked();
 
-	void SetThumbnail(TSubclassOf<ATool> ToolClass);
+	void SetDefaults(TSubclassOf<class ATool> ToolClass);
 
 	FToolOffer ToolOffer;
+
+	FToolInfo ToolInfo;
 };
