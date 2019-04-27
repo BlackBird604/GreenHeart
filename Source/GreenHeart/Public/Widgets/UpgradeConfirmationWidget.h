@@ -11,7 +11,7 @@ class UButton;
 class UImage;
 class UTextBlock;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnUpgradeConfirmedSignature);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnUpgradeConfirmedSignature, int32, Price);
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnUpgradeCanceledSignature);
 
@@ -64,4 +64,6 @@ private:
 	void SetLevelText(UTextBlock* TextBlock, int32 Level);
 
 	void SetUpgradePrice(int32 NewPrice);
+
+	int32 Price;
 };

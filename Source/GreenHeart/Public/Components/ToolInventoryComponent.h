@@ -37,9 +37,9 @@ public:
 
 	void InsertNewTool(const FToolInfo& NewToolInfo);
 
-private:
-	void RestoreSize(int32 Level);
+	void Upgrade();
 
+private:
 	FToolInventoryState InventoryState;
 		
 };

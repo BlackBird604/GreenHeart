@@ -16,6 +16,12 @@ struct FItemInventoryState
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	TArray<FLevelInfo> LevelInfos;
 
+
+	FItemInventoryState()
+	{
+		ItemInfos.SetNum(GetSize(Level), false);
+	}
+
 	bool CanUpgrade()
 	{
 		return LevelInfos.Num() > Level;
@@ -29,6 +35,20 @@ struct FItemInventoryState
 	FLevelInfo GetNextLevelInfo()
 	{
 		return GetLevelInfo(Level+1);
+	}
+
+	void Upgrade()
+	{
+		if (CanUpgrade())
+		{
+			Level++;
+			ItemInfos.SetNum(GetSize(Level), false);
+		}
+	}
+
+	int32 GetSize(int32 Level)
+	{
+		return FMath::Pow(2, Level + 1);
 	}
 
 private:

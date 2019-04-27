@@ -32,10 +32,10 @@ public:
 
 	void Update(TArray<FItemInfo> NewItemInfos);
 
+	void Upgrade();
+
 private:
 	AActor* SpawnItem(FItemInfo ItemInfo);
-
-	void RestoreSize(int32 Level);
 
 	FItemInventoryState InventoryState;
 };

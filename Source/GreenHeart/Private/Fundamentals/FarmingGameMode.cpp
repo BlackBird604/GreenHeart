@@ -273,3 +273,39 @@ void AFarmingGameMode::UpdateBlacksmithInfo(const FBlacksmithInfo NewInfo)
 		GameState->SetBlacksmithInfo(NewInfo);
 	}
 }
+
+void AFarmingGameMode::UpgradePlayerTool()
+{
+	if (PlayerCharacter)
+	{
+		FFarmerState FarmerState = PlayerCharacter->GetCurrentState();
+		FToolInventoryState ToolInventory = FarmerState.ToolInventoryState;
+		ToolInventory.UpdateCurrentTool();
+		PlayerCharacter->UpdateToolInventory(ToolInventory.ToolInfos);
+	}
+}
+
+void AFarmingGameMode::UpgradePlayerToolInventory()
+{
+	if (PlayerCharacter)
+	{
+		PlayerCharacter->UpgradeToolInventory();
+	}
+}
+
+void AFarmingGameMode::UpgradePlayerItemInventory()
+{
+	if (PlayerCharacter)
+	{
+		PlayerCharacter->UpgradeItemInventory();
+	}
+}
+
+FFarmerState AFarmingGameMode::GetPlayerState()
+{
+	if (PlayerCharacter)
+	{
+		return PlayerCharacter->GetCurrentState();
+	}
+	return FFarmerState();
+}

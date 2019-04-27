@@ -624,3 +624,13 @@ void AFarmer::AddTool(const FToolInfo& NewToolInfo)
 	ToolInventory->InsertNewTool(NewToolInfo);
 	UpdateCurrentTool();
 }
+
+void AFarmer::UpgradeToolInventory()
+{
+	ToolInventory->Upgrade();
+}
+
+void AFarmer::UpgradeItemInventory()
+{
+	ItemInventory->Upgrade();
+}

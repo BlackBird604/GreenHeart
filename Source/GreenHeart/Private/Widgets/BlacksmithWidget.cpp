@@ -147,6 +147,8 @@ void UBlacksmithWidget::CreateOfferBindings(UToolOfferWidget* OfferWidget)
 void UBlacksmithWidget::OnOfferClicked(UToolOfferWidget* ClickedOffer)
 {
 	ActiveOffer = ClickedOffer;
+	OfferConfirmation->SetOfferName(ActiveOffer->GetOfferName());
+	OfferConfirmation->SetOfferDescription(ActiveOffer->GetOfferDesctiprion());
 	OfferConfirmation->SetOfferPrice(ActiveOffer->GetOfferPrice());
 	OfferConfirmation->SetOfferThumbnail(ActiveOffer->GetThumbnail());
 	ShowOfferWidget();
@@ -162,10 +164,7 @@ void UBlacksmithWidget::OnOfferConfirmed()
 	ActiveOffer->SetAvailability(false);
 	ActiveOffer->Buy();
 
-	for (UToolOfferWidget* OfferWidget : OfferWidgets)
-	{
-		OfferWidget->UpdateActivation();
-	}
+	UpdateWidgetState();
 	HideOfferWidget();
 	ActiveOffer = nullptr;
 }
@@ -212,19 +211,25 @@ void UBlacksmithWidget::OnItemInventoryUpgradeClicked()
 	ShowUpgradeWidget();
 }
 
-void UBlacksmithWidget::OnUpgradeConfirmed()
+void UBlacksmithWidget::OnUpgradeConfirmed(int32 Price)
 {
-	if (ClickedUpgradeButton == UpgradeToolButton)
+	if (AFarmingGameMode* GameMode = Cast<AFarmingGameMode>(GetWorld()->GetAuthGameMode()))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Tool"));
-	}
-	else if (ClickedUpgradeButton == UpgradeToolInventoryButton)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("ToolInventory"));
-	}
-	else if (ClickedUpgradeButton == UpgradeItemInventoryButton)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("ItemInventory"));
+		if (ClickedUpgradeButton == UpgradeToolButton)
+		{
+			GameMode->UpgradePlayerTool();
+		}
+		else if (ClickedUpgradeButton == UpgradeToolInventoryButton)
+		{
+			GameMode->UpgradePlayerToolInventory();
+		}
+		else if (ClickedUpgradeButton == UpgradeItemInventoryButton)
+		{
+			GameMode->UpgradePlayerItemInventory();
+		}
+		GameMode->RemoveResource(EResourceType::Money, Price);
+		UpdateWidgetState();
+		HideUpgradeWidget();
 	}
 }
 
@@ -281,4 +286,17 @@ void UBlacksmithWidget::ShowUpgradeWidget()
 void UBlacksmithWidget::HideUpgradeWidget()
 {
 	PlayAnimation(ShowUpgradeConfirmationAnimation, 0.0f, 1, EUMGSequencePlayMode::Reverse);
+}
+
+void UBlacksmithWidget::UpdateWidgetState()
+{
+	if (AFarmingGameMode* GameMode = Cast<AFarmingGameMode>(GetWorld()->GetAuthGameMode()))
+	{
+		FarmerState = GameMode->GetPlayerState();
+		SetupUpgrades();
+		for (UToolOfferWidget* OfferWidget : OfferWidgets)
+		{
+			OfferWidget->UpdateActivation();
+		}
+	}
 }

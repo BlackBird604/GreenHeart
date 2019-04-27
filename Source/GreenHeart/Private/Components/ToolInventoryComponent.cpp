@@ -21,13 +21,6 @@ FToolInventoryState UToolInventoryComponent::GetState()
 void UToolInventoryComponent::RestoreState(FToolInventoryState SavedInventoryState)
 {
 	InventoryState = SavedInventoryState;
-	RestoreSize(InventoryState.Level);
-}
-
-void UToolInventoryComponent::RestoreSize(int32 Level)
-{
-	int32 NewSize = FMath::Pow(2, Level+1) + 1;
-	InventoryState.ToolInfos.SetNum(NewSize);
 }
 
 void UToolInventoryComponent::NextTool()
@@ -94,4 +87,9 @@ void UToolInventoryComponent::InsertNewTool(const FToolInfo& NewToolInfo)
 			return;
 		}
 	}
+}
+
+void UToolInventoryComponent::Upgrade()
+{
+	InventoryState.Upgrade();
 }

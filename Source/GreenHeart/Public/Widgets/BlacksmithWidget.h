@@ -116,10 +116,12 @@ private:
 	void OnOfferCanceled();
 
 	UFUNCTION()
-	void OnUpgradeConfirmed();
+	void OnUpgradeConfirmed(int32 Price);
 
 	UFUNCTION()
 	void OnUpgradeCanceled();
+
+	void UpdateWidgetState();
 
 	TArray<UToolOfferWidget*> OfferWidgets;
 

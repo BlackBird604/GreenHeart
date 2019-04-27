@@ -32,6 +32,7 @@ void UUpgradeConfirmationWidget::SetLevelText(UTextBlock* TextBlock, int32 Level
 
 void UUpgradeConfirmationWidget::SetUpgradePrice(int32 NewPrice)
 {
+	Price = NewPrice;
 	FString PriceString = FString::FromInt(NewPrice);
 	FText NewText = FText::FromString(PriceString + "G");
 	PriceText->SetText(NewText);
@@ -39,7 +40,7 @@ void UUpgradeConfirmationWidget::SetUpgradePrice(int32 NewPrice)
 
 void UUpgradeConfirmationWidget::OnConfirmButtonClicked()
 {
-	OnConfirm.Broadcast();
+	OnConfirm.Broadcast(Price);
 }
 
 void UUpgradeConfirmationWidget::OnCancelButtonClicked()

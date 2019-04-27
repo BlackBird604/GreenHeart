@@ -15,6 +15,12 @@ struct FToolInventoryState
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	TArray<FLevelInfo> LevelInfos;
 
+
+	FToolInventoryState()
+	{
+		ToolInfos.SetNum(GetSize(Level), false);
+	}
+
 	bool CanUpgrade()
 	{
 		return LevelInfos.Num() > Level;
@@ -37,6 +43,30 @@ struct FToolInventoryState
 			return ToolInfos[0];
 		}
 		return FToolInfo();
+	}
+
+	void UpdateCurrentTool()
+	{
+		if (ToolInfos.Num() > 0)
+		{
+			FToolInfo Tool = GetCurrentTool();
+			Tool.Upgrade();
+			ToolInfos[0] = Tool;
+		}
+	}
+
+	void Upgrade()
+	{
+		if (CanUpgrade())
+		{
+			Level++;
+			ToolInfos.SetNum(GetSize(Level), false);
+		}
+	}
+
+	int32 GetSize(int32 Level)
+	{
+		return FMath::Pow(2, Level + 1) + 1;
 	}
 
 private:

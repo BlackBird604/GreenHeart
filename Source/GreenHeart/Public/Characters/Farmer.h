@@ -51,6 +51,10 @@ public:
 
 	void AddTool(const FToolInfo& NewToolInfo);
 
+	void UpgradeToolInventory();
+
+	void UpgradeItemInventory();
+
 protected:
 	UFUNCTION(BlueprintImplementableEvent)
 	void PlayPickupTimeline();

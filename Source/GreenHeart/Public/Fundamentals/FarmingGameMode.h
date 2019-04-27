@@ -8,6 +8,7 @@
 #include "Structs/ToolInfo.h"
 #include "Structs/ItemInfo.h"
 #include "Structs/BlacksmithInfo.h"
+#include "Structs/FarmerState.h"
 #include "Enums/StationaryInventoryTypes.h"
 #include "Enums/ResourceTypes.h"
 #include "FarmingGameMode.generated.h"
@@ -58,6 +59,14 @@ public:
 	void AddNewTool(const FToolInfo& NewToolInfo);
 
 	void UpdateBlacksmithInfo(const FBlacksmithInfo NewInfo);
+
+	void UpgradePlayerTool();
+
+	void UpgradePlayerToolInventory();
+
+	void UpgradePlayerItemInventory();
+
+	FFarmerState GetPlayerState();
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Setup|UMG")

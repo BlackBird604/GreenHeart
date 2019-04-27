@@ -25,13 +25,6 @@ FItemInventoryState UItemInventoryComponent::GetState()
 void UItemInventoryComponent::RestoreState(FItemInventoryState SavedInventoryState)
 {
 	InventoryState = SavedInventoryState;
-	RestoreSize(InventoryState.Level);
-}
-
-void UItemInventoryComponent::RestoreSize(int32 Level)
-{
-	int32 NewSize = FMath::Pow(2, Level+1);
-	InventoryState.ItemInfos.SetNum(NewSize);
 }
 
 bool UItemInventoryComponent::HasPlace()
@@ -94,4 +87,9 @@ void UItemInventoryComponent::Update(TArray<FItemInfo> NewItemInfos)
 	{
 		InventoryState.ItemInfos[i] = NewItemInfos[i];
 	}
+}
+
+void UItemInventoryComponent::Upgrade()
+{
+	InventoryState.Upgrade();
 }
