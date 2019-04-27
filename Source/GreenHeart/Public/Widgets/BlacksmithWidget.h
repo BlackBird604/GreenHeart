@@ -98,7 +98,7 @@ private:
 	void RestoreGame();
 
 	UFUNCTION()
-	void OnOfferClicked(UToolOfferWidget* ClickedOffer);
+	void OnOfferClicked(UOfferWidget* ClickedOffer);
 
 	UFUNCTION()
 	void OnToolUpgradeClicked();
@@ -125,7 +125,7 @@ private:
 
 	TArray<UToolOfferWidget*> OfferWidgets;
 
-	UToolOfferWidget* ActiveOffer = nullptr;
+	UOfferWidget* ActiveOffer = nullptr;
 
 	FBlacksmithInfo BlacksmithInfo;
 

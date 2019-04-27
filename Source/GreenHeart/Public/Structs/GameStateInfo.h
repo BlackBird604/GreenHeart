@@ -9,6 +9,7 @@
 #include "Structs/ToolInfo.h"
 #include "Structs/ItemInfo.h"
 #include "Structs/BlacksmithInfo.h"
+#include "Structs/SupermarketInfo.h"
 #include "GameStateInfo.generated.h"
 
 USTRUCT(BlueprintType)
@@ -36,4 +37,7 @@ struct FGameStateInfo
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	FBlacksmithInfo BlacksmithInfo;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	FSupermarketInfo SupermarketInfo;
 };

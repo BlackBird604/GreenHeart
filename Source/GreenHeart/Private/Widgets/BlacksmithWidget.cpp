@@ -144,7 +144,7 @@ void UBlacksmithWidget::CreateOfferBindings(UToolOfferWidget* OfferWidget)
 	OfferWidget->OnClicked.AddDynamic(this, &UBlacksmithWidget::OnOfferClicked);
 }
 
-void UBlacksmithWidget::OnOfferClicked(UToolOfferWidget* ClickedOffer)
+void UBlacksmithWidget::OnOfferClicked(UOfferWidget* ClickedOffer)
 {
 	ActiveOffer = ClickedOffer;
 	OfferConfirmation->SetOfferName(ActiveOffer->GetOfferName());
@@ -161,7 +161,10 @@ void UBlacksmithWidget::OnOfferConfirmed()
 		return;
 	}
 
-	ActiveOffer->SetAvailability(false);
+	if (UToolOfferWidget* ToolOffer = Cast<UToolOfferWidget>(ActiveOffer))
+	{
+		ToolOffer->SetAvailability(false);
+	}
 	ActiveOffer->Buy();
 
 	UpdateWidgetState();

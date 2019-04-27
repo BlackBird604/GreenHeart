@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Interfaces/Interactable.h"
+#include "Enums/MerchantTypes.h"
 #include "MerchantStand.generated.h"
 
 class UBoxComponent;
@@ -30,4 +31,8 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	UStaticMeshComponent* StandMesh;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	EMerchantType MerchantType;
+
 };

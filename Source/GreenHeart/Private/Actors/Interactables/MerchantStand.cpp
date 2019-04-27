@@ -30,6 +30,15 @@ void AMerchantStand::Interact()
 {
 	if (AFarmingGameMode* GameMode = GetWorld()->GetAuthGameMode<AFarmingGameMode>())
 	{
-		GameMode->OpenBlacksmith();
+		switch (MerchantType)
+		{
+		case EMerchantType::Blacksmith:
+			GameMode->OpenBlacksmith();
+			break;
+		case EMerchantType::Supermarket:
+			GameMode->OpenSupermarket();
+			break;
+		}
+		
 	}
 }

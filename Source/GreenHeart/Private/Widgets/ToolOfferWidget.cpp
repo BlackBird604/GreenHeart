@@ -8,12 +8,6 @@
 #include "Actors/Tools/Tool.h"
 #include "Fundamentals/FarmingGameMode.h"
 
-bool UToolOfferWidget::Initialize()
-{
-	bool b = Super::Initialize();
-	Button->OnClicked.AddDynamic(this, &UToolOfferWidget::OnButtonClicked);
-	return b;
-}
 
 void UToolOfferWidget::SetOfferInfo(const FToolOffer& NewOffer)
 {
@@ -53,11 +47,7 @@ void UToolOfferWidget::UpdateActivation()
 		return;
 	}
 
-	if (AFarmingGameMode* GameMode = GetWorld()->GetAuthGameMode<AFarmingGameMode>())
-	{
-		bool HasResources = GameMode->HasResource(EResourceType::Money, OfferPrice);
-		Button->SetIsEnabled(HasResources);
-	}
+	Super::UpdateActivation();
 }
 
 void UToolOfferWidget::Buy()
@@ -67,11 +57,6 @@ void UToolOfferWidget::Buy()
 		GameMode->RemoveResource(EResourceType::Money, OfferPrice);
 		GameMode->AddNewTool(ToolInfo);
 	}
-}
-
-void UToolOfferWidget::OnButtonClicked()
-{
-	OnClicked.Broadcast(this);
 }
 
 FText UToolOfferWidget::GetOfferName()

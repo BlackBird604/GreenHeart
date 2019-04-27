@@ -3,56 +3,36 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Blueprint/UserWidget.h"
+#include "Widgets/OfferWidget.h"
 #include "Structs/ToolOffer.h"
 #include "Structs/ToolInfo.h"
 #include "ToolOfferWidget.generated.h"
 
-class UButton;
-class UImage;
-class UToolOfferWidget;
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnOfferClickedSignature, UToolOfferWidget*, ClickedOffer);
-
 UCLASS()
-class GREENHEART_API UToolOfferWidget : public UUserWidget
+class GREENHEART_API UToolOfferWidget : public UOfferWidget
 {
 	GENERATED_BODY()
 	
 public:
-	virtual bool Initialize() override;
-
 	void SetOfferInfo(const FToolOffer& NewOffer);
 
 	FToolOffer GetOfferInfo();
 
-	void UpdateActivation();
-
 	void SetAvailability(bool bNewAvalable);
 
-	void Buy();
+	virtual void UpdateActivation() override;
 
-	FOnOfferClickedSignature OnClicked;
+	virtual void Buy() override;
 
-	FText GetOfferName();
+	virtual FText GetOfferName() override;
 
-	FText GetOfferDesctiprion();
+	virtual FText GetOfferDesctiprion() override;
 
-	int32 GetOfferPrice();
+	virtual int32 GetOfferPrice() override;
 
-	UTexture2D* GetThumbnail();
-
-protected:
-	UPROPERTY(meta = (BindWidget))
-	UButton* Button;
-
-	UPROPERTY(meta = (BindWidget))
-	UImage* Thumbnail;
+	virtual UTexture2D* GetThumbnail() override;
 
 private:
-	UFUNCTION()
-	void OnButtonClicked();
-
 	void SetDefaults(TSubclassOf<class ATool> ToolClass);
 
 	FToolOffer ToolOffer;

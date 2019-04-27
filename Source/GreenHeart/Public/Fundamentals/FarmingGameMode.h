@@ -22,6 +22,7 @@ class AFarmer;
 class UStationaryToolInventoryWidget;
 class UStationaryItemInventoryWidget;
 class UBlacksmithWidget;
+class USupermarketWidget;
 
 UCLASS()
 class GREENHEART_API AFarmingGameMode : public AGameModeBase
@@ -43,6 +44,8 @@ public:
 	void OpenStationaryInventory(EStationaryInventoryType InventoryType);
 
 	void OpenBlacksmith();
+
+	void OpenSupermarket();
 
 	void RestoreGame();
 
@@ -83,6 +86,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup|UMG")
 	TSubclassOf<UBlacksmithWidget> BlacksmithWidgetClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Setup|UMG")
+	TSubclassOf<USupermarketWidget> SupermarketWidgetClass;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	float ClockMinuteTick = 1.0f;

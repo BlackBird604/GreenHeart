@@ -17,6 +17,7 @@ void AFarmingGameState::BeginPlay()
 		StationaryTools = SavedState.StationaryTools;
 		StationaryItems = SavedState.StationaryItems;
 		BlacksmithInfo = SavedState.BlacksmithInfo;
+		SupermarketInfo = SavedState.SupermarketInfo;
 	}
 }
 
@@ -33,6 +34,7 @@ void AFarmingGameState::EndPlay(const EEndPlayReason::Type EndPlayReason)
 		GameStateInfo.StationaryTools = StationaryTools;
 		GameStateInfo.StationaryItems = StationaryItems;
 		GameStateInfo.BlacksmithInfo = BlacksmithInfo;
+		GameStateInfo.SupermarketInfo = SupermarketInfo;
 		GameInstance->SetGameStateInfo(GameStateInfo);
 	}
 }
@@ -174,6 +176,11 @@ void AFarmingGameState::SetBlacksmithInfo(const FBlacksmithInfo& NewInfo)
 FBlacksmithInfo AFarmingGameState::GetBlacksmithInfo()
 {
 	return BlacksmithInfo;
+}
+
+FSupermarketInfo AFarmingGameState::GetSupermarketInfo()
+{
+	return SupermarketInfo;
 }
 
 void AFarmingGameState::AddToolToStationaryInventory(const FToolInfo& NewTool)

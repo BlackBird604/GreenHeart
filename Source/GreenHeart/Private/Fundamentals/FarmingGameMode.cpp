@@ -16,6 +16,7 @@
 #include "Widgets/StationaryToolInventoryWidget.h"
 #include "Widgets/StationaryItemInventoryWidget.h"
 #include "Widgets/BlacksmithWidget.h"
+#include "Widgets/SupermarketWidget.h"
 
 AActor* AFarmingGameMode::ChoosePlayerStart_Implementation(AController* Player)
 {
@@ -173,6 +174,21 @@ void AFarmingGameMode::OpenBlacksmith()
 		BlacksmithWidget->AddToViewport(2);
 		EnableUIMode();
 		BlacksmithWidget->SetupWidget(PlayerCharacter->GetCurrentState(), GameState->GetBlacksmithInfo());
+	}
+}
+
+void AFarmingGameMode::OpenSupermarket()
+{
+	if (!GameState)
+	{
+		return;
+	}
+	USupermarketWidget* SupermarketWidget = CreateWidget<USupermarketWidget>(GetWorld(), SupermarketWidgetClass);
+	if (SupermarketWidget)
+	{
+		SupermarketWidget->AddToViewport(2);
+		EnableUIMode();
+		SupermarketWidget->SetupWidget(GameState->GetSupermarketInfo());
 	}
 }
 

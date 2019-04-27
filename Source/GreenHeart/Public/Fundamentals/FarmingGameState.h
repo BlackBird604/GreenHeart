@@ -62,6 +62,8 @@ public:
 
 	FBlacksmithInfo GetBlacksmithInfo();
 
+	FSupermarketInfo GetSupermarketInfo();
+
 	void AddToolToStationaryInventory(const FToolInfo& NewTool);
 
 private:
@@ -80,4 +82,6 @@ private:
 	TArray<FItemInfo> StationaryItems;
 
 	FBlacksmithInfo BlacksmithInfo;
+
+	FSupermarketInfo SupermarketInfo;
 };
