@@ -41,14 +41,16 @@ void AFarmingGameState::EndPlay(const EEndPlayReason::Type EndPlayReason)
 
 void AFarmingGameState::AddCow()
 {
-	FAnimalState AnimalState = FAnimalState();
-	AnimalState.ID = CowStates.Num();
+	FAnimalState AnimalState;
+	AnimalState.ID = GetCowAmount();
 	CowStates.Add(AnimalState);
 }
 
 void AFarmingGameState::AddChcicken()
 {
-	ChickenStates.Add(FAnimalState());
+	FAnimalState AnimalState;
+	AnimalState.ID = GetChickenAmount();
+	ChickenStates.Add(AnimalState);
 }
 
 int32 AFarmingGameState::GetCowAmount()

@@ -325,3 +325,19 @@ FFarmerState AFarmingGameMode::GetPlayerState()
 	}
 	return FFarmerState();
 }
+
+void AFarmingGameMode::AddAnimal(EAnimalType AnimalType)
+{
+	if (GameState)
+	{
+		switch (AnimalType)
+		{
+		case EAnimalType::Cow:
+			GameState->AddCow();
+			break;
+		case EAnimalType::Chicken:
+			GameState->AddChcicken();
+			break;
+		}
+	}
+}

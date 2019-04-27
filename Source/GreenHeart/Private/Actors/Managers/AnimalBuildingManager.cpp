@@ -62,7 +62,19 @@ void AAnimalBuildingManager::SpawnAnimals()
 	{
 		FActorSpawnParameters SpawnInfo;
 		SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-		for (int32 i = 0; i < GameState->GetCowAmount(); i++)
+
+		int32 SpawnAmount = 0;
+		switch (AnimalType)
+		{
+		case EAnimalType::Cow:
+			SpawnAmount = GameState->GetCowAmount();
+			break;
+		case EAnimalType::Chicken:
+			SpawnAmount = GameState->GetChickenAmount();
+			break;
+		}
+
+		for (int32 i = 0; i < SpawnAmount; i++)
 		{
 			FVector SpawnLocation = GetRandomSpawnLocation();
 			FRotator SpawnRotation = GetRandomSpawnRotation();

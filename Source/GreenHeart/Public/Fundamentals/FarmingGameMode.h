@@ -11,6 +11,7 @@
 #include "Structs/FarmerState.h"
 #include "Enums/StationaryInventoryTypes.h"
 #include "Enums/ResourceTypes.h"
+#include "Enums/AnimalTypes.h"
 #include "FarmingGameMode.generated.h"
 
 class AFarmingGameState;
@@ -70,6 +71,8 @@ public:
 	void UpgradePlayerItemInventory();
 
 	FFarmerState GetPlayerState();
+
+	void AddAnimal(EAnimalType AnimalType);
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Setup|UMG")

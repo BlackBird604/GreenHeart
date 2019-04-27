@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Actors/Managers/ManagerBase.h"
 #include "Structs/AnimalBuildingState.h"
+#include "Enums/AnimalTypes.h"
 #include "AnimalBuildingManager.generated.h"
 
 class AAnimal;
@@ -33,6 +34,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	TSubclassOf<AAnimal> AnimalClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	EAnimalType AnimalType;
 
 private:
 	void RestoreFeedBoxState(const FAnimalBuildingState& BuildingState);

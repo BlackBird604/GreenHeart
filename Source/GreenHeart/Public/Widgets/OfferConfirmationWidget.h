@@ -53,10 +53,10 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* PriceText;
 
-private:
 	UFUNCTION()
-	void OnConfirmButtonClicked();
+	virtual void OnConfirmButtonClicked();
 
+private:
 	UFUNCTION()
 	void OnCancelButtonClicked();
 };
