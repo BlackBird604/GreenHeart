@@ -2,16 +2,16 @@
 
 #pragma once
 
-#include "ToolOffer.generated.h"
+#include "LevelInfo.generated.h"
 
 USTRUCT(BlueprintType)
-struct FToolOffer
+struct FLevelInfo
 {
 	GENERATED_USTRUCT_BODY()
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-	TSubclassOf<class ATool> OfferedClass = nullptr;
+	class UTexture2D* Thumbnail = nullptr;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-	bool bIsAvaliable = true;
+	int32 Cost;
 };

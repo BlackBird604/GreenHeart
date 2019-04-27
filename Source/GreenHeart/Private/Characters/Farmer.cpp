@@ -123,21 +123,17 @@ void AFarmer::SaveState()
 FFarmerState AFarmer::GetCurrentState()
 {
 	FFarmerState FarmerState = FFarmerState();
-	UFarmingGameInstance* GameInstance = Cast<UFarmingGameInstance>(GetGameInstance());
-	if (GameInstance)
+	FarmerState.ToolInventoryState = ToolInventory->GetState();
+	FarmerState.ItemInventoryState = ItemInventory->GetState();
+	if (IPickupItem* PickupItem = Cast<IPickupItem>(ItemInHands))
 	{
-		FarmerState.ToolInventoryState = ToolInventory->GetState();
-		FarmerState.ItemInventoryState = ItemInventory->GetState();
-		if (IPickupItem* PickupItem = Cast<IPickupItem>(ItemInHands))
-		{
-			FarmerState.ItemInHandsInfo = PickupItem->GetItemInfo();
-		}
-		else
-		{
-			FarmerState.ItemInHandsInfo = FItemInfo();
-		}
-		FarmerState.Energy = Energy;
+		FarmerState.ItemInHandsInfo = PickupItem->GetItemInfo();
 	}
+	else
+	{
+		FarmerState.ItemInHandsInfo = FItemInfo();
+	}
+	FarmerState.Energy = Energy;
 	return FarmerState;
 }
 

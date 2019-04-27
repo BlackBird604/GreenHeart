@@ -10,9 +10,9 @@ class UButton;
 class UImage;
 class UTextBlock;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnConfirmClickedSignature);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnOfferConfirmedSignature);
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnCancelClickedSignature);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnOfferCanceledSignature);
 
 UCLASS()
 class GREENHEART_API UOfferConfirmationWidget : public UUserWidget
@@ -30,9 +30,9 @@ public:
 
 	void SetOfferThumbnail(UTexture2D* NewTexture);
 
-	FOnConfirmClickedSignature OnConfirm;
+	FOnOfferConfirmedSignature OnConfirm;
 
-	FOnCancelClickedSignature OnCancel;
+	FOnOfferCanceledSignature OnCancel;
 
 protected:
 	UPROPERTY(meta = (BindWidget))
@@ -59,7 +59,4 @@ private:
 
 	UFUNCTION()
 	void OnCancelButtonClicked();
-
-	UFUNCTION()
-	void CloseWidget();
 };

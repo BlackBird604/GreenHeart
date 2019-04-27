@@ -6,7 +6,8 @@
 void UInventoryToolSlotWidget::SetToolInfo(const FToolInfo& NewToolInfo)
 {
 	ToolInfo = NewToolInfo;
-	SetThumbnail(ToolInfo.Thumbnail);
+	FLevelInfo ToolLevelInfo = ToolInfo.GetCurrentLevelInfo();
+	SetThumbnail(ToolLevelInfo.Thumbnail);
 }
 
 FToolInfo UInventoryToolSlotWidget::GetToolInfo()

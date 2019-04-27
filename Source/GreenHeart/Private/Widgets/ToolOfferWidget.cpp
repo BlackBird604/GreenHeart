@@ -4,6 +4,7 @@
 #include "Components/Button.h"
 #include "Components/Image.h"
 
+#include "Structs/LevelInfo.h"
 #include "Actors/Tools/Tool.h"
 #include "Fundamentals/FarmingGameMode.h"
 
@@ -29,7 +30,12 @@ void UToolOfferWidget::SetDefaults(TSubclassOf<ATool> ToolClass)
 		if (DefaultTool)
 		{
 			ToolInfo = DefaultTool->GetToolInfo();
-			Thumbnail->SetBrushFromTexture(ToolInfo.Thumbnail);
+
+			FLevelInfo LevelInfo = ToolInfo.GetFirstLevelInfo();
+			OfferPrice = LevelInfo.Cost;
+			OfferThumbnail = LevelInfo.Thumbnail;
+
+			Thumbnail->SetBrushFromTexture(OfferThumbnail);
 		}
 	}
 }
@@ -49,7 +55,7 @@ void UToolOfferWidget::UpdateActivation()
 
 	if (AFarmingGameMode* GameMode = GetWorld()->GetAuthGameMode<AFarmingGameMode>())
 	{
-		bool HasResources = GameMode->HasResource(EResourceType::Money, ToolOffer.Price);
+		bool HasResources = GameMode->HasResource(EResourceType::Money, OfferPrice);
 		Button->SetIsEnabled(HasResources);
 	}
 }
@@ -58,7 +64,7 @@ void UToolOfferWidget::Buy()
 {
 	if (AFarmingGameMode* GameMode = GetWorld()->GetAuthGameMode<AFarmingGameMode>())
 	{
-		GameMode->RemoveResource(EResourceType::Money, ToolOffer.Price);
+		GameMode->RemoveResource(EResourceType::Money, OfferPrice);
 		GameMode->AddNewTool(ToolInfo);
 	}
 }
@@ -80,12 +86,12 @@ FText UToolOfferWidget::GetOfferDesctiprion()
 
 int32 UToolOfferWidget::GetOfferPrice()
 {
-	return ToolOffer.Price;
+	return OfferPrice;
 }
 
 UTexture2D* UToolOfferWidget::GetThumbnail()
 {
-	return ToolInfo.Thumbnail;
+	return OfferThumbnail;
 }
 
 void UToolOfferWidget::SetAvailability(bool bNewAvalable)

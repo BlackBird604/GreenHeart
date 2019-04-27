@@ -24,7 +24,8 @@ void UFarmingGameInstance::StartNewGame()
 		FObstacleState* ObstacleState = (FObstacleState*)ObstacleStateRow.Value;
 		ObstacleStates.Add(*ObstacleState);
 	}
-	FarmerState = GetInitialFarmerState();
+	FarmerState = InitialFarmerState;
+	SetupFarmerInventory(FarmerState);
 	GameStateInfo = InitialGameStateInfo;
 
 	GameStateInfo.CowStates.Add(FAnimalState()); // TEMPORARY
@@ -33,9 +34,8 @@ void UFarmingGameInstance::StartNewGame()
 	GameStateInfo.StationaryItems.SetNum(8);
 }
 
-FFarmerState UFarmingGameInstance::GetInitialFarmerState()
+void UFarmingGameInstance::SetupFarmerInventory(FFarmerState& FarmerState)
 {
-	FarmerState.Energy = InitialFarmerEnergy;
 	for (TSubclassOf<ATool> ToolClass : InitialToolClasses)
 	{
 		if (ToolClass)
@@ -48,7 +48,6 @@ FFarmerState UFarmingGameInstance::GetInitialFarmerState()
 			FarmerState.ToolInventoryState.ToolInfos.Add(FToolInfo());
 		}
 	}
-	return FarmerState;
 }
 
 void UFarmingGameInstance::ApplyNextDayChanges()

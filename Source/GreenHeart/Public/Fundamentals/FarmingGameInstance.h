@@ -57,13 +57,13 @@ public:
 private:
 	void StartNewGame();
 
-	FFarmerState GetInitialFarmerState();
+	void SetupFarmerInventory(FFarmerState& FarmerState);
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	UDataTable* InitialObstacleStates;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
-	int32 InitialFarmerEnergy;
+	FFarmerState InitialFarmerState;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	TArray<TSubclassOf<class ATool>> InitialToolClasses;

@@ -40,10 +40,6 @@ public:
 private:
 	void RestoreSize(int32 Level);
 
-	void RestoreTools(const TArray<FToolInfo>& SavedToolInfos);
-
-	TArray<FToolInfo> ToolInfos;
-
-	int32 CurrentLevel;
+	FToolInventoryState InventoryState;
 		
 };

@@ -22,7 +22,7 @@ protected:
 public:
 	FItemInventoryState GetState();
 
-	void RestoreState(FItemInventoryState ItemState);
+	void RestoreState(FItemInventoryState SavedInventoryState);
 
 	bool HasPlace();
 
@@ -37,9 +37,5 @@ private:
 
 	void RestoreSize(int32 Level);
 
-	void RestoreItems(const TArray<FItemInfo>& SavedItemInfos);
-
-	TArray<FItemInfo> ItemInfos;
-
-	int32 CurrentLevel;
+	FItemInventoryState InventoryState;
 };

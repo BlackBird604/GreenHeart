@@ -58,4 +58,8 @@ private:
 	FToolOffer ToolOffer;
 
 	FToolInfo ToolInfo;
+
+	UTexture2D* OfferThumbnail;
+
+	int32 OfferPrice;
 };

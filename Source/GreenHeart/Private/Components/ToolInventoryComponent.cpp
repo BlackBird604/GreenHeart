@@ -8,7 +8,6 @@ UToolInventoryComponent::UToolInventoryComponent()
 	PrimaryComponentTick.bCanEverTick = false;
 }
 
-
 void UToolInventoryComponent::BeginPlay()
 {
 	Super::BeginPlay();
@@ -16,78 +15,66 @@ void UToolInventoryComponent::BeginPlay()
 
 FToolInventoryState UToolInventoryComponent::GetState()
 {
-	FToolInventoryState InventoryState = FToolInventoryState();
-	InventoryState.ToolInfos = ToolInfos;
 	return InventoryState;
 }
 
 void UToolInventoryComponent::RestoreState(FToolInventoryState SavedInventoryState)
 {
-	CurrentLevel = SavedInventoryState.Level;
-	RestoreSize(CurrentLevel);
-	RestoreTools(SavedInventoryState.ToolInfos);
+	InventoryState = SavedInventoryState;
+	RestoreSize(InventoryState.Level);
 }
 
 void UToolInventoryComponent::RestoreSize(int32 Level)
 {
-	int32 NewSize = FMath::Pow(2, Level) + 1;
-	ToolInfos.SetNum(NewSize);
-}
-
-void UToolInventoryComponent::RestoreTools(const TArray<FToolInfo>& SavedToolInfos)
-{
-	int32 ToolsToAdd = FMath::Min(SavedToolInfos.Num(), ToolInfos.Num());
-	for (int32 i = 0; i < ToolsToAdd; i++)
-	{
-		ToolInfos[i] = SavedToolInfos[i];
-	}
+	int32 NewSize = FMath::Pow(2, Level+1) + 1;
+	InventoryState.ToolInfos.SetNum(NewSize);
 }
 
 void UToolInventoryComponent::NextTool()
 {
-	for (int32 i = ToolInfos.Num() - 1; i >= 0; i--)
+	for (int32 i = InventoryState.ToolInfos.Num() - 1; i >= 0; i--)
 	{
-		if (ToolInfos[i].Class)
+		if (InventoryState.ToolInfos[i].Class)
 		{
-			FToolInfo NextTool = ToolInfos[i];
-			ToolInfos.RemoveAt(i);
-			ToolInfos.Insert(NextTool, 0);
+			FToolInfo NextTool = InventoryState.ToolInfos[i];
+			InventoryState.ToolInfos.RemoveAt(i);
+			InventoryState.ToolInfos.Insert(NextTool, 0);
 			break;
 		}
 	}
 
-	FToolInfo CurrentTool = ToolInfos[0];
+	FToolInfo CurrentTool = InventoryState.ToolInfos[0];
 }
 
 FToolInfo UToolInventoryComponent::GetCurrentTool()
 {
-	if (ToolInfos.Num() > 0)
+	if (InventoryState.ToolInfos.Num() > 0)
 	{
-		return ToolInfos[0];
+		return InventoryState.ToolInfos[0];
 	}
 	return FToolInfo();
 }
 
 void UToolInventoryComponent::RemoveCurrentTool()
 {
-	if (ToolInfos.Num() > 0)
+	if (InventoryState.ToolInfos.Num() > 0)
 	{
-		ToolInfos[0] = FToolInfo();
+		InventoryState.ToolInfos[0] = FToolInfo();
 	}
 }
 
 void UToolInventoryComponent::Update(TArray<FToolInfo> NewToolInfos)
 {
-	int32 ToolsToUpdate = FMath::Min(NewToolInfos.Num(), ToolInfos.Num());
+	int32 ToolsToUpdate = FMath::Min(NewToolInfos.Num(), InventoryState.ToolInfos.Num());
 	for (int32 i = 0; i < ToolsToUpdate; i++)
 	{
-		ToolInfos[i] = NewToolInfos[i];
+		InventoryState.ToolInfos[i] = NewToolInfos[i];
 	}
 }
 
 bool UToolInventoryComponent::HasPlace()
 {
-	for (FToolInfo ToolInfo : ToolInfos)
+	for (FToolInfo ToolInfo : InventoryState.ToolInfos)
 	{
 		if (!ToolInfo.Class)
 		{
@@ -99,11 +86,11 @@ bool UToolInventoryComponent::HasPlace()
 
 void UToolInventoryComponent::InsertNewTool(const FToolInfo& NewToolInfo)
 {
-	for (int32 i = 0; i < ToolInfos.Num(); i++)
+	for (int32 i = 0; i < InventoryState.ToolInfos.Num(); i++)
 	{
-		if (!ToolInfos[i].Class)
+		if (!InventoryState.ToolInfos[i].Class)
 		{
-			ToolInfos[i] = NewToolInfo;
+			InventoryState.ToolInfos[i] = NewToolInfo;
 			return;
 		}
 	}

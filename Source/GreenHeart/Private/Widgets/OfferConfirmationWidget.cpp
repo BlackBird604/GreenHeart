@@ -44,8 +44,3 @@ void UOfferConfirmationWidget::OnCancelButtonClicked()
 {
 	OnCancel.Broadcast();
 }
-
-void UOfferConfirmationWidget::CloseWidget()
-{
-	
-}

@@ -3,10 +3,15 @@
 #include "BlacksmithWidget.h"
 #include "Components/UniformGridPanel.h"
 #include "Components/UniformGridSlot.h"
+#include "Components/Button.h"
+#include "Components/Image.h"
 
 #include "Fundamentals/FarmingGameMode.h"
 #include "Widgets/ToolOfferWidget.h"
 #include "Widgets/OfferConfirmationWidget.h"
+#include "Widgets/UpgradeConfirmationWidget.h"
+#include "Structs/LevelInfo.h"
+#include "Actors/Tools/Tool.h"
 
 bool UBlacksmithWidget::Initialize()
 {
@@ -18,17 +23,33 @@ bool UBlacksmithWidget::Initialize()
 	return b;
 }
 
-void UBlacksmithWidget::SetupWidget(const FBlacksmithInfo& NewInfo)
+void UBlacksmithWidget::SetupWidget(const FFarmerState& NewFarmerState, const FBlacksmithInfo& NewBlacksmithInfo)
 {
-	BlacksmithInfo = NewInfo;
-	SetupOffers(NewInfo.OfferedTools);
+	FarmerState = NewFarmerState;
+	BlacksmithInfo = NewBlacksmithInfo;
+	CreateConfirmationWidgetBindings();
+	CreateUpgradeButtonBindings();
+	SetupOffers(NewBlacksmithInfo.OfferedTools);
+	SetupUpgrades();
+}
+
+void UBlacksmithWidget::CreateConfirmationWidgetBindings()
+{
+	OfferConfirmation->OnConfirm.AddDynamic(this, &UBlacksmithWidget::OnOfferConfirmed);
+	OfferConfirmation->OnCancel.AddDynamic(this, &UBlacksmithWidget::OnOfferCanceled);
+	UpgradeConfirmation->OnConfirm.AddDynamic(this, &UBlacksmithWidget::OnUpgradeConfirmed);
+	UpgradeConfirmation->OnCancel.AddDynamic(this, &UBlacksmithWidget::OnUpgradeCanceled);
+}
+
+void UBlacksmithWidget::CreateUpgradeButtonBindings()
+{
+	UpgradeToolButton->OnClicked.AddDynamic(this, &UBlacksmithWidget::OnToolUpgradeClicked);
+	UpgradeToolInventoryButton->OnClicked.AddDynamic(this, &UBlacksmithWidget::OnToolInventoryUpgradeClicked);
+	UpgradeItemInventoryButton->OnClicked.AddDynamic(this, &UBlacksmithWidget::OnItemInventoryUpgradeClicked);
 }
 
 void UBlacksmithWidget::SetupOffers(const TArray<FToolOffer>& Offers)
 {
-	OfferConfirmation->OnConfirm.AddDynamic(this, &UBlacksmithWidget::OnOfferConfirmed);
-	OfferConfirmation->OnCancel.AddDynamic(this, &UBlacksmithWidget::OnOfferCanceled);
-
 	for (int32 i = 0; i < Offers.Num(); i++)
 	{
 		UToolOfferWidget* OfferWidget = CreateWidget<UToolOfferWidget>(this, OfferClass);
@@ -45,6 +66,79 @@ void UBlacksmithWidget::SetupOffers(const TArray<FToolOffer>& Offers)
 	}
 }
 
+void UBlacksmithWidget::SetupUpgrades()
+{
+	SetupToolUpgrade();
+	SetupToolInventoryUpgrade();
+	SetupItemInventoryUpgrade();
+}
+
+void UBlacksmithWidget::SetupToolUpgrade()
+{
+	if (AFarmingGameMode* GameMode = Cast<AFarmingGameMode>(GetWorld()->GetAuthGameMode()))
+	{
+		FToolInventoryState ToolInventory = FarmerState.ToolInventoryState;
+		FToolInfo ToolInfo = ToolInventory.GetCurrentTool();
+		ToolIcon->SetBrushFromTexture(ToolInfo.GetCurrentLevelInfo().Thumbnail);
+		if (ToolInfo.Class && ToolInfo.CanUpgrade())
+		{
+			int32 UpgradeCost = ToolInfo.GetNextLevelInfo().Cost;
+			bool bHasResources = GameMode->HasResource(EResourceType::Money, UpgradeCost);
+			UpgradeToolButton->SetIsEnabled(bHasResources);
+		}
+		else
+		{
+			UpgradeToolButton->SetIsEnabled(false);
+		}
+	}
+	else
+	{
+		UpgradeToolButton->SetIsEnabled(false);
+	}
+}
+
+void UBlacksmithWidget::SetupToolInventoryUpgrade()
+{
+	if (AFarmingGameMode* GameMode = Cast<AFarmingGameMode>(GetWorld()->GetAuthGameMode()))
+	{
+		FToolInventoryState ToolInventory = FarmerState.ToolInventoryState;
+		ToolInventoryIcon->SetBrushFromTexture(ToolInventory.GetCurrentLevelInfo().Thumbnail);
+		if (ToolInventory.CanUpgrade())
+		{
+			int32 UpgradeCost = ToolInventory.GetNextLevelInfo().Cost;
+			bool bHasResources = GameMode->HasResource(EResourceType::Money, UpgradeCost);
+			UpgradeToolInventoryButton->SetIsEnabled(bHasResources);
+		}
+		else
+		{
+			UpgradeToolInventoryButton->SetIsEnabled(false);
+		}
+	}
+	else
+	{
+		UpgradeToolInventoryButton->SetIsEnabled(false);
+	}
+}
+
+void UBlacksmithWidget::SetupItemInventoryUpgrade()
+{
+	if (AFarmingGameMode* GameMode = Cast<AFarmingGameMode>(GetWorld()->GetAuthGameMode()))
+	{
+		FItemInventoryState ItemInventory = FarmerState.ItemInventoryState;
+		ItemInventoryIcon->SetBrushFromTexture(ItemInventory.GetCurrentLevelInfo().Thumbnail);
+		if (ItemInventory.CanUpgrade())
+		{
+			int32 UpgradeCost = ItemInventory.GetNextLevelInfo().Cost;
+			bool bHasResources = GameMode->HasResource(EResourceType::Money, UpgradeCost);
+			UpgradeItemInventoryButton->SetIsEnabled(bHasResources);
+		}
+		else
+		{
+			UpgradeItemInventoryButton->SetIsEnabled(false);
+		}
+	}
+}
+
 void UBlacksmithWidget::CreateOfferBindings(UToolOfferWidget* OfferWidget)
 {
 	OfferWidget->OnClicked.AddDynamic(this, &UBlacksmithWidget::OnOfferClicked);
@@ -55,7 +149,7 @@ void UBlacksmithWidget::OnOfferClicked(UToolOfferWidget* ClickedOffer)
 	ActiveOffer = ClickedOffer;
 	OfferConfirmation->SetOfferPrice(ActiveOffer->GetOfferPrice());
 	OfferConfirmation->SetOfferThumbnail(ActiveOffer->GetThumbnail());
-	PlayAnimation(ShowOfferConfirmationAnimation, 0.0f, 1, EUMGSequencePlayMode::Forward);
+	ShowOfferWidget();
 }
 
 void UBlacksmithWidget::OnOfferConfirmed()
@@ -72,13 +166,72 @@ void UBlacksmithWidget::OnOfferConfirmed()
 	{
 		OfferWidget->UpdateActivation();
 	}
-	PlayAnimation(ShowOfferConfirmationAnimation, 0.0f, 1, EUMGSequencePlayMode::Reverse);
+	HideOfferWidget();
 	ActiveOffer = nullptr;
 }
 
 void UBlacksmithWidget::OnOfferCanceled()
 {
-	PlayAnimation(ShowOfferConfirmationAnimation, 0.0f, 1, EUMGSequencePlayMode::Reverse);
+	HideOfferWidget();
+}
+
+void UBlacksmithWidget::OnToolUpgradeClicked()
+{
+	ClickedUpgradeButton = UpgradeToolButton;
+	FToolInventoryState ToolInventory = FarmerState.ToolInventoryState;
+	FToolInfo CurrentTool = ToolInventory.GetCurrentTool();
+	FText Name = CurrentTool.Name;
+	FLevelInfo CurrentLevelInfo = CurrentTool.GetCurrentLevelInfo();
+	FLevelInfo NextLevelInfo = CurrentTool.GetNextLevelInfo();
+	int32 ToolLevel = CurrentTool.CurrentLevel;
+	UpgradeConfirmation->SetupWidget(Name, CurrentLevelInfo, NextLevelInfo, ToolLevel);
+	ShowUpgradeWidget();
+}
+
+void UBlacksmithWidget::OnToolInventoryUpgradeClicked()
+{
+	ClickedUpgradeButton = UpgradeToolInventoryButton;
+	FToolInventoryState ToolInventory = FarmerState.ToolInventoryState;
+	FText Name = FText::FromString("Tool Inventory");
+	FLevelInfo CurrentLevelInfo = ToolInventory.GetCurrentLevelInfo();
+	FLevelInfo NextLevelInfo = ToolInventory.GetNextLevelInfo();
+	int32 ToolLevel = ToolInventory.Level;
+	UpgradeConfirmation->SetupWidget(Name, CurrentLevelInfo, NextLevelInfo, ToolLevel);
+	ShowUpgradeWidget();
+}
+
+void UBlacksmithWidget::OnItemInventoryUpgradeClicked()
+{
+	ClickedUpgradeButton = UpgradeItemInventoryButton;
+	FItemInventoryState ItemInventory = FarmerState.ItemInventoryState;
+	FText Name = FText::FromString("Item Inventory");
+	FLevelInfo CurrentLevelInfo = ItemInventory.GetCurrentLevelInfo();
+	FLevelInfo NextLevelInfo = ItemInventory.GetNextLevelInfo();
+	int32 ItemLevel = ItemInventory.Level;
+	UpgradeConfirmation->SetupWidget(Name, CurrentLevelInfo, NextLevelInfo, ItemLevel);
+	ShowUpgradeWidget();
+}
+
+void UBlacksmithWidget::OnUpgradeConfirmed()
+{
+	if (ClickedUpgradeButton == UpgradeToolButton)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Tool"));
+	}
+	else if (ClickedUpgradeButton == UpgradeToolInventoryButton)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("ToolInventory"));
+	}
+	else if (ClickedUpgradeButton == UpgradeItemInventoryButton)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("ItemInventory"));
+	}
+}
+
+void UBlacksmithWidget::OnUpgradeCanceled()
+{
+	ClickedUpgradeButton = nullptr;
+	HideUpgradeWidget();
 }
 
 void UBlacksmithWidget::CloseWidget()
@@ -108,4 +261,24 @@ void UBlacksmithWidget::RestoreGame()
 	{
 		GameMode->RestoreGame();
 	}
+}
+
+void UBlacksmithWidget::ShowOfferWidget()
+{
+	PlayAnimation(ShowOfferConfirmationAnimation, 0.0f, 1, EUMGSequencePlayMode::Forward);
+}
+
+void UBlacksmithWidget::HideOfferWidget()
+{
+	PlayAnimation(ShowOfferConfirmationAnimation, 0.0f, 1, EUMGSequencePlayMode::Reverse);
+}
+
+void UBlacksmithWidget::ShowUpgradeWidget()
+{
+	PlayAnimation(ShowUpgradeConfirmationAnimation, 0.0f, 1, EUMGSequencePlayMode::Forward);
+}
+
+void UBlacksmithWidget::HideUpgradeWidget()
+{
+	PlayAnimation(ShowUpgradeConfirmationAnimation, 0.0f, 1, EUMGSequencePlayMode::Reverse);
 }

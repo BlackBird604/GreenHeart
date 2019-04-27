@@ -172,7 +172,7 @@ void AFarmingGameMode::OpenBlacksmith()
 	{
 		BlacksmithWidget->AddToViewport(2);
 		EnableUIMode();
-		BlacksmithWidget->SetupWidget(GameState->GetBlacksmithInfo());
+		BlacksmithWidget->SetupWidget(PlayerCharacter->GetCurrentState(), GameState->GetBlacksmithInfo());
 	}
 }
 

@@ -17,6 +17,7 @@ struct FFarmerState
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	FToolInventoryState ToolInventoryState;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	FItemInventoryState ItemInventoryState;
 
 	FItemInfo ItemInHandsInfo;

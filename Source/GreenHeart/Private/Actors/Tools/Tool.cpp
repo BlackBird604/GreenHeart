@@ -35,7 +35,7 @@ void ATool::Restore(const FToolInfo& SavedToolInfo)
 
 bool ATool::Charge()
 {
-	if (CurrentCharge < ToolInfo.Level && CurrentCharge < ChargeInfo.Num())
+	if (CurrentCharge < ToolInfo.CurrentLevel && CurrentCharge < ChargeInfo.Num())
 	{
 		CurrentCharge++;
 		return true;
