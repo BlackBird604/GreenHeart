@@ -21,6 +21,7 @@ FToolInventoryState UToolInventoryComponent::GetState()
 void UToolInventoryComponent::RestoreState(FToolInventoryState SavedInventoryState)
 {
 	InventoryState = SavedInventoryState;
+	InventoryState.Resize();
 }
 
 void UToolInventoryComponent::NextTool()

@@ -25,6 +25,7 @@ FItemInventoryState UItemInventoryComponent::GetState()
 void UItemInventoryComponent::RestoreState(FItemInventoryState SavedInventoryState)
 {
 	InventoryState = SavedInventoryState;
+	InventoryState.Resize();
 }
 
 bool UItemInventoryComponent::HasPlace()

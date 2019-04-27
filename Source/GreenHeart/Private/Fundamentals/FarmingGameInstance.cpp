@@ -36,19 +36,12 @@ void UFarmingGameInstance::StartNewGame()
 
 void UFarmingGameInstance::SetupFarmerInventory(FFarmerState& FarmerState)
 {
-	int32 InventorySlot = 0; 
-	TArray<FToolInfo>& InventorySlots = FarmerState.ToolInventoryState.ToolInfos;
 	for (TSubclassOf<ATool> ToolClass : InitialToolClasses)
 	{
 		if (ToolClass)
 		{
 			ATool* DefaultTool = Cast<ATool>(ToolClass->GetDefaultObject());
-			InventorySlots[InventorySlot] = DefaultTool->GetToolInfo();
-			InventorySlot++;
-			if (InventorySlot >= InventorySlots.Num())
-			{
-				break;
-			}
+			FarmerState.ToolInventoryState.ToolInfos.Add(DefaultTool->GetToolInfo());
 		}
 	}
 }

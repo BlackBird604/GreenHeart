@@ -17,11 +17,6 @@ struct FItemInventoryState
 	TArray<FLevelInfo> LevelInfos;
 
 
-	FItemInventoryState()
-	{
-		ItemInfos.SetNum(GetSize(Level), false);
-	}
-
 	bool CanUpgrade()
 	{
 		return LevelInfos.Num() > Level;
@@ -42,13 +37,13 @@ struct FItemInventoryState
 		if (CanUpgrade())
 		{
 			Level++;
-			ItemInfos.SetNum(GetSize(Level), false);
+			Resize();
 		}
 	}
 
-	int32 GetSize(int32 Level)
+	void Resize()
 	{
-		return FMath::Pow(2, Level + 1);
+		ItemInfos.SetNum(GetSize(Level), false);
 	}
 
 private:
@@ -59,5 +54,10 @@ private:
 			return LevelInfos[Level];
 		}
 		return FLevelInfo();
+	}
+
+	int32 GetSize(int32 Level)
+	{
+		return FMath::Pow(2, Level + 1);
 	}
 };

@@ -16,11 +16,6 @@ struct FToolInventoryState
 	TArray<FLevelInfo> LevelInfos;
 
 
-	FToolInventoryState()
-	{
-		ToolInfos.SetNum(GetSize(Level), false);
-	}
-
 	bool CanUpgrade()
 	{
 		return LevelInfos.Num() > Level;
@@ -60,13 +55,13 @@ struct FToolInventoryState
 		if (CanUpgrade())
 		{
 			Level++;
-			ToolInfos.SetNum(GetSize(Level), false);
+			Resize();
 		}
 	}
 
-	int32 GetSize(int32 Level)
+	void Resize()
 	{
-		return FMath::Pow(2, Level + 1) + 1;
+		ToolInfos.SetNum(GetSize(Level), false);
 	}
 
 private:
@@ -77,5 +72,10 @@ private:
 			return LevelInfos[Level];
 		}
 		return FLevelInfo();
+	}
+
+	int32 GetSize(int32 Level)
+	{
+		return FMath::Pow(2, Level + 1) + 1;
 	}
 };
