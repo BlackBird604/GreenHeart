@@ -80,6 +80,10 @@ public:
 
 	void StartConstructionUpgrade(EConstructionType ConstructionType);
 
+	bool CanBuyAnimal(EAnimalType AnimalType);
+
+	bool IsConstructionInProgress();
+
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Setup|UMG")
 	TSubclassOf<UGameHUDWidget> GameHUDClass;
@@ -104,6 +108,12 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	float ClockMinuteTick = 1.0f;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	int32 CowsPerBuildingLevel = 10;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	int32 ChickensPerBuildingLevel = 5;
 
 private:
 	void CreateHUD();

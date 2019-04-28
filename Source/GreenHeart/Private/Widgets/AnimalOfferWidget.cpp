@@ -1,6 +1,7 @@
 // The Green Heart @Politechnika Opolska
 
 #include "AnimalOfferWidget.h"
+#include "Components/Button.h"
 
 #include "Enums/ResourceTypes.h"
 #include "Fundamentals/FarmingGameMode.h"
@@ -19,7 +20,14 @@ FAnimalOffer UAnimalOfferWidget::GetOfferInfo()
 
 void UAnimalOfferWidget::UpdateActivation()
 {
-	//TODO Check Animal Buildings
+	if (AFarmingGameMode* GameMode = GetWorld()->GetAuthGameMode<AFarmingGameMode>())
+	{
+		if (!GameMode->CanBuyAnimal(AnimalOffer.AnimalType))
+		{
+			Button->SetIsEnabled(false);
+			return;
+		}
+	}
 
 	Super::UpdateActivation();
 }

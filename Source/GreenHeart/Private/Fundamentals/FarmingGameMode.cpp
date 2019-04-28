@@ -365,3 +365,42 @@ void AFarmingGameMode::StartConstructionUpgrade(EConstructionType ConstructionTy
 		GameState->StartConstructionUpgrade(ConstructionType);
 	}
 }
+
+bool AFarmingGameMode::CanBuyAnimal(EAnimalType AnimalType)
+{
+	int32 BuildingLevel = 0;
+	int32 MaxAnimalAmount = 0;
+	int32 CurrentAnimalAmount = 0;
+
+	switch (AnimalType)
+	{
+	case EAnimalType::Cow:
+		BuildingLevel = GameState->GetConstructionState(EConstructionType::Barn).CurrentLevel;
+		MaxAnimalAmount = BuildingLevel * CowsPerBuildingLevel;
+		CurrentAnimalAmount = GameState->GetCowAmount();
+		return CurrentAnimalAmount < MaxAnimalAmount;
+
+	case EAnimalType::Chicken:
+		BuildingLevel = GameState->GetConstructionState(EConstructionType::ChickenCoop).CurrentLevel;
+		MaxAnimalAmount = BuildingLevel * ChickensPerBuildingLevel;
+		CurrentAnimalAmount = GameState->GetChickenAmount();
+		return CurrentAnimalAmount < MaxAnimalAmount;
+	}
+	return false;
+}
+
+bool AFarmingGameMode::IsConstructionInProgress()
+{
+	if (GameState)
+	{
+		TArray<FConstructionState> ConstructionStates = GameState->GetConstructionStates();
+		for (int32 i = 0; i < ConstructionStates.Num(); i++)
+		{
+			if (ConstructionStates[i].bIsUnderConstruction)
+			{
+				return true;
+			}
+		}
+	}
+	return false;
+}

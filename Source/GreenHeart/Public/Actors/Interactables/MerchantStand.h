@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "Actors/Others/DeferrableActor.h"
 #include "Interfaces/Interactable.h"
 #include "Enums/MerchantTypes.h"
 #include "MerchantStand.generated.h"
@@ -12,7 +12,7 @@ class UBoxComponent;
 class UStaticMeshComponent;
 
 UCLASS()
-class GREENHEART_API AMerchantStand : public AActor, public IInteractable
+class GREENHEART_API AMerchantStand : public ADeferrableActor, public IInteractable
 {
 	GENERATED_BODY()
 
