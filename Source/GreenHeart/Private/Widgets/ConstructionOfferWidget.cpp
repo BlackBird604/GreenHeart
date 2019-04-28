@@ -3,6 +3,7 @@
 #include "ConstructionOfferWidget.h"
 #include "Components/TextBlock.h"
 #include "Components/Image.h"
+#include "Components/Button.h"
 
 #include "Fundamentals/FarmingGameMode.h"
 
@@ -30,7 +31,11 @@ void UConstructionOfferWidget::SetupWidgetComponents()
 
 void UConstructionOfferWidget::UpdateActivation()
 {
-	//TODO Check Building States
+	if (!ConstructionOffer.CanBeUpgraded())
+	{
+		Button->SetIsEnabled(false);
+		return;
+	}
 
 	Super::UpdateActivation();
 }
@@ -40,6 +45,7 @@ void UConstructionOfferWidget::Buy()
 	if (AFarmingGameMode* GameMode = GetWorld()->GetAuthGameMode<AFarmingGameMode>())
 	{
 		GameMode->RemoveResource(EResourceType::Money, GetOfferPrice());
+		GameMode->StartConstructionUpgrade(ConstructionOffer.ConstructionType);
 	}
 }
 

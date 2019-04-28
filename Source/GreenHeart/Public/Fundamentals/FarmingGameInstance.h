@@ -59,6 +59,10 @@ private:
 
 	void SetupFarmerInventory(FFarmerState& FarmerState);
 
+	FName GetLevelNameWithSuffix(FName LevelName);
+
+	FName GetLevelNameWithSuffix(FName Prefix, EConstructionType ConstructionType);
+
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	UDataTable* InitialObstacleStates;
 

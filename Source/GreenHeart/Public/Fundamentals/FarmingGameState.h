@@ -70,6 +70,8 @@ public:
 
 	FConstructionState GetConstructionState(EConstructionType ConstructionType);
 
+	void StartConstructionUpgrade(EConstructionType ConstructionType);
+
 private:
 	void SetResourceAmount(EResourceType ResourceType, int32 Amount);
 

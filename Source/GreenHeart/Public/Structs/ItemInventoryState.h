@@ -47,17 +47,17 @@ struct FItemInventoryState
 	}
 
 private:
-	FLevelInfo GetLevelInfo(int32 Level)
+	FLevelInfo GetLevelInfo(int32 CheckedLevel)
 	{
-		if (LevelInfos.Num() > Level)
+		if (LevelInfos.Num() > CheckedLevel)
 		{
-			return LevelInfos[Level];
+			return LevelInfos[CheckedLevel];
 		}
 		return FLevelInfo();
 	}
 
-	int32 GetSize(int32 Level)
+	int32 GetSize(int32 CheckedLevel)
 	{
-		return FMath::Pow(2, Level + 1);
+		return FMath::Pow(2, CheckedLevel + 1);
 	}
 };

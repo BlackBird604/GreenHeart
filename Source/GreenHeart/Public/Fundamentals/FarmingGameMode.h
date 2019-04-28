@@ -12,6 +12,7 @@
 #include "Enums/StationaryInventoryTypes.h"
 #include "Enums/ResourceTypes.h"
 #include "Enums/AnimalTypes.h"
+#include "Enums/ConstructionTypes.h"
 #include "FarmingGameMode.generated.h"
 
 class AFarmingGameState;
@@ -76,6 +77,8 @@ public:
 	FFarmerState GetPlayerState();
 
 	void AddAnimal(EAnimalType AnimalType);
+
+	void StartConstructionUpgrade(EConstructionType ConstructionType);
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Setup|UMG")

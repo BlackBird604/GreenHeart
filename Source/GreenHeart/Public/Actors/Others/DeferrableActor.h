@@ -4,10 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "ManagerBase.generated.h"
+#include "DeferrableActor.generated.h"
 
 UCLASS()
-class GREENHEART_API AManagerBase : public AActor
+class GREENHEART_API ADeferrableActor : public AActor
 {
 	GENERATED_BODY()
 	

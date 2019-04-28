@@ -44,6 +44,38 @@ struct FConstructionState
 		return GetLevelInfo(CurrentLevel + 1);
 	}
 
+	void ApplyNextDay()
+	{
+		if (bIsUnderConstruction)
+		{
+			ConstructionTimeLeft--;
+			if (ConstructionTimeLeft <= 0)
+			{
+				CurrentLevel++;
+				bIsUnderConstruction = false;
+				ConstructionTimeLeft = 0;
+			}
+		}
+	}
+
+	void StartUpgrade()
+	{
+		bIsUnderConstruction = true;
+		FBuildingLevelInfo NextLevelInfo = GetNextLevelInfo();
+		ConstructionTimeLeft = NextLevelInfo.UpgradeTime;
+	}
+
+	bool CanBeUpgraded()
+	{
+		bool bCanUpgrade = !IsMaxLevel() && bIsAvaliable && !bIsUnderConstruction;
+		return bCanUpgrade;
+	}
+
+	bool IsMaxLevel()
+	{
+		return CurrentLevel >= LevelInfos.Num() - 1;
+	}
+
 private:
 	FBuildingLevelInfo GetLevelInfo(int32 Level)
 	{

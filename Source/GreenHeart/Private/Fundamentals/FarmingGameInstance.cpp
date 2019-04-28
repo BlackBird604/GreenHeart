@@ -6,6 +6,7 @@
 #include "Objects/FarmUpdater.h"
 #include "Objects/AnimalUpdater.h"
 #include "Objects/FarmerUpdater.h"
+#include "Objects/ConstructionUpdater.h"
 #include "Actors/Tools/Tool.h"
 
 void UFarmingGameInstance::Init()
@@ -56,6 +57,9 @@ void UFarmingGameInstance::ApplyNextDayChanges()
 
 	UFarmerUpdater* FarmerUpdater = NewObject<UFarmerUpdater>();
 	FarmerUpdater->ApplyNextDay(GameStateInfo, FarmerState);
+
+	UConstructionUpdater* ConstructionUpdater = NewObject<UConstructionUpdater>();
+	ConstructionUpdater->ApplyNextDay(GameStateInfo.ConstructionStates);
 }
 
 void UFarmingGameInstance::SetGridState(FFieldGridState NewState)
@@ -125,8 +129,42 @@ void UFarmingGameInstance::StartNextDay()
 
 void UFarmingGameInstance::OpenLevel(FName LevelName, int32 SpawnPoint)
 {
+	FName AdjustedLevelName = GetLevelNameWithSuffix(LevelName);
 	SpawnPointIndex = SpawnPoint;
-	UGameplayStatics::OpenLevel(this, LevelName, false);
+	UGameplayStatics::OpenLevel(this, AdjustedLevelName, false);
+}
+
+FName UFarmingGameInstance::GetLevelNameWithSuffix(FName LevelName)
+{
+	if (LevelName == "House")
+	{
+		return GetLevelNameWithSuffix("House", EConstructionType::House);
+	}
+
+	if (LevelName == "Barn")
+	{
+		return GetLevelNameWithSuffix("Barn", EConstructionType::Barn);
+	}
+
+	if (LevelName == "Coop")
+	{
+		return GetLevelNameWithSuffix("Coop", EConstructionType::ChickenCoop);
+	}
+	return LevelName;
+}
+
+FName UFarmingGameInstance::GetLevelNameWithSuffix(FName Prefix, EConstructionType ConstructionType)
+{
+	TArray<FConstructionState> ConstructionStates = GameStateInfo.ConstructionStates;
+	for (FConstructionState State : ConstructionStates)
+	{
+		if (State.ConstructionType == ConstructionType)
+		{
+			FString NewLevelName = Prefix.ToString() + FString::FromInt(State.CurrentLevel);
+			return FName(*NewLevelName);
+		}
+	}
+	return Prefix;
 }
 
 int32 UFarmingGameInstance::GetSpawnPointIndex()

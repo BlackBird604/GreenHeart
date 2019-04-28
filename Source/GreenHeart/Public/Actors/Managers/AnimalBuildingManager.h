@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Actors/Managers/ManagerBase.h"
+#include "Actors/Others/DeferrableActor.h"
 #include "Structs/AnimalBuildingState.h"
 #include "Enums/AnimalTypes.h"
 #include "AnimalBuildingManager.generated.h"
@@ -12,7 +12,7 @@ class AAnimal;
 class UBoxComponent;
 
 UCLASS()
-class GREENHEART_API AAnimalBuildingManager : public AManagerBase
+class GREENHEART_API AAnimalBuildingManager : public ADeferrableActor
 {
 	GENERATED_BODY()
 	

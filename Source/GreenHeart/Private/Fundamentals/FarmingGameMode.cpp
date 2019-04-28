@@ -8,7 +8,7 @@
 
 #include "Fundamentals/FarmingGameInstance.h"
 #include "Fundamentals/FarmingGameState.h"
-#include "Actors/Managers/ManagerBase.h"
+#include "Actors/Others/DeferrableActor.h"
 #include "Actors/Others/FarmerSpawnPoint.h"
 #include "Widgets/GameHUDWidget.h"
 #include "Widgets/PlayerInventoryWidget.h"
@@ -73,11 +73,11 @@ void AFarmingGameMode::StartPlay()
 void AFarmingGameMode::InitializeManagers()
 {
 	TArray<AActor*> FoundActors;
-	UGameplayStatics::GetAllActorsOfClass(this, AManagerBase::StaticClass(), FoundActors);
+	UGameplayStatics::GetAllActorsOfClass(this, ADeferrableActor::StaticClass(), FoundActors);
 	for (AActor* FoundActor : FoundActors)
 	{
-		AManagerBase* Manager = Cast<AManagerBase>(FoundActor);
-		Manager->StartPlay();
+		ADeferrableActor* Defferable = Cast<ADeferrableActor>(FoundActor);
+		Defferable->StartPlay();
 	}
 }
 
@@ -355,5 +355,13 @@ void AFarmingGameMode::AddAnimal(EAnimalType AnimalType)
 			GameState->AddChcicken();
 			break;
 		}
+	}
+}
+
+void AFarmingGameMode::StartConstructionUpgrade(EConstructionType ConstructionType)
+{
+	if (GameState)
+	{
+		GameState->StartConstructionUpgrade(ConstructionType);
 	}
 }
