@@ -38,6 +38,9 @@ void AMerchantStand::Interact()
 		case EMerchantType::Supermarket:
 			GameMode->OpenSupermarket();
 			break;
+		case EMerchantType::HouseBuilder:
+			GameMode->OpenHouseBuilder();
+			break;
 		}
 		
 	}

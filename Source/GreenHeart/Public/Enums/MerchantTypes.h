@@ -9,5 +9,6 @@ UENUM(BlueprintType)
 enum class EMerchantType : uint8
 {
 	Blacksmith,
-	Supermarket
+	Supermarket,
+	HouseBuilder
 };

@@ -17,6 +17,7 @@
 #include "Widgets/StationaryItemInventoryWidget.h"
 #include "Widgets/BlacksmithWidget.h"
 #include "Widgets/SupermarketWidget.h"
+#include "Widgets/HouseBuilderWidget.h"
 
 AActor* AFarmingGameMode::ChoosePlayerStart_Implementation(AController* Player)
 {
@@ -189,6 +190,21 @@ void AFarmingGameMode::OpenSupermarket()
 		SupermarketWidget->AddToViewport(2);
 		EnableUIMode();
 		SupermarketWidget->SetupWidget(GameState->GetSupermarketInfo());
+	}
+}
+
+void AFarmingGameMode::OpenHouseBuilder()
+{
+	if (!GameState)
+	{
+		return;
+	}
+	UHouseBuilderWidget* HouseBuilderWidget = CreateWidget<UHouseBuilderWidget>(GetWorld(), HouseBuilderWidgetClass);
+	if (HouseBuilderWidget)
+	{
+		HouseBuilderWidget->AddToViewport(2);
+		EnableUIMode();
+		HouseBuilderWidget->SetupWidget(GameState->GetConstructionStates());
 	}
 }
 

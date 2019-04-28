@@ -1,0 +1,113 @@
+// The Green Heart @Politechnika Opolska
+
+#include "HouseBuilderWidget.h"
+#include "Components/UniformGridPanel.h"
+#include "Components/UniformGridSlot.h"
+
+#include "Fundamentals/FarmingGameMode.h"
+#include "Widgets/ConstructionOfferWidget.h"
+#include "Widgets/UpgradeConfirmationWidget.h"
+
+bool UHouseBuilderWidget::Initialize()
+{
+	bool b = Super::Initialize();
+	bStopAction = true;
+	FOnInputAction Callback;
+	Callback.BindUFunction(this, FName("CloseWidget"));
+	ListenForInputAction("Interact", EInputEvent::IE_Pressed, false, Callback);
+	return b;
+}
+
+void UHouseBuilderWidget::SetupWidget(const TArray<FConstructionState>& NewConstructionStates)
+{
+	CreateConfirmationWidgetBindings();
+	SetupConstructionOffers(NewConstructionStates);
+}
+
+void UHouseBuilderWidget::SetupConstructionOffers(const TArray<FConstructionState>& Offers)
+{
+	for (int32 i = 0; i < Offers.Num(); i++)
+	{
+		UConstructionOfferWidget* OfferWidget = CreateWidget<UConstructionOfferWidget>(this, ConstructionOfferClass);
+		OfferWidget->SetOfferInfo(Offers[i]);
+		CreateOfferBindings(OfferWidget);
+		OfferWidgets.Add(OfferWidget);
+
+		OfferGrid->AddChild(OfferWidget);
+		if (UUniformGridSlot* GridSlot = Cast<UUniformGridSlot>(OfferWidget->Slot))
+		{
+			GridSlot->SetColumn(i % OffersInRow);
+			GridSlot->SetRow(i / OffersInRow);
+		}
+	}
+}
+
+void UHouseBuilderWidget::CreateConfirmationWidgetBindings()
+{
+	UpgradeConfirmation->OnConfirm.AddDynamic(this, &UHouseBuilderWidget::OnUpgradeConfirmed);
+	UpgradeConfirmation->OnCancel.AddDynamic(this, &UHouseBuilderWidget::OnUpgradeCanceled);
+}
+
+void UHouseBuilderWidget::CreateOfferBindings(UOfferWidget* OfferWidget)
+{
+	OfferWidget->OnClicked.AddDynamic(this, &UHouseBuilderWidget::OnOfferClicked);
+}
+
+void UHouseBuilderWidget::OnOfferClicked(UOfferWidget* ClickedOffer)
+{
+	if (UConstructionOfferWidget* ConstructionOffer = Cast<UConstructionOfferWidget>(ClickedOffer))
+	{
+		ActiveOffer = ConstructionOffer;
+		SetupUpgradeConfirmationWidget(ConstructionOffer);
+		ShowUpgradeConfirmationWidget();
+	}
+}
+
+void UHouseBuilderWidget::SetupUpgradeConfirmationWidget(UConstructionOfferWidget* ClickedOffer)
+{
+	FText Name = ClickedOffer->GetOfferName();
+	FLevelInfo CurrentLevelInfo = ClickedOffer->GetCurrentLevelInfo();
+	FLevelInfo NextLevelInfo = ClickedOffer->GetNextLevelInfo();
+	int32 CurrentLevel = ClickedOffer->GetCurrentLevel();
+	UpgradeConfirmation->SetupWidget(Name, CurrentLevelInfo, NextLevelInfo, CurrentLevel);
+}
+
+void UHouseBuilderWidget::OnUpgradeConfirmed(int32 Price)
+{
+	if (!ActiveOffer)
+	{
+		return;
+	}
+
+	ActiveOffer->Buy();
+	CloseWidget();
+}
+
+void UHouseBuilderWidget::OnUpgradeCanceled()
+{
+	HideUpgradeConfirmationWidget();
+}
+
+void UHouseBuilderWidget::ShowUpgradeConfirmationWidget()
+{
+	PlayAnimation(ShowUpgradeConfirmationAnimation, 0.0f, 1, EUMGSequencePlayMode::Forward);
+}
+
+void UHouseBuilderWidget::HideUpgradeConfirmationWidget()
+{
+	PlayAnimation(ShowUpgradeConfirmationAnimation, 0.0f, 1, EUMGSequencePlayMode::Reverse);
+}
+
+void UHouseBuilderWidget::CloseWidget()
+{
+	RestoreGame();
+	RemoveFromParent();
+}
+
+void UHouseBuilderWidget::RestoreGame()
+{
+	if (AFarmingGameMode* GameMode = Cast<AFarmingGameMode>(GetWorld()->GetAuthGameMode()))
+	{
+		GameMode->RestoreGame();
+	}
+}

@@ -10,6 +10,7 @@
 #include "Structs/ItemInfo.h"
 #include "Structs/BlacksmithInfo.h"
 #include "Structs/SupermarketInfo.h"
+#include "Structs/ConstructionState.h"
 #include "GameStateInfo.generated.h"
 
 USTRUCT(BlueprintType)
@@ -40,4 +41,7 @@ struct FGameStateInfo
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	FSupermarketInfo SupermarketInfo;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	TArray<FConstructionState> ConstructionStates;
 };

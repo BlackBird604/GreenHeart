@@ -66,6 +66,10 @@ public:
 
 	void AddToolToStationaryInventory(const FToolInfo& NewTool);
 
+	TArray<FConstructionState> GetConstructionStates();
+
+	FConstructionState GetConstructionState(EConstructionType ConstructionType);
+
 private:
 	void SetResourceAmount(EResourceType ResourceType, int32 Amount);
 
@@ -84,4 +88,6 @@ private:
 	FBlacksmithInfo BlacksmithInfo;
 
 	FSupermarketInfo SupermarketInfo;
+
+	TArray<FConstructionState> ConstructionStates;
 };

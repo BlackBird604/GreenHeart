@@ -15,3 +15,13 @@ struct FLevelInfo
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	int32 Cost;
 };
+
+
+USTRUCT(BlueprintType)
+struct FBuildingLevelInfo : public FLevelInfo
+{
+	GENERATED_USTRUCT_BODY()
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	int32 UpgradeTime;
+};

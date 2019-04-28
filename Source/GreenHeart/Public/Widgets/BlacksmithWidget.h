@@ -105,7 +105,7 @@ private:
 
 	UFUNCTION()
 	void OnToolInventoryUpgradeClicked();
-
+	
 	UFUNCTION()
 	void OnItemInventoryUpgradeClicked();
 

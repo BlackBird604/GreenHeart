@@ -18,6 +18,7 @@ void AFarmingGameState::BeginPlay()
 		StationaryItems = SavedState.StationaryItems;
 		BlacksmithInfo = SavedState.BlacksmithInfo;
 		SupermarketInfo = SavedState.SupermarketInfo;
+		ConstructionStates = SavedState.ConstructionStates;
 	}
 }
 
@@ -35,6 +36,7 @@ void AFarmingGameState::EndPlay(const EEndPlayReason::Type EndPlayReason)
 		GameStateInfo.StationaryItems = StationaryItems;
 		GameStateInfo.BlacksmithInfo = BlacksmithInfo;
 		GameStateInfo.SupermarketInfo = SupermarketInfo;
+		GameStateInfo.ConstructionStates = ConstructionStates;
 		GameInstance->SetGameStateInfo(GameStateInfo);
 	}
 }
@@ -195,4 +197,21 @@ void AFarmingGameState::AddToolToStationaryInventory(const FToolInfo& NewTool)
 			return;
 		}
 	}
+}
+
+TArray<FConstructionState> AFarmingGameState::GetConstructionStates()
+{
+	return ConstructionStates;
+}
+
+FConstructionState AFarmingGameState::GetConstructionState(EConstructionType ConstructionType)
+{
+	for (FConstructionState State : ConstructionStates)
+	{
+		if (State.ConstructionType == ConstructionType)
+		{
+			return State;
+		}
+	}
+	return FConstructionState();
 }
