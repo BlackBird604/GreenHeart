@@ -13,5 +13,7 @@ struct FAnimalState
 
 	bool bHasItem;
 
+	bool bReceivedInteraction;
+
 	int32 Happiness;
 };

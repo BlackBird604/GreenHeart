@@ -12,5 +12,8 @@ enum class EToolType : uint8
 	WateringCan,
 	Seeds,
 	Hammer,
-	Scythe
+	Scythe,
+	Axe,
+	Milker,
+	Brush
 };

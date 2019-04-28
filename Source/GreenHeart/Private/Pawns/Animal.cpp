@@ -3,11 +3,13 @@
 #include "Animal.h"
 #include "Components/BoxComponent.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "Components/SceneComponent.h"
 #include "GameFramework/PawnMovementComponent.h"
 #include "GameFramework/FloatingPawnMovement.h"
 #include "Engine/World.h"
 #include "TimerManager.h"
 
+#include "Defaults/ProjectDefaults.h"
 #include "Types/CollisionTypes.h"
 #include "Actors/Tools/Tool.h"
 
@@ -15,15 +17,18 @@ AAnimal::AAnimal()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
+	SceneRoot = CreateDefaultSubobject<USceneComponent>(TEXT("SceneRoot"));
+	RootComponent = SceneRoot;
+
 	CollisionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("CollisionBox"));
 	CollisionBox->SetCollisionProfileName(CollisionPresets::Pawn);
-	RootComponent = CollisionBox;
+	CollisionBox->SetupAttachment(SceneRoot);
 
 	AnimalMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("AnimalMesh"));
 	AnimalMesh->SetupAttachment(CollisionBox);
 
 	MovementComponent = CreateDefaultSubobject<UPawnMovementComponent, UFloatingPawnMovement>(TEXT("MovementComponent"));
-	MovementComponent->UpdatedComponent = CollisionBox;
+	MovementComponent->UpdatedComponent = SceneRoot;
 }
 
 void AAnimal::BeginPlay()
@@ -39,7 +44,6 @@ void AAnimal::Tick(float DeltaTime)
 	{
 		AddMovementInput(GetActorForwardVector());
 	}
-
 }
 
 void AAnimal::RestoreState(const FAnimalState& AnimalState)
@@ -64,6 +68,7 @@ void AAnimal::UseTool(const ATool* Instigator, int32 Strength)
 		case EToolType::Hoe:
 		case EToolType::Hammer:
 		case EToolType::Scythe:
+		case EToolType::Axe:
 			ApplyDamage();
 			break;
 	}
@@ -71,12 +76,12 @@ void AAnimal::UseTool(const ATool* Instigator, int32 Strength)
 
 void AAnimal::ApplyDamage()
 {
-	UE_LOG(LogTemp, Warning, TEXT("ToolHIT!"));
+	CurrentState.Happiness = FMath::Max(ProjectDefaults::MinHappiness, CurrentState.Happiness-10);
+	SaveUpdatedState();
 }
 
 void AAnimal::PerformNextAction()
 {
-	UE_LOG(LogTemp, Warning, TEXT("ToolHIT!"));
 	if (IsMovementBlocked())
 	{
 		Turn();
@@ -85,7 +90,7 @@ void AAnimal::PerformNextAction()
 		return;
 	}
 
-	if (FMath::RandBool())
+	if (FMath::RandRange(0, 10) > 7)
 	{
 		bShouldMove = true;
 		SetActionTimer(2.0f, 4.0f);
@@ -121,6 +126,8 @@ bool AAnimal::IsMovementBlocked()
 	float CollisionBoxLengthExtent = CollisionBox->GetScaledBoxExtent().X;
 	float CollisionBoxWidthExtent = CollisionBox->GetScaledBoxExtent().Y;
 	FVector ActorFrontLocation = GetActorLocation() + GetActorForwardVector() * CollisionBoxLengthExtent;
+	float HeightAboveGround = 10.0f;
+	ActorFrontLocation += GetActorUpVector() * HeightAboveGround;
 	float DetectionOffset = 1.0f;
 	ActorFrontLocation += GetActorForwardVector() * DetectionOffset;
 	FVector LeftSide = ActorFrontLocation - GetActorRightVector() * CollisionBoxWidthExtent;
@@ -139,4 +146,37 @@ void AAnimal::Turn()
 	FRotator ActorRotation = GetActorRotation();
 	ActorRotation.Yaw = FMath::RoundToFloat(ActorRotation.Yaw + YawRotationToAdd);
 	SetActorRotation(ActorRotation);
+}
+
+void AAnimal::RemoveOwnedItem()
+{
+	CurrentState.bHasItem = false;
+	SaveUpdatedState();
+}
+
+bool AAnimal::HasItem()
+{
+	return CurrentState.bHasItem;
+}
+
+void AAnimal::SetReceivedInteraction()
+{
+	CurrentState.bReceivedInteraction = true;
+	SaveUpdatedState();
+}
+
+TSubclassOf<ABaseItem> AAnimal::GetItemClass()
+{
+	FAnimalItemInfo BestResult;
+	for (FAnimalItemInfo ItemInfo : ItemInfos)
+	{
+		if (CurrentState.Happiness >= ItemInfo.RequiredHappiness)
+		{
+			if (BestResult.RequiredHappiness <= ItemInfo.RequiredHappiness)
+			{
+				BestResult = ItemInfo;
+			}
+		}
+	}
+	return BestResult.ItemClass;
 }

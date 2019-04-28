@@ -10,7 +10,7 @@ class UButton;
 class UImage;
 class UOfferWidget;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnOfferClickedSignature1, UOfferWidget*, ClickedOffer);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnOfferClickedSignature, UOfferWidget*, ClickedOffer);
 
 UCLASS()
 class GREENHEART_API UOfferWidget : public UUserWidget
@@ -20,7 +20,7 @@ class GREENHEART_API UOfferWidget : public UUserWidget
 public:
 	virtual bool Initialize() override;
 
-	FOnOfferClickedSignature1 OnClicked;
+	FOnOfferClickedSignature OnClicked;
 
 	virtual FText GetOfferName() { return FText(); }
 

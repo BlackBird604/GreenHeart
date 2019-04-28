@@ -6,8 +6,10 @@
 #include "GameFramework/Pawn.h"
 #include "Interfaces/ToolAffectable.h"
 #include "Structs/AnimalState.h"
+#include "Structs/AnimalItemInfo.h"
 #include "Animal.generated.h"
 
+class USceneComponent;
 class UBoxComponent;
 class USkeletalMeshComponent;
 class UPawnMovementComponent;
@@ -33,7 +35,20 @@ public:
 protected:
 	void RestoreState(const FAnimalState& AnimalState);
 
+	void RemoveOwnedItem();
+
+	bool HasItem();
+
+	void SetReceivedInteraction();
+
+	virtual void SaveUpdatedState() {}
+
+	TSubclassOf<ABaseItem> GetItemClass();
+
 	FAnimalState GetCurrentState();
+
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	USceneComponent* SceneRoot;
 
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	UBoxComponent* CollisionBox;
@@ -43,6 +58,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	UPawnMovementComponent* MovementComponent;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	TArray<FAnimalItemInfo> ItemInfos;
 
 private:
 	void SetActionTimer(float MinDelay, float MaxDelay);
@@ -55,8 +73,6 @@ private:
 	void Turn();
 
 	FAnimalState CurrentState;
-
-	bool bHasItem = false;
 
 	void ApplyDamage();
 

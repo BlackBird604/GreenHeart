@@ -24,22 +24,34 @@ void UAnimalUpdater::UpdateAnimalBuilding(TArray<FAnimalState>& AnimalStates, TA
 
 	for (FAnimalState& AnimalState : AnimalStates)
 	{
+		int HappinessChange = 0;
 		if (!AnimalState.bHasItem && BoxesFilled > 0)
 		{
 			AnimalState.bHasItem = true;
-			if (AnimalState.Happiness < ProjectDefaults::MaxHappiness)
-			{
-				AnimalState.Happiness++;
-			}
+			HappinessChange += 1;
 			BoxesFilled--;
 		}
 		else
 		{
-			if (AnimalState.Happiness > ProjectDefaults::MinHappiness)
+			if (AnimalState.bHasItem)
 			{
-				AnimalState.Happiness--;
+				HappinessChange -= 1;
+			}
+			if (BoxesFilled <= 0)
+			{
+				HappinessChange -= 5;
 			}
 		}
+		if (AnimalState.bReceivedInteraction)
+		{
+			HappinessChange += 2;
+		}
 
+		AnimalState.Happiness = GetClampedHappiness(AnimalState.Happiness + HappinessChange);
 	}
+}
+
+int32 UAnimalUpdater::GetClampedHappiness(int32 Happiness)
+{
+	return FMath::Clamp(Happiness, ProjectDefaults::MinHappiness, ProjectDefaults::MaxHappiness);
 }

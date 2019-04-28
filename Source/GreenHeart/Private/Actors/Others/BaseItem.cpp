@@ -16,6 +16,7 @@ ABaseItem::ABaseItem()
 	CollisionSphere->SetSphereRadius(20.0f);
 	CollisionSphere->SetCollisionProfileName(CollisionPresets::Throwable);
 	ItemMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ItemMesh"));
+	ItemMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	ItemMesh->SetupAttachment(CollisionSphere);
 
 	ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovement"));

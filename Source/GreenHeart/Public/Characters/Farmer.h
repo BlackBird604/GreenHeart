@@ -35,6 +35,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "AnimNotifies")
 	void OnUseToolEnd();
 
+	UFUNCTION(BlueprintCallable, Category = "AnimNotifies")
+	void OnCollectMilk();
+
 	void ClearMovementInput();
 
 	void AutomaticMoveTo(TArray<FVector> TargetLocations);

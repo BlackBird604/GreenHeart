@@ -221,6 +221,33 @@ void AFarmer::OnUseToolEnd()
 	}
 }
 
+void AFarmer::OnCollectMilk()
+{
+	if (!CurrentTool)
+	{
+		return;
+	}
+
+	TArray<AActor*> AffectedActors = CurrentTool->GetAffectedActors();
+	if (AffectedActors.Num() == 0)
+	{
+		return;
+	}
+	AActor* AffectedActor = AffectedActors[0];
+	if (ICollectable* CollectableActor = Cast<ICollectable>(AffectedActor))
+	{
+		if (CollectableActor->CanBeCollected())
+		{
+			ItemInHands = CollectableActor->Collect();
+			if (ItemInHands)
+			{
+				PlayPickupTimeline();
+				AttachActorToItemSocket(ItemInHands);
+			}
+		}
+	}
+}
+
 void AFarmer::OnMoveUpPressed()
 {
 	MovementInputs.AddUnique(EMovementDirection::Up);

@@ -19,4 +19,7 @@ public:
 
 	void UpdateAnimalBuilding(TArray<FAnimalState>& CowStates, TArray<FFeedBoxState>& FeedBoxStates);
 
+
+private:
+	int32 GetClampedHappiness(int32 Happiness);
 };

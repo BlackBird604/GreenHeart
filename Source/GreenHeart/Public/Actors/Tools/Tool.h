@@ -39,7 +39,7 @@ protected:
 public:
 	void Restore(const FToolInfo& SavedToolInfo);
 
-	int32 Use(const AActor* User);
+	virtual int32 Use(const AActor* User);
 
 	bool Charge();
 
@@ -52,6 +52,8 @@ public:
 	UAnimMontage* GetUseMontage();
 
 	bool IsSingleUse();
+
+	TArray<AActor*> GetAffectedActors();
 
 protected:
 	UPROPERTY(VisibleAnywhere, Category = "Components")
@@ -76,5 +78,7 @@ protected:
 	FToolInfo ToolInfo;
 
 private:
+	TArray<AActor*> AffectedActors;
+
 	int32 CurrentCharge = 0;
 };

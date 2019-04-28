@@ -20,11 +20,6 @@ void AFarmingGameState::BeginPlay()
 		SupermarketInfo = SavedState.SupermarketInfo;
 		ConstructionStates = SavedState.ConstructionStates;
 	}
-
-	for (FConstructionState& State : ConstructionStates)
-	{
-		UE_LOG(LogTemp,Warning,TEXT("BeginPlay: %s, %d [%d]"), *State.Name.ToString(), State.CurrentLevel, State.ConstructionTimeLeft)
-	}
 }
 
 void AFarmingGameState::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -43,11 +38,6 @@ void AFarmingGameState::EndPlay(const EEndPlayReason::Type EndPlayReason)
 		GameStateInfo.SupermarketInfo = SupermarketInfo;
 		GameStateInfo.ConstructionStates = ConstructionStates;
 		GameInstance->SetGameStateInfo(GameStateInfo);
-	}
-
-	for (FConstructionState& State : ConstructionStates)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("EndPlay: %s, %d"), *State.Name.ToString(), State.CurrentLevel, State.ConstructionTimeLeft)
 	}
 }
 

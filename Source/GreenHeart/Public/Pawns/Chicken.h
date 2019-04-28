@@ -6,7 +6,6 @@
 #include "Pawns/Animal.h"
 #include "Chicken.generated.h"
 
-
 UCLASS()
 class GREENHEART_API AChicken : public AAnimal
 {
@@ -15,6 +14,15 @@ class GREENHEART_API AChicken : public AAnimal
 public:
 	virtual void RestoreStateByID(int32 AnimalID) override;
 
+protected:
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	float EggSpawnHeight = 0.0f;
+
+	virtual void SaveUpdatedState() override;
+
 private:
-	void SaveUpdatedState();
+	void SpawnEgg();
+
+	UFUNCTION()
+	void OnEggCollected();
 };

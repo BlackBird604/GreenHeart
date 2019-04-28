@@ -65,6 +65,7 @@ int32 ATool::Use(const AActor* User)
 		return 0;
 	}
 
+	AffectedActors.Empty();
 	int32 EnergyDrain = CurrentCharge + 1;
 	TArray<FVector2D> TraceOffsets = ChargeInfo[CurrentCharge].TraceOffsets;
 	for (FVector2D TraceOffset : TraceOffsets)
@@ -83,6 +84,7 @@ int32 ATool::Use(const AActor* User)
 			IToolAffectable* AffectableActor = Cast<IToolAffectable>(HitResult.Actor);
 			if (AffectableActor)
 			{
+				AffectedActors.Add(HitResult.GetActor());
 				AffectableActor->UseTool(this, CurrentCharge + 1);
 			}
 		}
@@ -105,4 +107,9 @@ FToolInfo ATool::GetToolInfo()
 bool ATool::IsSingleUse()
 {
 	return bIsSingleUse;
+}
+
+TArray<AActor*> ATool::GetAffectedActors()
+{
+	return AffectedActors;
 }
