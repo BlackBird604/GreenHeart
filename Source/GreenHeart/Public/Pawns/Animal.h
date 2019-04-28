@@ -20,6 +20,8 @@ class GREENHEART_API AAnimal : public APawn, public IToolAffectable
 public:
 	AAnimal();
 
+	virtual void Tick(float DeltaTime) override;
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -43,9 +45,22 @@ protected:
 	UPawnMovementComponent* MovementComponent;
 
 private:
+	void SetActionTimer(float MinDelay, float MaxDelay);
+
+	UFUNCTION()
+	void PerformNextAction();
+
+	bool IsMovementBlocked();
+
+	void Turn();
+
 	FAnimalState CurrentState;
 
 	bool bHasItem = false;
 
 	void ApplyDamage();
+
+	bool bShouldMove = false;
+
+	FTimerHandle ActionTimer;
 };
