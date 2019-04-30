@@ -31,6 +31,7 @@ void ATool::BeginPlay()
 void ATool::Restore(const FToolInfo& SavedToolInfo)
 {
 	ToolInfo = SavedToolInfo;
+	SetupMaterial(ToolInfo.CurrentLevel);
 }
 
 bool ATool::Charge()

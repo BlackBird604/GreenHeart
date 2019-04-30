@@ -36,6 +36,9 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void SetupMaterial(int32 Level);
+
 public:
 	void Restore(const FToolInfo& SavedToolInfo);
 
@@ -59,7 +62,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	USceneComponent* SceneRoot;
 
-	UPROPERTY(VisibleAnywhere, Category = "Components")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 	USkeletalMeshComponent* ToolMesh;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")

@@ -34,6 +34,9 @@ protected:
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "AnimNotifies")
+	void OnHideTool();
+
+	UFUNCTION(BlueprintCallable, Category = "AnimNotifies")
 	void OnUseToolEnd();
 
 	UFUNCTION(BlueprintCallable, Category = "AnimNotifies")
@@ -139,6 +142,7 @@ private:
 
 	void ChargeTool();
 
+	UFUNCTION(BlueprintCallable)
 	void SetToolHidden(bool bNewHidden);
 
 	void DestroyItemInHands();

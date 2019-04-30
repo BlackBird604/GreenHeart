@@ -325,9 +325,12 @@ void AFarmer::OnEatPressed()
 
 void AFarmer::OnToggleInventory()
 {
-	if (AFarmingGameMode* GameMode = GetWorld()->GetAuthGameMode<AFarmingGameMode>())
+	if (!IsMontagePlaying())
 	{
-		GameMode->OpenPlayerInventory();
+		if (AFarmingGameMode* GameMode = GetWorld()->GetAuthGameMode<AFarmingGameMode>())
+		{
+			GameMode->OpenPlayerInventory();
+		}
 	}
 }
 
@@ -665,4 +668,9 @@ void AFarmer::UpgradeItemInventory()
 bool AFarmer::HasItemInHands() const
 {
 	return ItemInHands != nullptr;
+}
+
+void AFarmer::OnHideTool()
+{
+	SetToolHidden(true);
 }
