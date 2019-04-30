@@ -48,6 +48,8 @@ public:
 
 	virtual AActor* Collect() override;
 
+	virtual UAnimMontage* GetPickupMontage() override;
+
 	FPlantState GetState();
 
 	void RestoreState(const FPlantState& PlantState);
@@ -77,6 +79,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup", meta = (ClampMin = "0"))
 	int32 GrowthValueAfterCollecting = 0;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	UAnimMontage* PickupMontage;
 
 private:
 	void UpdateMesh();

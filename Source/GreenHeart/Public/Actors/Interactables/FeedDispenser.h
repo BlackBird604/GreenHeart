@@ -29,6 +29,8 @@ public:
 
 	virtual AActor* Collect() override;
 
+	virtual UAnimMontage* GetPickupMontage() override;
+
 protected:
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	UBoxComponent* CollisionBox;
@@ -41,6 +43,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	EResourceType ResourceType;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	UAnimMontage* PickupMontage;
 
 private:
 	UPROPERTY()

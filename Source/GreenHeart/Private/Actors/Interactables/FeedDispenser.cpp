@@ -56,3 +56,8 @@ AActor* AFeedDispenser::Collect()
 	return FeedActor;
 }
 
+UAnimMontage* AFeedDispenser::GetPickupMontage()
+{
+	return PickupMontage;
+}
+

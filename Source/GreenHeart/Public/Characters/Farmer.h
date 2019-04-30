@@ -12,6 +12,7 @@ class USpringArmComponent;
 class UCameraComponent;
 class UToolInventoryComponent;
 class UItemInventoryComponent;
+class UAnimMontage;
 class ATool;
 
 UCLASS()
@@ -37,6 +38,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "AnimNotifies")
 	void OnCollectMilk();
+
+	UFUNCTION(BlueprintCallable, Category = "AnimNotifies")
+	bool HasItemInHands() const;
 
 	void ClearMovementInput();
 
@@ -101,8 +105,8 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	UItemInventoryComponent* ItemInventory;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
-	USceneComponent* PickupComponent;
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	UAnimMontage* ThrowMontage;
 
 private:
 	void SaveState();

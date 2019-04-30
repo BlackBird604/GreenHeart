@@ -33,6 +33,8 @@ public:
 
 	virtual AActor* Collect() override;
 
+	virtual UAnimMontage* GetPickupMontage() override;
+
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	UBoxComponent* InteractionBox;
 
@@ -44,4 +46,7 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	int32 EnergyPoints = 0;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	UAnimMontage* PickupMontage;
 };

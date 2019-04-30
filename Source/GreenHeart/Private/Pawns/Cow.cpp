@@ -52,6 +52,11 @@ AActor* ACow::Collect()
 	return MilkActor;
 }
 
+UAnimMontage* ACow::GetPickupMontage()
+{
+	return PickupMontage;
+}
+
 void ACow::SaveUpdatedState()
 {
 	if (AFarmingGameState* GameState = GetWorld()->GetGameState<AFarmingGameState>())

@@ -38,3 +38,8 @@ AActor* AEgg::Collect()
 	OnCollected.Broadcast();
 	return this;
 }
+
+UAnimMontage* AEgg::GetPickupMontage()
+{
+	return PickupMontage;
+}

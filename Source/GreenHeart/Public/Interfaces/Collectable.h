@@ -14,6 +14,7 @@ class UCollectable : public UInterface
 };
 
 class AActor;
+class UAnimMontage;
 
 class GREENHEART_API ICollectable
 {
@@ -23,4 +24,6 @@ public:
 	virtual bool CanBeCollected() = 0;
 
 	virtual AActor* Collect() = 0;
+
+	virtual UAnimMontage* GetPickupMontage() = 0;
 };

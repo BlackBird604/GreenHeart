@@ -93,6 +93,11 @@ AActor* APlant::Collect()
 	return CropActor;
 }
 
+UAnimMontage* APlant::GetPickupMontage()
+{
+	return PickupMontage;
+}
+
 
 FPlantState APlant::GetState()
 {

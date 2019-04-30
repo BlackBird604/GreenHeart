@@ -46,9 +46,6 @@ AFarmer::AFarmer()
 	FollowCamera->PostProcessSettings.bOverride_MotionBlurAmount = true;
 	FollowCamera->PostProcessSettings.MotionBlurAmount = 0.0f;
 
-	PickupComponent = CreateDefaultSubobject<USceneComponent>(TEXT("PickupComponent"));
-	PickupComponent->SetupAttachment(RootComponent);
-
 	ToolInventory = CreateDefaultSubobject<UToolInventoryComponent>(TEXT("ToolInventory"));
 	ItemInventory = CreateDefaultSubobject<UItemInventoryComponent>(TEXT("ItemInventory"));
 
@@ -241,7 +238,8 @@ void AFarmer::OnCollectMilk()
 			ItemInHands = CollectableActor->Collect();
 			if (ItemInHands)
 			{
-				PlayPickupTimeline();
+				UAnimMontage* PickupMontage = CollectableActor->GetPickupMontage();
+				PlayAnimMontage(PickupMontage);
 				AttachActorToItemSocket(ItemInHands);
 			}
 		}
@@ -470,6 +468,7 @@ void AFarmer::OnInteractPressed()
 		{
 			if (ThrowableActor->CanBeThrown(GetActorForwardVector()))
 			{
+				PlayAnimMontage(ThrowMontage);
 				ThrowableActor->Throw(GetActorForwardVector());
 				ItemInHands = nullptr;
 				return;
@@ -487,7 +486,8 @@ void AFarmer::OnInteractPressed()
 				ItemInHands = CollectableActor->Collect();
 				if (ItemInHands)
 				{
-					PlayPickupTimeline();
+					UAnimMontage* PickupMontage = CollectableActor->GetPickupMontage();
+					PlayAnimMontage(PickupMontage);
 					AttachActorToItemSocket(ItemInHands);
 				}
 			}
@@ -546,7 +546,7 @@ void AFarmer::AttachActorToItemSocket(AActor* Item)
 {
 	if (Item)
 	{
-		Item->AttachToComponent(PickupComponent, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+		Item->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, "PickupBone");
 	}
 }
 
@@ -660,4 +660,9 @@ void AFarmer::UpgradeToolInventory()
 void AFarmer::UpgradeItemInventory()
 {
 	ItemInventory->Upgrade();
+}
+
+bool AFarmer::HasItemInHands() const
+{
+	return ItemInHands != nullptr;
 }

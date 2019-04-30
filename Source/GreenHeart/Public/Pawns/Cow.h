@@ -24,6 +24,11 @@ public:
 
 	virtual AActor* Collect() override;
 
+	virtual UAnimMontage* GetPickupMontage() override;
+
 protected:
 	virtual void SaveUpdatedState() override;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	UAnimMontage* PickupMontage;
 };
