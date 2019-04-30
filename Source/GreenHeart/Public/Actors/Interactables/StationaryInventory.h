@@ -25,6 +25,8 @@ protected:
 public:
 	virtual void Interact() override;
 
+	void EndInteraction();
+
 protected:
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	UBoxComponent* CollisionBox;
@@ -34,4 +36,10 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	EStationaryInventoryType InventoryType;
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnInteractionStart();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnInteractionEnd();
 };

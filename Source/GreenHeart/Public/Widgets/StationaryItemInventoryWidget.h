@@ -11,6 +11,7 @@ class UUniformGridPanel;
 class UInventoryItemSlotWidget;
 class UDescriptionWidget;
 class AFarmer;
+class AActor;
 
 UCLASS()
 class GREENHEART_API UStationaryItemInventoryWidget : public UUserWidget
@@ -19,6 +20,8 @@ class GREENHEART_API UStationaryItemInventoryWidget : public UUserWidget
 
 public:
 	virtual bool Initialize() override;
+
+	void SetInventoryActor(AActor* NewInventoryActor);
 
 	void PopulateSlots(AFarmer* Farmer, const TArray<FItemInfo>& StoredItems);
 
@@ -66,6 +69,8 @@ private:
 
 	void UpdateStationaryInventory();
 
+	void UpdateInventoryActor();
+
 	void RestoreGame();
 
 	TArray<UInventoryItemSlotWidget*> EquippedItemSlots;
@@ -76,4 +81,5 @@ private:
 
 	AFarmer* PlayerRef;
 
+	AActor* InventoryActor;
 };

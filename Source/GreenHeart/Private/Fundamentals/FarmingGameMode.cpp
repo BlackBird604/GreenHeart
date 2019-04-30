@@ -125,40 +125,42 @@ void AFarmingGameMode::OpenPlayerInventory()
 	}
 }
 
-void AFarmingGameMode::OpenStationaryInventory(EStationaryInventoryType InventoryType)
+void AFarmingGameMode::OpenStationaryInventory(EStationaryInventoryType InventoryType, AActor* InventoryActor)
 {
 	if (GameState)
 	{
 		switch (InventoryType)
 		{
 		case EStationaryInventoryType::Tool:
-			OpenStationaryToolInventory();
+			OpenStationaryToolInventory(InventoryActor);
 			break;
 		case EStationaryInventoryType::Item:
-			OpenStationaryItemInventory();
+			OpenStationaryItemInventory(InventoryActor);
 			break;
 		}
 	}
 }
 
-void AFarmingGameMode::OpenStationaryToolInventory()
+void AFarmingGameMode::OpenStationaryToolInventory(AActor* InventoryActor)
 {
 	UStationaryToolInventoryWidget* StationaryInventoryWidget = CreateWidget<UStationaryToolInventoryWidget>(GetWorld(), StationaryToolInventoryWidgetClass);
 	if (StationaryInventoryWidget)
 	{
 		StationaryInventoryWidget->AddToViewport(2);
 		EnableUIMode();
+		StationaryInventoryWidget->SetInventoryActor(InventoryActor);
 		StationaryInventoryWidget->PopulateSlots(PlayerCharacter, GameState->GetStationaryToolInventoryInfo());
 	}
 }
 
-void AFarmingGameMode::OpenStationaryItemInventory()
+void AFarmingGameMode::OpenStationaryItemInventory(AActor* InventoryActor)
 {
 	UStationaryItemInventoryWidget* StationaryInventoryWidget = CreateWidget<UStationaryItemInventoryWidget>(GetWorld(), StationaryItemInventoryWidgetClass);
 	if (StationaryInventoryWidget)
 	{
 		StationaryInventoryWidget->AddToViewport(2);
 		EnableUIMode();
+		StationaryInventoryWidget->SetInventoryActor(InventoryActor);
 		StationaryInventoryWidget->PopulateSlots(PlayerCharacter, GameState->GetStationaryItemInventoryInfo());
 	}
 }

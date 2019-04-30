@@ -8,6 +8,7 @@
 #include "Widgets/DescriptionWidget.h"
 #include "Fundamentals/FarmingGameMode.h"
 #include "Characters/Farmer.h"
+#include "Actors/Interactables/StationaryInventory.h"
 
 bool UStationaryToolInventoryWidget::Initialize()
 {
@@ -17,6 +18,11 @@ bool UStationaryToolInventoryWidget::Initialize()
 	Callback.BindUFunction(this, FName("CloseWidget"));
 	ListenForInputAction("Interact", EInputEvent::IE_Pressed, false, Callback);
 	return b;
+}
+
+void UStationaryToolInventoryWidget::SetInventoryActor(AActor* NewInventoryActor)
+{
+	InventoryActor = NewInventoryActor;
 }
 
 void UStationaryToolInventoryWidget::PopulateSlots(AFarmer* Farmer, const TArray<FToolInfo>& StoredTools)
@@ -137,6 +143,7 @@ void UStationaryToolInventoryWidget::CloseWidget()
 {
 	UpdatePlayerInventory();
 	UpdateStationaryInventory();
+	UpdateInventoryActor();
 	RestoreGame();
 	RemoveFromParent();
 }
@@ -169,6 +176,14 @@ void UStationaryToolInventoryWidget::UpdateStationaryInventory()
 	if (AFarmingGameMode* GameMode = Cast<AFarmingGameMode>(GetWorld()->GetAuthGameMode()))
 	{
 		GameMode->UpdateStationaryInventory(ToolInfos);
+	}
+}
+
+void UStationaryToolInventoryWidget::UpdateInventoryActor()
+{
+	if (AStationaryInventory* Inventory = Cast<AStationaryInventory>(InventoryActor))
+	{
+		Inventory->EndInteraction();
 	}
 }
 

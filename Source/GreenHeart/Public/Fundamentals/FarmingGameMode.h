@@ -44,7 +44,7 @@ protected:
 public:
 	void OpenPlayerInventory();
 
-	void OpenStationaryInventory(EStationaryInventoryType InventoryType);
+	void OpenStationaryInventory(EStationaryInventoryType InventoryType, AActor* InventoryActor);
 
 	void OpenBlacksmith();
 
@@ -124,9 +124,9 @@ private:
 
 	void UpdateClock();
 
-	void OpenStationaryToolInventory();
+	void OpenStationaryToolInventory(AActor* InventoryActor);
 
-	void OpenStationaryItemInventory();
+	void OpenStationaryItemInventory(AActor* InventoryActor);
 
 	void EnableUIMode();
 

@@ -29,7 +29,13 @@ void AStationaryInventory::Interact()
 {
 	if (AFarmingGameMode* GameMode = GetWorld()->GetAuthGameMode<AFarmingGameMode>())
 	{
-		GameMode->OpenStationaryInventory(InventoryType);
+		GameMode->OpenStationaryInventory(InventoryType, this);
+		OnInteractionStart();
 	}
+}
+
+void AStationaryInventory::EndInteraction()
+{
+	OnInteractionEnd();
 }
 
