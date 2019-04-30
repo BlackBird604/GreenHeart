@@ -59,6 +59,12 @@ public:
 	TArray<AActor*> GetAffectedActors();
 
 protected:
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnUse(const FVector& GridLocation);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnAffectedUse(const FVector& GridLocation);
+
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	USceneComponent* SceneRoot;
 
@@ -80,8 +86,22 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	FToolInfo ToolInfo;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	float SequenceUseDelay;
+
 private:
+	void PerformInstantUse();
+
+	UFUNCTION()
+	void PerformSequenceUse();
+
+	void UseAtLocation(const FVector& Location);
+
+	TArray<FVector> UseLocations;
+
 	TArray<AActor*> AffectedActors;
+
+	FTimerHandle SequenceUseTimer;
 
 	int32 CurrentCharge = 0;
 };

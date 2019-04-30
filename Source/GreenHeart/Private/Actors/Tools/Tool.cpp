@@ -3,6 +3,8 @@
 #include "Tool.h"
 #include "Engine/World.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "TimerManager.h"
 
 #include "Defaults/ProjectDefaults.h"
 #include "Types/CollisionTypes.h"
@@ -58,7 +60,6 @@ UAnimMontage* ATool::GetUseMontage()
 	return UseMontage;
 }
 
-//REFACTORING
 int32 ATool::Use(const AActor* User)
 {
 	if (!User || CurrentCharge >= ChargeInfo.Num())
@@ -72,28 +73,69 @@ int32 ATool::Use(const AActor* User)
 	for (FVector2D TraceOffset : TraceOffsets)
 	{
 		float TileSize = ProjectDefaults::TileSize;
-		float TraceLength = 100.0f;
 		FVector TraceStart = User->GetActorLocation();
 		TraceStart += User->GetActorForwardVector() * TraceOffset.X * TileSize;
 		TraceStart += User->GetActorRightVector() * TraceOffset.Y * TileSize;
-		FVector TraceEnd = TraceStart + FVector(0.0f, 0.0f, -TraceLength);
-
-		TArray<FHitResult> HitResults;
-		GetWorld()->LineTraceMultiByChannel(HitResults, TraceStart, TraceEnd, ECC_ToolTrace);
-		for (FHitResult HitResult : HitResults)
-		{
-			IToolAffectable* AffectableActor = Cast<IToolAffectable>(HitResult.Actor);
-			if (AffectableActor)
-			{
-				AffectedActors.Add(HitResult.GetActor());
-				AffectableActor->UseTool(this, CurrentCharge + 1);
-			}
-		}
+		UseLocations.Add(TraceStart);
 	}
 
-	CurrentCharge = 0;
+	if (SequenceUseDelay <= 0)
+	{
+		PerformInstantUse();
+	}
+	else
+	{
+		GetWorldTimerManager().SetTimer(SequenceUseTimer, this, &ATool::PerformSequenceUse, SequenceUseDelay, true, 0.0f);
+	}
 	return EnergyDrain;
 }
+
+void ATool::PerformInstantUse()
+{
+	for (const FVector& Location : UseLocations)
+	{
+		UseAtLocation(Location);
+	}
+	UseLocations.Empty();
+	CurrentCharge = 0;
+}
+
+void ATool::PerformSequenceUse()
+{
+	if (UseLocations.Num() > 0)
+	{
+		FVector Location = UseLocations[0];
+		UseLocations.RemoveAt(0);
+		UseAtLocation(Location);
+	}
+
+	if (UseLocations.Num() == 0)
+	{
+		GetWorldTimerManager().ClearTimer(SequenceUseTimer);
+		CurrentCharge = 0;
+	}
+}
+
+void ATool::UseAtLocation(const FVector& Location)
+{
+	OnUse(Location.GridSnap(ProjectDefaults::TileSize));
+	FVector GridLocation = Location.GridSnap(100.0f);
+	float TraceLength = 100.0f;
+	FVector TraceEnd = Location + FVector(0.0f, 0.0f, -TraceLength);
+	TArray<FHitResult> HitResults;
+	GetWorld()->LineTraceMultiByChannel(HitResults, Location, TraceEnd, ECC_ToolTrace);
+	for (FHitResult HitResult : HitResults)
+	{
+		IToolAffectable* AffectableActor = Cast<IToolAffectable>(HitResult.Actor);
+		if (AffectableActor)
+		{
+			OnAffectedUse(Location.GridSnap(ProjectDefaults::TileSize));
+			AffectedActors.Add(HitResult.GetActor());
+			AffectableActor->UseTool(this, CurrentCharge + 1);
+		}
+	}
+}
+
 
 EToolType ATool::GetType() const
 {
