@@ -37,12 +37,18 @@ public:
 	void OnHideTool();
 
 	UFUNCTION(BlueprintCallable, Category = "AnimNotifies")
+		void OnShowTool();
+
+	UFUNCTION(BlueprintCallable, Category = "AnimNotifies")
 	void OnUseToolEnd();
+
+	UFUNCTION(BlueprintCallable, Category = "AnimNotifies")
+	void OnToolPreviewEnd();
 
 	UFUNCTION(BlueprintCallable, Category = "AnimNotifies")
 	void OnCollectMilk();
 
-	UFUNCTION(BlueprintCallable, Category = "AnimNotifies")
+	UFUNCTION(BlueprintCallable)
 	bool HasItemInHands() const;
 
 	void ClearMovementInput();
@@ -111,6 +117,12 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	UAnimMontage* ThrowMontage;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	UAnimMontage* ToolPreviewMontage;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	FRotator ToolPreviewRotation;
+
 private:
 	void SaveState();
 
@@ -174,4 +186,6 @@ private:
 	float SprintSpeed = 400.0f;
 
 	int32 Energy;
+
+	FRotator SavedRotation = FRotator::ZeroRotator;
 };

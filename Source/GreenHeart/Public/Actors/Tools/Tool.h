@@ -58,6 +58,10 @@ public:
 
 	TArray<AActor*> GetAffectedActors();
 
+	void SetPreviewTransform();
+
+	void RestoreInitialTransform();
+
 protected:
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnUse(const FVector& GridLocation);
@@ -89,6 +93,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	float SequenceUseDelay;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	FTransform PreviewTransform;
+
 private:
 	void PerformInstantUse();
 
@@ -104,4 +111,6 @@ private:
 	FTimerHandle SequenceUseTimer;
 
 	int32 CurrentCharge = 0;
+
+	FTransform InitialTransform;
 };

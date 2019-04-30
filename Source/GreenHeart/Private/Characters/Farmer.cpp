@@ -415,6 +415,11 @@ void AFarmer::OnNextToolPressed()
 	CurrentTool = SpawnTool();
 	if (CurrentTool && GetMesh())
 	{
+		SetToolHidden(true);
+		SavedRotation = GetActorRotation();
+		SetActorRotation(ToolPreviewRotation);
+		CurrentTool->SetPreviewTransform();
+		PlayAnimMontage(ToolPreviewMontage);
 		CurrentTool->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, FName("ToolSocket"));
 	}
 }
@@ -673,4 +678,19 @@ bool AFarmer::HasItemInHands() const
 void AFarmer::OnHideTool()
 {
 	SetToolHidden(true);
+}
+
+void AFarmer::OnShowTool()
+{
+	SetToolHidden(false);
+}
+
+void AFarmer::OnToolPreviewEnd()
+{
+	if (CurrentTool)
+	{
+		SetActorRotation(SavedRotation, ETeleportType::ResetPhysics);
+		CurrentTool->RestoreInitialTransform();
+		SetToolHidden(true);
+	}
 }

@@ -27,7 +27,10 @@ ATool::ATool()
 void ATool::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	if (ToolMesh)
+	{
+		InitialTransform = ToolMesh->GetRelativeTransform();
+	}
 }
 
 void ATool::Restore(const FToolInfo& SavedToolInfo)
@@ -155,4 +158,21 @@ bool ATool::IsSingleUse()
 TArray<AActor*> ATool::GetAffectedActors()
 {
 	return AffectedActors;
+}
+
+void ATool::SetPreviewTransform()
+{
+	if (ToolMesh)
+	{
+		ToolMesh->SetRelativeTransform(PreviewTransform);
+	}
+
+}
+
+void ATool::RestoreInitialTransform()
+{
+	if (ToolMesh)
+	{
+		ToolMesh->SetRelativeTransform(InitialTransform);
+	}
 }
