@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "Enums/MovementDirections.h"
 #include "Structs/FarmerState.h"
+#include "Structs/FatigueInfo.h"
 #include "Farmer.generated.h"
 
 class USpringArmComponent;
@@ -121,6 +122,9 @@ protected:
 	UAnimMontage* ToolPreviewMontage;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	TArray<FFatigueInfo> FatigueInfos;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	FRotator ToolPreviewRotation;
 
 private:
@@ -163,6 +167,8 @@ private:
 
 	void UpdateCurrentTool();
 
+	void UpdateFatigueState();
+
 	UPROPERTY()
 	ATool* CurrentTool;
 
@@ -188,4 +194,6 @@ private:
 	int32 Energy;
 
 	FRotator SavedRotation = FRotator::ZeroRotator;
+
+	int32 CurrentFatigueState = 0;
 };

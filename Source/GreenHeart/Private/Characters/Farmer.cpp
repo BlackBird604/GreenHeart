@@ -144,6 +144,7 @@ void AFarmer::RestoreState()
 		ItemInventory->RestoreState(FarmerState.ItemInventoryState);
 		RestoreItemInHands(FarmerState.ItemInHandsInfo.Class);
 		Energy = FarmerState.Energy;
+		UpdateFatigueState();
 	}
 }
 
@@ -216,6 +217,7 @@ void AFarmer::OnUseToolEnd()
 		CurrentTool->Destroy();
 		CurrentTool = nullptr;
 	}
+	UpdateFatigueState();
 }
 
 void AFarmer::OnCollectMilk()
@@ -320,6 +322,7 @@ void AFarmer::OnEatPressed()
 	{
 		Energy += Consumable->GetEnergyPoints();
 		DestroyItemInHands();
+		UpdateFatigueState();
 	}
 }
 
@@ -693,4 +696,22 @@ void AFarmer::OnToolPreviewEnd()
 		CurrentTool->RestoreInitialTransform();
 		SetToolHidden(true);
 	}
+}
+
+void AFarmer::UpdateFatigueState()
+{
+	int32 NewFatigueState = 0;
+	for (const FFatigueInfo FatigueInfo : FatigueInfos)
+	{
+		if (Energy > FatigueInfo.EnergyLevel)
+		{
+			NewFatigueState++;
+		}
+	}
+	if (CurrentFatigueState > NewFatigueState)
+	{
+		UAnimMontage* FatigueMontage = FatigueInfos[NewFatigueState].FatigueMontage;
+		PlayAnimMontage(FatigueMontage);
+	}
+	CurrentFatigueState = NewFatigueState;
 }
