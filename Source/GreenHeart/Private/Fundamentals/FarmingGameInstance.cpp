@@ -3,6 +3,7 @@
 #include "FarmingGameInstance.h"
 #include "Kismet/GameplayStatics.h"
 
+#include "Defaults/ProjectDefaults.h"
 #include "Objects/FarmUpdater.h"
 #include "Objects/AnimalUpdater.h"
 #include "Objects/FarmerUpdater.h"
@@ -12,13 +13,10 @@
 void UFarmingGameInstance::Init()
 {
 	Super::Init();
-	if (InitialObstacleStates)
-	{
-		StartNewGame(); //Temporary
-	}
+	InitializeVariables();
 }
 
-void UFarmingGameInstance::StartNewGame()
+void UFarmingGameInstance::InitializeVariables()
 {
 	for (auto ObstacleStateRow : InitialObstacleStates->GetRowMap())
 	{
@@ -33,6 +31,12 @@ void UFarmingGameInstance::StartNewGame()
 	GameStateInfo.ChickenStates.Add(FAnimalState()); // TEMPORARY
 	GameStateInfo.StationaryTools.SetNum(8);
 	GameStateInfo.StationaryItems.SetNum(8);
+}
+
+void UFarmingGameInstance::StartNewGame()
+{
+	InitializeVariables();
+	OpenLevel("Farm", 0);
 }
 
 void UFarmingGameInstance::SetupFarmerInventory(FFarmerState& FarmerState)
@@ -171,4 +175,3 @@ int32 UFarmingGameInstance::GetSpawnPointIndex()
 {
 	return SpawnPointIndex;
 }
-

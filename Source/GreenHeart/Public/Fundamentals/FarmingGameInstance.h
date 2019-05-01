@@ -54,9 +54,11 @@ public:
 
 	void StartNextDay();
 
-private:
+	void InitializeVariables();
+
 	void StartNewGame();
 
+private:
 	void SetupFarmerInventory(FFarmerState& FarmerState);
 
 	FName GetLevelNameWithSuffix(FName LevelName);

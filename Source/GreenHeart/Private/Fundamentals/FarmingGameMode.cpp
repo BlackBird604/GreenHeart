@@ -68,6 +68,7 @@ void AFarmingGameMode::StartPlay()
 
 	InitializeManagers();
 	InitializeClockWidget();
+	DisableUIMode();
 }
 
 void AFarmingGameMode::InitializeManagers()
@@ -225,8 +226,10 @@ void AFarmingGameMode::EnableUIMode()
 {
 	if (PlayerController)
 	{
-		PlayerController->SetInputMode(FInputModeGameAndUI());
 		PlayerController->bShowMouseCursor = true;
+		FInputModeGameAndUI InputMode;
+		InputMode.SetHideCursorDuringCapture(false);
+		PlayerController->SetInputMode(InputMode);
 	}
 	if (PlayerCharacter)
 	{
