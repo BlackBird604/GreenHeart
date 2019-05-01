@@ -11,6 +11,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Animation/AnimMontage.h"
 #include "Animation/AnimInstance.h"
+#include "Animation/AnimSequence.h"
 
 #include "Defaults/ProjectDefaults.h"
 #include "Defaults/GHFuncLib.h"
@@ -396,10 +397,13 @@ void AFarmer::OnUseToolReleased()
 	{
 		UAnimMontage* UseMontage = CurrentTool->GetUseMontage();
 		PlayAnimMontage(UseMontage);
-		int32 EnergyDrain = CurrentTool->Use(this);
-		Energy -= EnergyDrain;
-		UE_LOG(LogTemp, Warning, TEXT("Energy left: %d"), Energy);
 	}
+}
+
+void AFarmer::OnUseToolStart()
+{
+	int32 EnergyDrain = CurrentTool->Use(this);
+	Energy -= EnergyDrain;
 }
 
 void AFarmer::OnNextToolPressed()
@@ -700,6 +704,16 @@ void AFarmer::OnToolPreviewEnd()
 
 void AFarmer::UpdateFatigueState()
 {
+	if (Energy <= 0 && GetMesh())
+	{
+		if (AFarmingGameMode* GameMode = GetWorld()->GetAuthGameMode<AFarmingGameMode>())
+		{
+			GetMesh()->PlayAnimation(OutOfEnergyAnimation, false);
+			GameMode->OnPlayerOutOfEnergy();
+			return;
+		}
+	}
+
 	int32 NewFatigueState = 0;
 	for (const FFatigueInfo FatigueInfo : FatigueInfos)
 	{
@@ -714,4 +728,5 @@ void AFarmer::UpdateFatigueState()
 		PlayAnimMontage(FatigueMontage);
 	}
 	CurrentFatigueState = NewFatigueState;
+	
 }

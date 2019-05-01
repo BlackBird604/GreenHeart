@@ -13,6 +13,7 @@ class USpringArmComponent;
 class UCameraComponent;
 class UToolInventoryComponent;
 class UItemInventoryComponent;
+class UAnimSequence;
 class UAnimMontage;
 class ATool;
 
@@ -38,7 +39,7 @@ public:
 	void OnHideTool();
 
 	UFUNCTION(BlueprintCallable, Category = "AnimNotifies")
-		void OnShowTool();
+	void OnShowTool();
 
 	UFUNCTION(BlueprintCallable, Category = "AnimNotifies")
 	void OnUseToolEnd();
@@ -48,6 +49,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "AnimNotifies")
 	void OnCollectMilk();
+
+	UFUNCTION(BlueprintCallable, Category = "AnimNotifies")
+	void OnUseToolStart();
 
 	UFUNCTION(BlueprintCallable)
 	bool HasItemInHands() const;
@@ -123,6 +127,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	TArray<FFatigueInfo> FatigueInfos;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	UAnimSequence* OutOfEnergyAnimation;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	FRotator ToolPreviewRotation;

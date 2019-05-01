@@ -18,6 +18,7 @@
 #include "Widgets/BlacksmithWidget.h"
 #include "Widgets/SupermarketWidget.h"
 #include "Widgets/HouseBuilderWidget.h"
+#include "Widgets/MessageboxWidget.h"
 
 AActor* AFarmingGameMode::ChoosePlayerStart_Implementation(AController* Player)
 {
@@ -98,6 +99,15 @@ void AFarmingGameMode::UpdateClock()
 {
 	ClockInfo.AddMinutes(1);
 	GameHUD->UpdateClock(ClockInfo);
+	if (ClockInfo.Hour == EndDayHour)
+	{
+		GetWorldTimerManager().ClearTimer(ClockTimer);
+		UMessageboxWidget* MessageboxWidget = OpenMessagebox(FText::FromString("It's getting late. I should go to bed now."));
+		if (MessageboxWidget)
+		{
+			MessageboxWidget->OnClosed.AddDynamic(this, &AFarmingGameMode::EndDay);
+		}
+	}
 }
 
 void AFarmingGameMode::UpdateMoney()
@@ -408,4 +418,38 @@ bool AFarmingGameMode::IsConstructionInProgress()
 		}
 	}
 	return false;
+}
+
+void AFarmingGameMode::OnPlayerOutOfEnergy()
+{
+	GetWorldTimerManager().ClearTimer(ClockTimer);
+	UMessageboxWidget* MessageboxWidget = OpenMessagebox(FText::FromString("I'm exhausted! I need to rest."));
+	if (MessageboxWidget)
+	{
+		MessageboxWidget->OnClosed.AddDynamic(this, &AFarmingGameMode::EndDay);
+	}
+}
+
+UMessageboxWidget* AFarmingGameMode::OpenMessagebox(FText NewMessage)
+{
+	UMessageboxWidget* MessageboxWidget = CreateWidget<UMessageboxWidget>(GetWorld(), MessageboxWidgetClass);
+	if (MessageboxWidget)
+	{
+		MessageboxWidget->AddToViewport(3);
+		EnableUIMode();
+		if (PlayerController)
+		{
+			PlayerController->bShowMouseCursor = false;
+		}
+		MessageboxWidget->SetMessage(NewMessage);
+	}
+	return MessageboxWidget;
+}
+
+void AFarmingGameMode::EndDay()
+{
+	if (UFarmingGameInstance* GameInstance = GetGameInstance<UFarmingGameInstance>())
+	{
+		GameInstance->StartNextDay();
+	}
 }

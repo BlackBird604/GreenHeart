@@ -26,6 +26,7 @@ class UStationaryItemInventoryWidget;
 class UBlacksmithWidget;
 class USupermarketWidget;
 class UHouseBuilderWidget;
+class UMessageboxWidget;
 
 UCLASS()
 class GREENHEART_API AFarmingGameMode : public AGameModeBase
@@ -84,6 +85,8 @@ public:
 
 	bool IsConstructionInProgress();
 
+	void OnPlayerOutOfEnergy();
+
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Setup|UMG")
 	TSubclassOf<UGameHUDWidget> GameHUDClass;
@@ -106,6 +109,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Setup|UMG")
 	TSubclassOf<UHouseBuilderWidget> HouseBuilderWidgetClass;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Setup|UMG")
+	TSubclassOf<UMessageboxWidget> MessageboxWidgetClass;
+
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	float ClockMinuteTick = 1.0f;
 
@@ -114,6 +120,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	int32 ChickensPerBuildingLevel = 5;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	int32 EndDayHour = 20;
 
 private:
 	void CreateHUD();
@@ -131,6 +140,11 @@ private:
 	void EnableUIMode();
 
 	void DisableUIMode();
+
+	UMessageboxWidget* OpenMessagebox(FText NewMessage);
+
+	UFUNCTION()
+	void EndDay();
 
 	UFUNCTION()
 	void UpdateMoney();
