@@ -94,3 +94,15 @@ void UItemInventoryComponent::Upgrade()
 {
 	InventoryState.Upgrade();
 }
+
+bool UItemInventoryComponent::HasItem()
+{
+	for (int32 i = 0; i < InventoryState.ItemInfos.Num(); i++)
+	{
+		if (InventoryState.ItemInfos[i].Class)
+		{
+			return true;
+		}
+	}
+	return false;
+}

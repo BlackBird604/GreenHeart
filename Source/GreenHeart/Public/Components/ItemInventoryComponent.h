@@ -34,6 +34,8 @@ public:
 
 	void Upgrade();
 
+	bool HasItem();
+
 private:
 	AActor* SpawnItem(FItemInfo ItemInfo);
 

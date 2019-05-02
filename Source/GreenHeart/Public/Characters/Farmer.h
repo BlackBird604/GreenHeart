@@ -53,6 +53,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "AnimNotifies")
 	void OnUseToolStart();
 
+	UFUNCTION(BlueprintCallable, Category = "AnimNotifies")
+	void OnItemPack();
+
+	UFUNCTION(BlueprintCallable, Category = "AnimNotifies")
+	void OnItemUnpack();
+
 	UFUNCTION(BlueprintCallable)
 	bool HasItemInHands() const;
 
@@ -114,6 +120,9 @@ protected:
 	UCameraComponent* FollowCamera;
 
 	UPROPERTY(VisibleAnywhere, Category = "Components")
+	USkeletalMeshComponent* BackpackMesh;
+
+	UPROPERTY(VisibleAnywhere, Category = "Components")
 	UToolInventoryComponent* ToolInventory;
 
 	UPROPERTY(VisibleAnywhere, Category = "Components")
@@ -133,6 +142,15 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	FRotator ToolPreviewRotation;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	UAnimSequence* BackpackAnimation;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	UAnimMontage* PackItemMontage;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	UAnimMontage* UnpackItemMontage;
 
 private:
 	void SaveState();

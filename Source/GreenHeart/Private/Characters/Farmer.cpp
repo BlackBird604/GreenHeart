@@ -47,6 +47,9 @@ AFarmer::AFarmer()
 	FollowCamera->PostProcessSettings.bOverride_MotionBlurAmount = true;
 	FollowCamera->PostProcessSettings.MotionBlurAmount = 0.0f;
 
+	BackpackMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("BackpackMesh"));
+	BackpackMesh->SetupAttachment(RootComponent);
+
 	ToolInventory = CreateDefaultSubobject<UToolInventoryComponent>(TEXT("ToolInventory"));
 	ItemInventory = CreateDefaultSubobject<UItemInventoryComponent>(TEXT("ItemInventory"));
 
@@ -64,6 +67,7 @@ void AFarmer::BeginPlay()
 	{
 		CurrentTool->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, FName("ToolSocket"));
 	}
+	BackpackMesh->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, "BackpackSocket");
 }
 
 void AFarmer::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -445,16 +449,15 @@ void AFarmer::OnNextItemPressed()
 			if (ItemInventory->HasPlace())
 			{
 				ItemInventory->AddItem(Item->GetItemInfo());
-				DestroyItemInHands();
+				PlayAnimMontage(PackItemMontage);
 			}
 		}
 	}
 	else
 	{
-		ItemInHands = ItemInventory->TakeOut();
-		if (ItemInHands)
+		if (ItemInventory->HasItem())
 		{
-			AttachActorToItemSocket(ItemInHands);
+			PlayAnimMontage(UnpackItemMontage);
 		}
 	}
 }
@@ -729,4 +732,19 @@ void AFarmer::UpdateFatigueState()
 	}
 	CurrentFatigueState = NewFatigueState;
 	
+}
+
+void AFarmer::OnItemPack()
+{
+	BackpackMesh->PlayAnimation(BackpackAnimation, false);
+	DestroyItemInHands();
+}
+
+void AFarmer::OnItemUnpack()
+{
+	ItemInHands = ItemInventory->TakeOut();
+	if (ItemInHands)
+	{
+		AttachActorToItemSocket(ItemInHands);
+	}
 }
