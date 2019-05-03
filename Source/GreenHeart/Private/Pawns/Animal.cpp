@@ -4,6 +4,7 @@
 #include "Components/BoxComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/SceneComponent.h"
+#include "Components/WidgetComponent.h"
 #include "GameFramework/PawnMovementComponent.h"
 #include "GameFramework/FloatingPawnMovement.h"
 #include "Engine/World.h"
@@ -14,6 +15,7 @@
 #include "Defaults/ProjectDefaults.h"
 #include "Types/CollisionTypes.h"
 #include "Actors/Tools/Tool.h"
+#include "Widgets/AnimalMessageboxWidget.h"
 
 AAnimal::AAnimal()
 {
@@ -29,6 +31,11 @@ AAnimal::AAnimal()
 	AnimalMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("AnimalMesh"));
 	AnimalMesh->SetupAttachment(CollisionBox);
 
+	Messagebox = CreateDefaultSubobject<UWidgetComponent>(TEXT("Messagebox"));
+	Messagebox->SetupAttachment(CollisionBox);
+	Messagebox->SetWidgetSpace(EWidgetSpace::Screen);
+	Messagebox->SetDrawAtDesiredSize(true);
+
 	MovementComponent = CreateDefaultSubobject<UPawnMovementComponent, UFloatingPawnMovement>(TEXT("MovementComponent"));
 	MovementComponent->UpdatedComponent = SceneRoot;
 }
@@ -42,7 +49,7 @@ void AAnimal::BeginPlay()
 void AAnimal::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	if (bShouldMove && !IsMovementBlocked())
+	if (bShouldMove && !IsMovementBlocked() && !IsMontagePlaying())
 	{
 		AddMovementInput(GetActorForwardVector());
 	}
@@ -73,10 +80,8 @@ void AAnimal::UseTool(const ATool* Instigator, int32 Strength)
 		case EToolType::Axe:
 			OnHit();
 			ApplyDamage();
-			if (UAnimInstance* AnimInstance = AnimalMesh->GetAnimInstance())
-			{
-				AnimInstance->Montage_Play(HitMontage);
-			}
+			PlayMessageboxAnimation(false);
+			PlayMontage(HitMontage);
 			break;
 	}
 }
@@ -89,11 +94,17 @@ void AAnimal::ApplyDamage()
 
 void AAnimal::PerformNextAction()
 {
+	if (IsMontagePlaying())
+	{
+		SetActionTimer(1.0f, 2.0f);
+		return;
+	}
+
 	if (IsMovementBlocked())
 	{
 		Turn();
 		bShouldMove = false;
-		SetActionTimer(0.5f, 2.0f);
+		SetActionTimer(1.0f, 2.0f);
 		return;
 	}
 
@@ -111,7 +122,7 @@ void AAnimal::PerformNextAction()
 		return;
 	}
 
-	if (FMath::RandBool())
+	if (FMath::RandRange(0, 10) > 7)
 	{
 		Turn();
 		bShouldMove = false;
@@ -166,6 +177,11 @@ bool AAnimal::HasItem()
 	return CurrentState.bHasItem;
 }
 
+bool AAnimal::HasReceivedInteraction()
+{
+	return CurrentState.bReceivedInteraction;
+}
+
 void AAnimal::SetReceivedInteraction()
 {
 	CurrentState.bReceivedInteraction = true;
@@ -186,4 +202,43 @@ TSubclassOf<ABaseItem> AAnimal::GetItemClass()
 		}
 	}
 	return BestResult.ItemClass;
+}
+
+bool AAnimal::IsMontagePlaying()
+{
+	if (UAnimInstance* AnimInstance = AnimalMesh->GetAnimInstance())
+	{
+		return AnimInstance->Montage_IsPlaying(nullptr);
+	}
+	return false;
+}
+
+void AAnimal::PlayMontage(UAnimMontage* MontageToPlay)
+{
+	if (UAnimInstance* AnimInstance = AnimalMesh->GetAnimInstance())
+	{
+		AnimInstance->Montage_Play(MontageToPlay);
+	}
+}
+
+void AAnimal::PlayMessageboxAnimation(bool bIsPositive)
+{
+	if (UAnimalMessageboxWidget* Widget = Cast<UAnimalMessageboxWidget>(Messagebox->GetUserWidgetObject()))
+	{
+		if (bIsPositive)
+		{
+			Widget->PlayPositiveAnimation();
+		}
+		else
+		{
+			Widget->PlayNegativeAnimation();
+		}
+	}
+}
+
+void AAnimal::DisableActions(float Duration)
+{
+	GetWorldTimerManager().ClearTimer(ActionTimer);
+	bShouldMove = false;
+	SetActionTimer(Duration, Duration);
 }

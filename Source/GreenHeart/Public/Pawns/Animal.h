@@ -14,6 +14,7 @@ class UBoxComponent;
 class USkeletalMeshComponent;
 class UPawnMovementComponent;
 class UAnimMontage;
+class UWidgetComponent;
 
 UCLASS()
 class GREENHEART_API AAnimal : public APawn, public IToolAffectable
@@ -43,9 +44,17 @@ protected:
 
 	bool HasItem();
 
+	bool HasReceivedInteraction();
+
 	void SetReceivedInteraction();
 
 	virtual void SaveUpdatedState() {}
+
+	void PlayMessageboxAnimation(bool bIsPositive);
+
+	void PlayMontage(UAnimMontage* MontageToPlay);
+
+	void DisableActions(float Duration);
 
 	TSubclassOf<ABaseItem> GetItemClass();
 
@@ -57,17 +66,23 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	UBoxComponent* CollisionBox;
 
-	UPROPERTY(VisibleAnywhere, Category = "Components")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 	USkeletalMeshComponent* AnimalMesh;
 
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	UPawnMovementComponent* MovementComponent;
+
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	UWidgetComponent* Messagebox;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	TArray<FAnimalItemInfo> ItemInfos;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	UAnimMontage* HitMontage;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	UAnimMontage* InteractionMontage;
 
 private:
 	void SetActionTimer(float MinDelay, float MaxDelay);
@@ -82,6 +97,8 @@ private:
 	FAnimalState CurrentState;
 
 	void ApplyDamage();
+
+	bool IsMontagePlaying();
 
 	bool bShouldMove = false;
 

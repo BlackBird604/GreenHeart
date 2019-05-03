@@ -23,10 +23,21 @@ void ACow::UseTool(const ATool* Instigator, int32 Strength)
 		switch (Instigator->GetType())
 		{
 		case EToolType::Milker:
-			// TODO AddAnimation + BlockMovement
+			if (HasItem())
+			{
+				PlayMessageboxAnimation(true);
+			}
+			PlayMontage(InteractionMontage);
+			DisableActions(2.0f);
 			break;
 		case EToolType::Brush:
-			SetReceivedInteraction();
+			if (!HasReceivedInteraction())
+			{
+				PlayMessageboxAnimation(true);
+				SetReceivedInteraction();
+			}
+			PlayMontage(InteractionMontage);
+			DisableActions(2.0f);
 			break;
 		}
 	}
