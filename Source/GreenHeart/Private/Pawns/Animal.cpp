@@ -8,6 +8,8 @@
 #include "GameFramework/FloatingPawnMovement.h"
 #include "Engine/World.h"
 #include "TimerManager.h"
+#include "Animation/AnimInstance.h"
+#include "Animation/AnimMontage.h"
 
 #include "Defaults/ProjectDefaults.h"
 #include "Types/CollisionTypes.h"
@@ -69,7 +71,12 @@ void AAnimal::UseTool(const ATool* Instigator, int32 Strength)
 		case EToolType::Hammer:
 		case EToolType::Scythe:
 		case EToolType::Axe:
+			OnHit();
 			ApplyDamage();
+			if (UAnimInstance* AnimInstance = AnimalMesh->GetAnimInstance())
+			{
+				AnimInstance->Montage_Play(HitMontage);
+			}
 			break;
 	}
 }

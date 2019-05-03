@@ -13,6 +13,7 @@ class USceneComponent;
 class UBoxComponent;
 class USkeletalMeshComponent;
 class UPawnMovementComponent;
+class UAnimMontage;
 
 UCLASS()
 class GREENHEART_API AAnimal : public APawn, public IToolAffectable
@@ -33,6 +34,9 @@ public:
 	virtual void RestoreStateByID(int32 AnimalID) {};
 
 protected:
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnHit();
+
 	void RestoreState(const FAnimalState& AnimalState);
 
 	void RemoveOwnedItem();
@@ -61,6 +65,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	TArray<FAnimalItemInfo> ItemInfos;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	UAnimMontage* HitMontage;
 
 private:
 	void SetActionTimer(float MinDelay, float MaxDelay);
