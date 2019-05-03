@@ -108,6 +108,7 @@ void AFarmingGameMode::UpdateClock()
 			MessageboxWidget->OnClosed.AddDynamic(this, &AFarmingGameMode::EndDay);
 		}
 	}
+	OnTimeUpdated.Broadcast(ClockInfo.Hour, ClockInfo.Minute);
 }
 
 void AFarmingGameMode::UpdateMoney()

@@ -28,6 +28,8 @@ class USupermarketWidget;
 class UHouseBuilderWidget;
 class UMessageboxWidget;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnTimeUpdatedSigneture, int32, NewHour, int32, NewMinute);
+
 UCLASS()
 class GREENHEART_API AFarmingGameMode : public AGameModeBase
 {
@@ -86,6 +88,9 @@ public:
 	bool IsConstructionInProgress();
 
 	void OnPlayerOutOfEnergy();
+
+	UPROPERTY(BlueprintAssignable)
+	FOnTimeUpdatedSigneture OnTimeUpdated;
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Setup|UMG")
