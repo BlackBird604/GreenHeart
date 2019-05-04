@@ -1,10 +1,10 @@
 // The Green Heart @Politechnika Opolska
 
 #include "AnimalOfferWidget.h"
-#include "Components/Button.h"
 
 #include "Enums/ResourceTypes.h"
 #include "Fundamentals/FarmingGameMode.h"
+#include "Widgets/Buttons/FocusButton.h"
 
 void UAnimalOfferWidget::SetOfferInfo(const FAnimalOffer& NewOffer)
 {

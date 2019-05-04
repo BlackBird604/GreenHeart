@@ -2,11 +2,11 @@
 
 #include "AmountOfferConfirmationWidget.h"
 #include "Components/TextBlock.h"
-#include "Components/Button.h"
 #include "TimerManager.h"
 
-#include "Fundamentals/FarmingGameMode.h"
 #include "Enums/ResourceTypes.h"
+#include "Fundamentals/FarmingGameMode.h"
+#include "Widgets/Buttons/FocusButton.h"
 
 bool UAmountOfferConfirmationWidget::Initialize()
 {
@@ -15,7 +15,8 @@ bool UAmountOfferConfirmationWidget::Initialize()
 	IncreaseAmountButton->OnReleased.AddDynamic(this, &UAmountOfferConfirmationWidget::OnIncreaseButtonReleased);
 	DecreaseAmountButton->OnPressed.AddDynamic(this, &UAmountOfferConfirmationWidget::OnDecreaseButtonClicked);
 	DecreaseAmountButton->OnReleased.AddDynamic(this, &UAmountOfferConfirmationWidget::OnDecreaseButtonReleased);
-
+	IncreaseAmountButton->StartUpdating();
+	DecreaseAmountButton->StartUpdating();
 	GameMode = GetWorld()->GetAuthGameMode<AFarmingGameMode>();
 	return b;
 }

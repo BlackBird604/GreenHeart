@@ -19,7 +19,7 @@ bool USupermarketWidget::Initialize()
 	bStopAction = true;
 	FOnInputAction Callback;
 	Callback.BindUFunction(this, FName("CloseWidget"));
-	ListenForInputAction("Interact", EInputEvent::IE_Pressed, false, Callback);
+	ListenForInputAction("Exit", EInputEvent::IE_Pressed, false, Callback);
 	return b;
 }
 
@@ -30,6 +30,7 @@ void USupermarketWidget::SetupWidget(const FSupermarketInfo& NewSupermarketInfo)
 	SetupSeedOffers(SupermarketInfo.OfferedSeeds);
 	SetupAnimalOffers(SupermarketInfo.OfferedAnimals);
 	SetupFeedOffers(SupermarketInfo.OfferedFeeds);
+	SetupFocus();
 }
 
 void USupermarketWidget::SetupSeedOffers(const TArray<FToolOffer>& Offers)
@@ -102,6 +103,18 @@ void USupermarketWidget::CreateConfirmationWidgetBindings()
 	OfferConfirmation->OnCancel.AddDynamic(this, &USupermarketWidget::OnOfferCanceled);
 	AmountOfferConfirmation->OnConfirm.AddDynamic(this, &USupermarketWidget::OnAmountOfferConfirmed);
 	AmountOfferConfirmation->OnCancel.AddDynamic(this, &USupermarketWidget::OnAmountOfferCanceled);
+}
+
+void USupermarketWidget::SetupFocus()
+{
+	for (UOfferWidget* Offer : OfferWidgets)
+	{
+		if (Offer->IsEnabled())
+		{
+			Offer->SetupFocus();
+			break;
+		}
+	}
 }
 
 void USupermarketWidget::OnOfferClicked(UOfferWidget* ClickedOffer)
@@ -189,21 +202,25 @@ void USupermarketWidget::UpdateWidgetState()
 
 void USupermarketWidget::ShowOfferWidget()
 {
+	OfferConfirmation->SetupFocus();
 	PlayAnimation(ShowOfferConfirmationAnimation, 0.0f, 1, EUMGSequencePlayMode::Forward);
 }
 
 void USupermarketWidget::HideOfferWidget()
 {
+	SetupFocus();
 	PlayAnimation(ShowOfferConfirmationAnimation, 0.0f, 1, EUMGSequencePlayMode::Reverse);
 }
 
 void USupermarketWidget::ShowAmountOfferWidget()
 {
+	AmountOfferConfirmation->SetupFocus();
 	PlayAnimation(ShowAmountOfferConfirmationAnimation, 0.0f, 1, EUMGSequencePlayMode::Forward);
 }
 
 void USupermarketWidget::HideAmountOfferWidget()
 {
+	SetupFocus();
 	PlayAnimation(ShowAmountOfferConfirmationAnimation, 0.0f, 1, EUMGSequencePlayMode::Reverse);
 }
 

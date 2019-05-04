@@ -16,7 +16,7 @@ bool UStationaryToolInventoryWidget::Initialize()
 	bStopAction = true;
 	FOnInputAction Callback;
 	Callback.BindUFunction(this, FName("CloseWidget"));
-	ListenForInputAction("Interact", EInputEvent::IE_Pressed, false, Callback);
+	ListenForInputAction("Exit", EInputEvent::IE_Pressed, false, Callback);
 	return b;
 }
 
@@ -33,6 +33,7 @@ void UStationaryToolInventoryWidget::PopulateSlots(AFarmer* Farmer, const TArray
 
 	PopulateEquippedToolSlots(EquippedToolInfos);
 	PopulateStoredToolSlots(StoredTools);
+	CurrentToolSlot->SetupFocus();
 }
 
 void UStationaryToolInventoryWidget::PopulateEquippedToolSlots(const TArray<FToolInfo>& ToolInfos)

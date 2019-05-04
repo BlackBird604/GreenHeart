@@ -39,6 +39,8 @@ protected:
 	UWidgetAnimation* ShowUpgradeConfirmationAnimation;
 
 private:
+	void SetupFocus();
+
 	void CreateConfirmationWidgetBindings();
 
 	void SetupConstructionOffers(const TArray<FConstructionState>& Offers);

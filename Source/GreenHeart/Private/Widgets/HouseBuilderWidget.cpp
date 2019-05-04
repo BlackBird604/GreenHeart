@@ -14,7 +14,7 @@ bool UHouseBuilderWidget::Initialize()
 	bStopAction = true;
 	FOnInputAction Callback;
 	Callback.BindUFunction(this, FName("CloseWidget"));
-	ListenForInputAction("Interact", EInputEvent::IE_Pressed, false, Callback);
+	ListenForInputAction("Exit", EInputEvent::IE_Pressed, false, Callback);
 	return b;
 }
 
@@ -22,6 +22,7 @@ void UHouseBuilderWidget::SetupWidget(const TArray<FConstructionState>& NewConst
 {
 	CreateConfirmationWidgetBindings();
 	SetupConstructionOffers(NewConstructionStates);
+	SetupFocus();
 }
 
 void UHouseBuilderWidget::SetupConstructionOffers(const TArray<FConstructionState>& Offers)
@@ -38,6 +39,18 @@ void UHouseBuilderWidget::SetupConstructionOffers(const TArray<FConstructionStat
 		{
 			GridSlot->SetColumn(i % OffersInRow);
 			GridSlot->SetRow(i / OffersInRow);
+		}
+	}
+}
+
+void UHouseBuilderWidget::SetupFocus()
+{
+	for (UOfferWidget* Offer : OfferWidgets)
+	{
+		if (Offer->IsEnabled())
+		{
+			Offer->SetupFocus();
+			break;
 		}
 	}
 }
@@ -90,11 +103,13 @@ void UHouseBuilderWidget::OnUpgradeCanceled()
 
 void UHouseBuilderWidget::ShowUpgradeConfirmationWidget()
 {
+	UpgradeConfirmation->SetupFocus();
 	PlayAnimation(ShowUpgradeConfirmationAnimation, 0.0f, 1, EUMGSequencePlayMode::Forward);
 }
 
 void UHouseBuilderWidget::HideUpgradeConfirmationWidget()
 {
+	SetupFocus();
 	PlayAnimation(ShowUpgradeConfirmationAnimation, 0.0f, 1, EUMGSequencePlayMode::Reverse);
 }
 

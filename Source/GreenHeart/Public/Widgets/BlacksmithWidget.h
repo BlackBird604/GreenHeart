@@ -9,6 +9,7 @@
 #include "BlacksmithWidget.generated.h"
 
 class UButton;
+class UFocusButton;
 class UImage;
 class UToolOfferWidget;
 class UUniformGridPanel;
@@ -27,13 +28,13 @@ public:
 
 protected:
 	UPROPERTY(meta = (BindWidget))
-	UButton* UpgradeToolButton;
+	UFocusButton* UpgradeToolButton;
 
 	UPROPERTY(meta = (BindWidget))
-	UButton* UpgradeToolInventoryButton;
+	UFocusButton* UpgradeToolInventoryButton;
 
 	UPROPERTY(meta = (BindWidget))
-	UButton* UpgradeItemInventoryButton;
+	UFocusButton* UpgradeItemInventoryButton;
 
 	UPROPERTY(meta = (BindWidget))
 	UImage* ToolIcon;
@@ -122,6 +123,8 @@ private:
 	void OnUpgradeCanceled();
 
 	void UpdateWidgetState();
+
+	void SetupFocus();
 
 	TArray<UToolOfferWidget*> OfferWidgets;
 

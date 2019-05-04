@@ -7,9 +7,9 @@
 #include "Structs/LevelInfo.h"
 #include "UpgradeConfirmationWidget.generated.h"
 
-class UButton;
 class UImage;
 class UTextBlock;
+class UFocusButton;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnUpgradeConfirmedSignature, int32, Price);
 
@@ -25,16 +25,18 @@ public:
 
 	void SetupWidget(const FText& Name, const FLevelInfo& CurrentLevelInfo, const FLevelInfo& NextLevelInfo, int32 CurrentLevel);
 
+	void SetupFocus();
+
 	FOnUpgradeConfirmedSignature OnConfirm;
 
 	FOnUpgradeCanceledSignature OnCancel;
 
 protected:
 	UPROPERTY(meta = (BindWidget))
-	UButton* ConfirmButton;
+	UFocusButton* ConfirmButton;
 
 	UPROPERTY(meta = (BindWidget))
-	UButton* CancelButton;
+	UFocusButton* CancelButton;
 
 	UPROPERTY(meta = (BindWidget))
 	UImage* CurrentLevelThumbnail;

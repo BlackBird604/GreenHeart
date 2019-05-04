@@ -12,6 +12,7 @@
 #include "Widgets/UpgradeConfirmationWidget.h"
 #include "Structs/LevelInfo.h"
 #include "Actors/Tools/Tool.h"
+#include "Widgets/Buttons/FocusButton.h"
 
 bool UBlacksmithWidget::Initialize()
 {
@@ -19,7 +20,7 @@ bool UBlacksmithWidget::Initialize()
 	bStopAction = true;
 	FOnInputAction Callback;
 	Callback.BindUFunction(this, FName("CloseWidget"));
-	ListenForInputAction("Interact", EInputEvent::IE_Pressed, false, Callback);
+	ListenForInputAction("Exit", EInputEvent::IE_Pressed, false, Callback);
 	return b;
 }
 
@@ -31,6 +32,7 @@ void UBlacksmithWidget::SetupWidget(const FFarmerState& NewFarmerState, const FB
 	CreateUpgradeButtonBindings();
 	SetupOffers(NewBlacksmithInfo.OfferedTools);
 	SetupUpgrades();
+	SetupFocus();
 }
 
 void UBlacksmithWidget::CreateConfirmationWidgetBindings()
@@ -85,6 +87,7 @@ void UBlacksmithWidget::SetupToolUpgrade()
 			int32 UpgradeCost = ToolInfo.GetNextLevelInfo().Cost;
 			bool bHasResources = GameMode->HasResource(EResourceType::Money, UpgradeCost);
 			UpgradeToolButton->SetIsEnabled(bHasResources);
+			UpgradeToolButton->StartUpdating();
 		}
 		else
 		{
@@ -108,6 +111,7 @@ void UBlacksmithWidget::SetupToolInventoryUpgrade()
 			int32 UpgradeCost = ToolInventory.GetNextLevelInfo().Cost;
 			bool bHasResources = GameMode->HasResource(EResourceType::Money, UpgradeCost);
 			UpgradeToolInventoryButton->SetIsEnabled(bHasResources);
+			UpgradeToolInventoryButton->StartUpdating();
 		}
 		else
 		{
@@ -131,6 +135,7 @@ void UBlacksmithWidget::SetupItemInventoryUpgrade()
 			int32 UpgradeCost = ItemInventory.GetNextLevelInfo().Cost;
 			bool bHasResources = GameMode->HasResource(EResourceType::Money, UpgradeCost);
 			UpgradeItemInventoryButton->SetIsEnabled(bHasResources);
+			UpgradeItemInventoryButton->StartUpdating();
 		}
 		else
 		{
@@ -273,21 +278,25 @@ void UBlacksmithWidget::RestoreGame()
 
 void UBlacksmithWidget::ShowOfferWidget()
 {
+	OfferConfirmation->SetupFocus();
 	PlayAnimation(ShowOfferConfirmationAnimation, 0.0f, 1, EUMGSequencePlayMode::Forward);
 }
 
 void UBlacksmithWidget::HideOfferWidget()
 {
+	SetupFocus();
 	PlayAnimation(ShowOfferConfirmationAnimation, 0.0f, 1, EUMGSequencePlayMode::Reverse);
 }
 
 void UBlacksmithWidget::ShowUpgradeWidget()
 {
+	UpgradeConfirmation->SetupFocus();
 	PlayAnimation(ShowUpgradeConfirmationAnimation, 0.0f, 1, EUMGSequencePlayMode::Forward);
 }
 
 void UBlacksmithWidget::HideUpgradeWidget()
 {
+	SetupFocus();
 	PlayAnimation(ShowUpgradeConfirmationAnimation, 0.0f, 1, EUMGSequencePlayMode::Reverse);
 }
 
@@ -300,6 +309,33 @@ void UBlacksmithWidget::UpdateWidgetState()
 		for (UToolOfferWidget* OfferWidget : OfferWidgets)
 		{
 			OfferWidget->UpdateActivation();
+		}
+	}
+}
+
+void UBlacksmithWidget::SetupFocus()
+{
+	if (UpgradeToolButton->bIsEnabled)
+	{
+		UpgradeToolButton->SetKeyboardFocus();
+	}
+	else if (UpgradeToolInventoryButton->bIsEnabled)
+	{
+		UpgradeToolInventoryButton->SetKeyboardFocus();
+	}
+	else if (UpgradeItemInventoryButton->bIsEnabled)
+	{
+		UpgradeItemInventoryButton->SetKeyboardFocus();
+	}
+	else
+	{
+		for (UToolOfferWidget* OfferWidget : OfferWidgets)
+		{
+			if (OfferWidget->IsEnabled())
+			{
+				OfferWidget->SetupFocus();
+				break;
+			}
 		}
 	}
 }

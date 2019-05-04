@@ -26,10 +26,10 @@ protected:
 	virtual void OnConfirmButtonClicked() override;
 
 	UPROPERTY(meta = (BindWidget))
-	UButton* DecreaseAmountButton;
+	UFocusButton* DecreaseAmountButton;
 
 	UPROPERTY(meta = (BindWidget))
-	UButton* IncreaseAmountButton;
+	UFocusButton* IncreaseAmountButton;
 
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* AmountText;

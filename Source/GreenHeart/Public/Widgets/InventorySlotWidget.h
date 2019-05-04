@@ -7,7 +7,7 @@
 #include "InventorySlotWidget.generated.h"
 
 
-class UButton;
+class UFocusButton;
 class UImage;
 class UInventorySlotWidget;
 
@@ -30,11 +30,13 @@ public:
 
 	FOnSlotUnhoveredSignature OnUnhovered;
 
+	void SetupFocus();
+
 protected:
 	void SetThumbnail(UTexture2D* NewTexture);
 
 	UPROPERTY(meta = (BindWidget))
-	UButton* Button;
+	UFocusButton* Button;
 
 	UPROPERTY(meta = (BindWidget))
 	UImage* Thumbnail;

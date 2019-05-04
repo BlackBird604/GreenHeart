@@ -1,12 +1,12 @@
 // The Green Heart @Politechnika Opolska
 
 #include "ToolOfferWidget.h"
-#include "Components/Button.h"
 #include "Components/Image.h"
 
 #include "Structs/LevelInfo.h"
 #include "Actors/Tools/Tool.h"
 #include "Fundamentals/FarmingGameMode.h"
+#include "Widgets/Buttons/FocusButton.h"
 
 
 void UToolOfferWidget::SetOfferInfo(const FToolOffer& NewOffer)

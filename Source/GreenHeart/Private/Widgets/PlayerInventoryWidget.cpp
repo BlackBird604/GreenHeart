@@ -17,6 +17,7 @@ bool UPlayerInventoryWidget::Initialize()
 	FOnInputAction Callback;
 	Callback.BindUFunction(this, FName("CloseWidget"));
 	ListenForInputAction("ToggleInventory", EInputEvent::IE_Pressed, false, Callback);
+	ListenForInputAction("Exit", EInputEvent::IE_Pressed, false, Callback);
 	return b;
 }
 
@@ -30,6 +31,7 @@ void UPlayerInventoryWidget::PopulateSlots(AFarmer* Farmer)
 
 	PopulateToolSlots(ToolInfos);
 	PopulateItemSlots(ItemInHands, ItemInfos);
+	CurrentToolSlot->SetupFocus();
 }
 
 void UPlayerInventoryWidget::PopulateToolSlots(const TArray<FToolInfo>& ToolInfos)

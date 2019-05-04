@@ -3,9 +3,9 @@
 #include "ConstructionOfferWidget.h"
 #include "Components/TextBlock.h"
 #include "Components/Image.h"
-#include "Components/Button.h"
 
 #include "Fundamentals/FarmingGameMode.h"
+#include "Widgets/Buttons/FocusButton.h"
 
 void UConstructionOfferWidget::SetOfferInfo(const FConstructionState& NewOffer)
 {

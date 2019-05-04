@@ -16,7 +16,7 @@ bool UStationaryItemInventoryWidget::Initialize()
 	bStopAction = true;
 	FOnInputAction Callback;
 	Callback.BindUFunction(this, FName("CloseWidget"));
-	ListenForInputAction("Interact", EInputEvent::IE_Pressed, false, Callback);
+	ListenForInputAction("Exit", EInputEvent::IE_Pressed, false, Callback);
 	return b;
 }
 
@@ -34,6 +34,7 @@ void UStationaryItemInventoryWidget::PopulateSlots(AFarmer* Farmer, const TArray
 
 	PopulateEquippedItemSlots(ItemInHands, EquippedItemInfos);
 	PopulateStoredItemSlots(StoredItems);
+	CurrentItemSlot->SetupFocus();
 }
 
 void UStationaryItemInventoryWidget::PopulateEquippedItemSlots(const FItemInfo& ItemInHands, const TArray<FItemInfo>& ItemInfos)

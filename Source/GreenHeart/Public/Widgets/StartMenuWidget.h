@@ -6,7 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "StartMenuWidget.generated.h"
 
-class UButton;
+class UFocusButton;
 
 UCLASS()
 class GREENHEART_API UStartMenuWidget : public UUserWidget
@@ -17,11 +17,14 @@ public:
 	virtual bool Initialize() override;
 
 protected:
-	UPROPERTY(meta = (BindWidget))
-	UButton* NewGameButton;
+	UFUNCTION(BlueprintCallable)
+	void InitializeFocus();
 
 	UPROPERTY(meta = (BindWidget))
-	UButton* QuitButton;
+	UFocusButton* NewGameButton;
+
+	UPROPERTY(meta = (BindWidget))
+	UFocusButton* QuitButton;
 
 private:
 	UFUNCTION()

@@ -6,9 +6,9 @@
 #include "Blueprint/UserWidget.h"
 #include "OfferConfirmationWidget.generated.h"
 
-class UButton;
 class UImage;
 class UTextBlock;
+class UFocusButton;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnOfferConfirmedSignature);
 
@@ -21,6 +21,8 @@ class GREENHEART_API UOfferConfirmationWidget : public UUserWidget
 	
 public:
 	virtual bool Initialize() override;
+
+	void SetupFocus();
 
 	void SetOfferName(FText NewName);
 
@@ -36,10 +38,10 @@ public:
 
 protected:
 	UPROPERTY(meta = (BindWidget))
-	UButton* ConfirmButton;
+	UFocusButton* ConfirmButton;
 
 	UPROPERTY(meta = (BindWidget))
-	UButton* CancelButton;
+	UFocusButton* CancelButton;
 
 	UPROPERTY(meta = (BindWidget))
 	UImage* Thumbnail;

@@ -3,14 +3,22 @@
 #include "OfferConfirmationWidget.h"
 #include "Components/TextBlock.h"
 #include "Components/Image.h"
-#include "Components/Button.h"
+
+#include "Widgets/Buttons/FocusButton.h"
 
 bool UOfferConfirmationWidget::Initialize()
 {
 	bool b = Super::Initialize();
 	ConfirmButton->OnClicked.AddDynamic(this, &UOfferConfirmationWidget::OnConfirmButtonClicked);
 	CancelButton->OnClicked.AddDynamic(this, &UOfferConfirmationWidget::OnCancelButtonClicked);
+	ConfirmButton->StartUpdating();
+	CancelButton->StartUpdating();
 	return b;
+}
+
+void UOfferConfirmationWidget::SetupFocus()
+{
+	ConfirmButton->SetKeyboardFocus();
 }
 
 void UOfferConfirmationWidget::SetOfferName(FText NewName)

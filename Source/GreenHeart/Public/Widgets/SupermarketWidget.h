@@ -68,6 +68,8 @@ protected:
 	UWidgetAnimation* ShowAmountOfferConfirmationAnimation;
 
 private:
+	void SetupFocus();
+
 	void CreateConfirmationWidgetBindings();
 
 	void SetupSeedOffers(const TArray<FToolOffer>& Offers);

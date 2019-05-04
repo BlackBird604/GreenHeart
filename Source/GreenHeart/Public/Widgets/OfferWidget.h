@@ -6,7 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "OfferWidget.generated.h"
 
-class UButton;
+class UFocusButton;
 class UImage;
 class UOfferWidget;
 
@@ -19,6 +19,10 @@ class GREENHEART_API UOfferWidget : public UUserWidget
 
 public:
 	virtual bool Initialize() override;
+
+	bool IsEnabled();
+
+	void SetupFocus();
 
 	FOnOfferClickedSignature OnClicked;
 
@@ -36,7 +40,7 @@ public:
 
 protected:
 	UPROPERTY(meta = (BindWidget))
-	UButton* Button;
+	UFocusButton* Button;
 
 	UPROPERTY(meta = (BindWidget))
 	UImage* Thumbnail;

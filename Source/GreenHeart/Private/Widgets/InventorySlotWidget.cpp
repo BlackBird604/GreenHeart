@@ -2,7 +2,8 @@
 
 #include "InventorySlotWidget.h"
 #include "Components/Image.h"
-#include "Components/Button.h"
+
+#include "Widgets/Buttons/FocusButton.h"
 
 bool UInventorySlotWidget::Initialize()
 {
@@ -10,7 +11,13 @@ bool UInventorySlotWidget::Initialize()
 	Button->OnClicked.AddDynamic(this, &UInventorySlotWidget::OnButtonClicked);
 	Button->OnHovered.AddDynamic(this, &UInventorySlotWidget::OnButtonHovered);
 	Button->OnUnhovered.AddDynamic(this, &UInventorySlotWidget::OnButtonUnhovered);
+	Button->StartUpdating();
 	return b;
+}
+
+void UInventorySlotWidget::SetupFocus()
+{
+	Button->SetKeyboardFocus();
 }
 
 void UInventorySlotWidget::OnButtonClicked()

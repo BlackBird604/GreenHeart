@@ -3,13 +3,16 @@
 #include "UpgradeConfirmationWidget.h"
 #include "Components/TextBlock.h"
 #include "Components/Image.h"
-#include "Components/Button.h"
+
+#include "Widgets/Buttons/FocusButton.h"
 
 bool UUpgradeConfirmationWidget::Initialize()
 {
 	bool b = Super::Initialize();
 	ConfirmButton->OnClicked.AddDynamic(this, &UUpgradeConfirmationWidget::OnConfirmButtonClicked);
 	CancelButton->OnClicked.AddDynamic(this, &UUpgradeConfirmationWidget::OnCancelButtonClicked);
+	ConfirmButton->StartUpdating();
+	CancelButton->StartUpdating();
 	return b;
 }
 
@@ -21,6 +24,11 @@ void UUpgradeConfirmationWidget::SetupWidget(const FText& Name, const FLevelInfo
 	SetUpgradePrice(NextLevelInfo.Cost);
 	CurrentLevelThumbnail->SetBrushFromTexture(CurrentLevelInfo.Thumbnail);
 	NextLevelThumbnail->SetBrushFromTexture(NextLevelInfo.Thumbnail);
+}
+
+void UUpgradeConfirmationWidget::SetupFocus()
+{
+	ConfirmButton->SetKeyboardFocus();
 }
 
 void UUpgradeConfirmationWidget::SetLevelText(UTextBlock* TextBlock, int32 Level)
