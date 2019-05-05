@@ -10,6 +10,7 @@
 
 class AAnimal;
 class UBoxComponent;
+class AAnimalSpawnPoint;
 
 UCLASS()
 class GREENHEART_API AAnimalBuildingManager : public ADeferrableActor
@@ -29,9 +30,6 @@ protected:
 
 	virtual void SaveState(const FAnimalBuildingState& CurrentBuildingState) {};
 
-	UPROPERTY(VisibleAnywhere, Category = "Components")
-	UBoxComponent* SpawnBox;
-
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	TSubclassOf<AAnimal> AnimalClass;
 
@@ -41,12 +39,13 @@ protected:
 private:
 	void RestoreFeedBoxState(const FAnimalBuildingState& BuildingState);
 
-	void SpawnAnimals();
+	void InitializeSpawnPoints();
 
-	FVector GetRandomSpawnLocation();
+	void SpawnAnimals();
 
 	FRotator GetRandomSpawnRotation();
 
 	FAnimalBuildingState GetCurrentBuildingState();
 
+	TArray<AAnimalSpawnPoint*> SpawnPoints;
 };

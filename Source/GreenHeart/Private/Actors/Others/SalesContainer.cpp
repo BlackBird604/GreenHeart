@@ -4,6 +4,7 @@
 #include "Components/BoxComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Animation/AnimSequence.h"
 
 #include "Interfaces/Sellable.h"
 #include "Fundamentals/FarmingGameState.h"
@@ -39,6 +40,7 @@ void ASalesContainer::OnBoxBeginOverlap(UPrimitiveComponent* OverlappedComp,
 			int32 SellPrice = Sellable->GetPrice();
 			GameState->AddResource(EResourceType::Money, SellPrice);
 		}
+		ContainerMesh->PlayAnimation(HitAnimation, false);
 		OtherActor->Destroy();
 	}
 }

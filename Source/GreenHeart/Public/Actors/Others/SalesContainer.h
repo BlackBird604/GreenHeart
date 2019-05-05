@@ -9,6 +9,7 @@
 
 class UBoxComponent;
 class USkeletalMeshComponent;
+class UAnimSequence;
 
 UCLASS()
 class GREENHEART_API ASalesContainer : public AActor
@@ -27,6 +28,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	USkeletalMeshComponent* ContainerMesh;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	UAnimSequence* HitAnimation;
 
 	UFUNCTION()
 	void OnBoxBeginOverlap(UPrimitiveComponent* OverlappedComp, 

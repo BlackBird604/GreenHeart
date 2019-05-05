@@ -7,16 +7,12 @@
 #include "Fundamentals/FarmingGameInstance.h"
 #include "Fundamentals/FarmingGameState.h"
 #include "Actors/Interactables/FeedBox.h"
+#include "Actors/Others/AnimalSpawnPoint.h"
 #include "Pawns/Animal.h"
 
 AAnimalBuildingManager::AAnimalBuildingManager()
 {
 	PrimaryActorTick.bCanEverTick = false;
-
-	SpawnBox = CreateDefaultSubobject<UBoxComponent>(TEXT("SpawnBox"));
-	SpawnBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	SpawnBox->SetBoxExtent(FVector(100.0f, 100.0f, 0.0f));
-	RootComponent = SpawnBox;
 }
 
 void AAnimalBuildingManager::StartPlay()
@@ -28,7 +24,22 @@ void AAnimalBuildingManager::StartPlay()
 
 	FAnimalBuildingState BuildingState = GetSavedBuildingState();
 	RestoreFeedBoxState(BuildingState);
+	InitializeSpawnPoints();
 	SpawnAnimals();
+}
+
+void AAnimalBuildingManager::InitializeSpawnPoints()
+{
+	SpawnPoints.Empty();
+	TArray<AActor*> FoundActors;
+	UGameplayStatics::GetAllActorsOfClass(this, AAnimalSpawnPoint::StaticClass(), FoundActors);
+	for (AActor* FoundActor : FoundActors)
+	{
+		if (AAnimalSpawnPoint* SpawnPoint = Cast<AAnimalSpawnPoint>(FoundActor))
+		{
+			SpawnPoints.Add(SpawnPoint);
+		}
+	}
 }
 
 void AAnimalBuildingManager::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -74,9 +85,12 @@ void AAnimalBuildingManager::SpawnAnimals()
 			break;
 		}
 
-		for (int32 i = 0; i < SpawnAmount; i++)
+		for (int32 i = 0; i < SpawnAmount && SpawnPoints.Num() > 0; i++)
 		{
-			FVector SpawnLocation = GetRandomSpawnLocation();
+			int32 SpawnPointIndex = FMath::RandRange(0, SpawnPoints.Num() - 1);
+			AAnimalSpawnPoint* SpawnPoint = SpawnPoints[SpawnPointIndex];
+			SpawnPoints.RemoveAt(SpawnPointIndex);
+			FVector SpawnLocation = SpawnPoint->GetActorLocation();
 			FRotator SpawnRotation = GetRandomSpawnRotation();
 			AAnimal* SpawnedAnimal = GetWorld()->SpawnActor<AAnimal>(AnimalClass, SpawnLocation, SpawnRotation, SpawnInfo);
 			if (SpawnedAnimal)
@@ -85,16 +99,6 @@ void AAnimalBuildingManager::SpawnAnimals()
 			}
 		}
 	}
-}
-
-FVector AAnimalBuildingManager::GetRandomSpawnLocation()
-{
-	FVector SpawnLocation = GetActorLocation();
-	float xExtent = SpawnBox->GetScaledBoxExtent().X;
-	SpawnLocation.X += FMath::RandRange(-xExtent, xExtent);
-	float yExtent = SpawnBox->GetScaledBoxExtent().Y;
-	SpawnLocation.Y += FMath::RandRange(-yExtent, yExtent);
-	return SpawnLocation;
 }
 
 FRotator AAnimalBuildingManager::GetRandomSpawnRotation()
