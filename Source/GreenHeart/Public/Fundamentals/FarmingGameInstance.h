@@ -61,6 +61,8 @@ public:
 private:
 	void SetupFarmerInventory(FFarmerState& FarmerState);
 
+	void SetupStationaryInventories(FGameStateInfo& GameState);
+
 	FName GetLevelNameWithSuffix(FName LevelName);
 
 	FName GetLevelNameWithSuffix(FName Prefix, EConstructionType ConstructionType);
@@ -73,6 +75,15 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	TArray<TSubclassOf<class ATool>> InitialToolClasses;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	TArray<TSubclassOf<class ATool>> InitialStationaryToolClasses;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	int32 StationaryToolInventorySize = 8;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	int32 StationaryItemInventorySize = 8;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	FGameStateInfo InitialGameStateInfo;

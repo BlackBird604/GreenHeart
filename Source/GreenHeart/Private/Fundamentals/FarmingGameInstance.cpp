@@ -27,10 +27,9 @@ void UFarmingGameInstance::InitializeVariables()
 	SetupFarmerInventory(FarmerState);
 	GameStateInfo = InitialGameStateInfo;
 
-	GameStateInfo.CowStates.Add(FAnimalState()); // TEMPORARY
-	GameStateInfo.ChickenStates.Add(FAnimalState()); // TEMPORARY
-	GameStateInfo.StationaryTools.SetNum(8);
-	GameStateInfo.StationaryItems.SetNum(8);
+	SetupStationaryInventories(GameStateInfo);
+	GameStateInfo.StationaryTools.SetNum(StationaryToolInventorySize);
+	GameStateInfo.StationaryItems.SetNum(StationaryItemInventorySize);
 }
 
 void UFarmingGameInstance::StartNewGame()
@@ -47,6 +46,18 @@ void UFarmingGameInstance::SetupFarmerInventory(FFarmerState& FarmerState)
 		{
 			ATool* DefaultTool = Cast<ATool>(ToolClass->GetDefaultObject());
 			FarmerState.ToolInventoryState.ToolInfos.Add(DefaultTool->GetToolInfo());
+		}
+	}
+}
+
+void UFarmingGameInstance::SetupStationaryInventories(FGameStateInfo& GameState)
+{
+	for (TSubclassOf<ATool> ToolClass : InitialStationaryToolClasses)
+	{
+		if (ToolClass)
+		{
+			ATool* DefaultTool = Cast<ATool>(ToolClass->GetDefaultObject());
+			GameState.StationaryTools.Add(DefaultTool->GetToolInfo());
 		}
 	}
 }
