@@ -78,3 +78,11 @@ DerivedDataCache/*
 
 # Models, textures and sounds
 Assets/*
+Content/Voices/shovelDig.uasset
+Content/Voices/doorOpenClose.uasset
+Content/Voices/backgroundBirds.uasset
+Content/Voices/onButtonMove.uasset
+Content/Voices/onButtonClick.uasset
+Content/Voices/moneyChing.uasset
+Content/Voices/hammerHit.uasset
+Content/Voices/footstep.uasset
