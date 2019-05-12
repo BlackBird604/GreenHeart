@@ -38,6 +38,9 @@ protected:
 	void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor,
 		UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void PlayDestroyTimeline();
+
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	USphereComponent* CollisionSphere;
 
