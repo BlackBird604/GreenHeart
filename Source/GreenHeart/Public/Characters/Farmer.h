@@ -152,6 +152,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	UAnimMontage* UnpackItemMontage;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	float ChargeDelay = 1.0f;
+
 private:
 	void SaveState();
 

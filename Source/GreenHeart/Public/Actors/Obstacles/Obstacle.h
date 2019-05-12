@@ -10,6 +10,7 @@
 
 class UBoxComponent;
 class UStaticMeshComponent;
+class ADestroyActor;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDestroyedSignature, AActor*, DestroyedActor);
 
@@ -46,6 +47,11 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	int32 RequiredStrength = 1;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	TSubclassOf<ADestroyActor> DestroyActorClass;
+
 private:
 	void ApplyDamage(int32 Strength);
+
+	void SpawnDestroyActor();
 };

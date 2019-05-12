@@ -7,6 +7,7 @@
 #include "Defaults/ProjectDefaults.h"
 #include "Types/CollisionTypes.h"
 #include "Actors/Tools/Tool.h"
+#include "Actors/Others/DestroyActor.h"
 
 AObstacle::AObstacle()
 {
@@ -38,6 +39,7 @@ void AObstacle::UseTool(const ATool* Instigator, int32 Strength)
 		if (HealthPoints <= 0)
 		{
 			OnObstacleDestroyed.Broadcast(this);
+			SpawnDestroyActor();
 			Destroy();
 		}
 	}
@@ -48,4 +50,13 @@ void AObstacle::ApplyDamage(int32 Strength)
 	int32 Power = Strength - RequiredStrength;
 	int32 Damage = FMath::Pow(2, Power);
 	HealthPoints -= Damage;
+}
+
+void AObstacle::SpawnDestroyActor()
+{
+	FActorSpawnParameters SpawnInfo;
+	FVector SpawnLocation = GetActorLocation();
+	FRotator SpawnRotation = GetActorRotation();
+	SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	GetWorld()->SpawnActor<ADestroyActor>(DestroyActorClass, SpawnLocation, SpawnRotation, SpawnInfo);
 }

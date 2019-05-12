@@ -313,7 +313,7 @@ void AFarmer::OnUseToolPressed()
 	bIsUsingTool = true;
 	SetToolHidden(false);
 	UpdateChargePose();
-	GetWorld()->GetTimerManager().SetTimer(ToolChargeTimer, this, &AFarmer::ChargeTool, 1.0f, true, 1.0f);
+	GetWorld()->GetTimerManager().SetTimer(ToolChargeTimer, this, &AFarmer::ChargeTool, ChargeDelay, true, ChargeDelay);
 }
 
 void AFarmer::OnEatPressed()
