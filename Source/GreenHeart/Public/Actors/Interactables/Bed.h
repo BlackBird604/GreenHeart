@@ -9,6 +9,7 @@
 
 class UBoxComponent;
 class UStaticMeshComponent;
+class UArrowComponent;
 
 UCLASS()
 class GREENHEART_API ABed : public AActor, public IInteractable
@@ -30,5 +31,8 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	UStaticMeshComponent* BedMesh;
+
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	UArrowComponent* BedJumpTarget;
 
 };

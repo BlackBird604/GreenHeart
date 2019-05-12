@@ -657,6 +657,16 @@ void AFarmer::EndAutomaticMovement()
 	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	EnableInput(PlayerController);
 	bIsAutomaticMovement = false;
+
+	if (bShouldGoToBed)
+	{
+		SetActorRotation(BedJumpRotation);
+		PlayAnimMontage(BedJumpMontage);
+		if(APlayerController * PlayerController = Cast<APlayerController>(Controller))
+		{
+			PlayerController->ClientSetCameraFade(true, FColor::Black, FVector2D(0.0, 1.0), 2.0, true);
+		}
+	}
 }
 
 bool AFarmer::IsToolInventoryFull()
@@ -746,5 +756,20 @@ void AFarmer::OnItemUnpack()
 	if (ItemInHands)
 	{
 		AttachActorToItemSocket(ItemInHands);
+	}
+}
+
+void AFarmer::GoToBed(const FVector& TargetLocation, const FRotator& TargetRotation)
+{
+	bShouldGoToBed = true;
+	AutomaticMoveTo(TargetLocation);
+	BedJumpRotation = TargetRotation;
+}
+
+void AFarmer::OnSleep()
+{
+	if (UFarmingGameInstance* GameInstance = GetGameInstance<UFarmingGameInstance>())
+	{
+		GameInstance->StartNextDay();
 	}
 }

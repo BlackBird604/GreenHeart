@@ -3,9 +3,11 @@
 #include "Bed.h"
 #include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "Components/ArrowComponent.h"
 
 #include "Types/CollisionTypes.h"
-#include "Fundamentals/FarmingGameInstance.h"
+#include "Characters/Farmer.h"
 
 ABed::ABed()
 {
@@ -17,6 +19,9 @@ ABed::ABed()
 
 	BedMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BedMesh"));
 	BedMesh->SetupAttachment(CollisionBox);
+
+	BedJumpTarget = CreateDefaultSubobject<UArrowComponent>(TEXT("BedJumpTarget"));
+	BedJumpTarget->SetupAttachment(CollisionBox);
 }
 
 void ABed::BeginPlay()
@@ -27,9 +32,12 @@ void ABed::BeginPlay()
 
 void ABed::Interact()
 {
-	if (UFarmingGameInstance* GameInstance = Cast<UFarmingGameInstance>(GetGameInstance()))
+	AFarmer* PlayerCharacter = Cast<AFarmer>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	if (PlayerCharacter)
 	{
-		GameInstance->StartNextDay();
+		FVector TargetLocation = BedJumpTarget->GetComponentToWorld().GetLocation();
+		FRotator TargetRotation = BedJumpTarget->GetComponentToWorld().GetRotation().Rotator();
+		PlayerCharacter->GoToBed(TargetLocation, TargetRotation);
 	}
 }
 

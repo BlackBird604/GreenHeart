@@ -16,6 +16,7 @@ class UItemInventoryComponent;
 class UAnimSequence;
 class UAnimMontage;
 class ATool;
+class ABed;
 
 UCLASS()
 class GREENHEART_API AFarmer : public ACharacter
@@ -59,6 +60,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "AnimNotifies")
 	void OnItemUnpack();
 
+	UFUNCTION(BlueprintCallable, Category = "AnimNotifies")
+	void OnSleep();
+
 	UFUNCTION(BlueprintCallable)
 	bool HasItemInHands() const;
 
@@ -81,6 +85,8 @@ public:
 	void UpgradeToolInventory();
 
 	void UpgradeItemInventory();
+
+	void GoToBed(const FVector& TargetLocation, const FRotator& TargetRotation);
 
 protected:
 	UFUNCTION(BlueprintImplementableEvent)
@@ -151,6 +157,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	UAnimMontage* UnpackItemMontage;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	UAnimMontage* BedJumpMontage;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	float ChargeDelay = 1.0f;
@@ -224,4 +233,8 @@ private:
 	FRotator SavedRotation = FRotator::ZeroRotator;
 
 	int32 CurrentFatigueState = 0;
+
+	bool bShouldGoToBed = false;
+
+	FRotator BedJumpRotation;
 };
