@@ -18,16 +18,6 @@ void AEgg::BeginPlay()
 	Super::BeginPlay();
 }
 
-int32 AEgg::GetPrice()
-{
-	return SellPrice;
-}
-
-int32 AEgg::GetEnergyPoints()
-{
-	return EnergyPoints;
-}
-
 bool AEgg::CanBeCollected()
 {
 	return true;

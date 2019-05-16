@@ -14,6 +14,8 @@ class UConsumable : public UInterface
 };
 
 
+class UAnimMontage;
+
 class GREENHEART_API IConsumable
 {
 	GENERATED_BODY()
@@ -21,4 +23,5 @@ class GREENHEART_API IConsumable
 public:
 	virtual int32 GetEnergyPoints() = 0;
 
+	virtual UAnimMontage* GetConsumeMontage() = 0;
 };

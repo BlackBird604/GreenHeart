@@ -325,8 +325,9 @@ void AFarmer::OnEatPressed()
 
 	if (IConsumable* Consumable = Cast<IConsumable>(ItemInHands))
 	{
+		UAnimMontage* ConsumeMontage = Consumable->GetConsumeMontage();
+		PlayAnimMontage(ConsumeMontage);
 		Energy += Consumable->GetEnergyPoints();
-		DestroyItemInHands();
 		UpdateFatigueState();
 	}
 }
@@ -772,4 +773,9 @@ void AFarmer::OnSleep()
 	{
 		GameInstance->StartNextDay();
 	}
+}
+
+void AFarmer::OnConsume()
+{
+	DestroyItemInHands();
 }

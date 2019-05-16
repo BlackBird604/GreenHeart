@@ -63,6 +63,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "AnimNotifies")
 	void OnSleep();
 
+	UFUNCTION(BlueprintCallable, Category = "AnimNotifies")
+	void OnConsume();
+
 	UFUNCTION(BlueprintCallable)
 	bool HasItemInHands() const;
 

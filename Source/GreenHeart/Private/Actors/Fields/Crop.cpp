@@ -24,3 +24,7 @@ int32 ACrop::GetEnergyPoints()
 	return EnergyPoints;
 }
 
+UAnimMontage* ACrop::GetConsumeMontage()
+{
+	return ConsumeMontage;
+}
