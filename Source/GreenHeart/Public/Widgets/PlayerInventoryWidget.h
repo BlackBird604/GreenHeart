@@ -7,6 +7,7 @@
 #include "Structs/FarmerState.h"
 #include "PlayerInventoryWidget.generated.h"
 
+class UTextBlock;
 class UUniformGridPanel;
 class UInventoryItemSlotWidget;
 class UInventoryToolSlotWidget;
@@ -23,6 +24,12 @@ public:
 
 	void PopulateSlots(AFarmer* Farmer);
 
+	void SetCowInfo(int32 CowAmount, int32 MaxCowAmount);
+
+	void SetChickenInfo(int32 ChickenAmount, int32 MaxChickenAmount);
+
+	void SetFeedInfo(int32 CowFeedAmount, int32 ChickenFeedAmount);
+
 protected:
 	UPROPERTY(meta = (BindWidget))
 	UInventoryToolSlotWidget* CurrentToolSlot;
@@ -38,6 +45,24 @@ protected:
 
 	UPROPERTY(meta = (BindWidget))
 	UDescriptionWidget* DescriptionBox;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* CowAmountText;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* MaxCowAmountText;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* CowFeedAmountText;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* ChickenAmountText;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* MaxChickenAmountText;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* ChickenFeedAmountText;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	TSubclassOf<UInventoryToolSlotWidget> ToolSlotClass;

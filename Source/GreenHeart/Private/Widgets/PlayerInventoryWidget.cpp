@@ -1,6 +1,7 @@
 // The Green Heart @Politechnika Opolska
 
 #include "PlayerInventoryWidget.h"
+#include "Components/TextBlock.h"
 #include "Components/UniformGridPanel.h"
 #include "Components/UniformGridSlot.h"
 
@@ -19,6 +20,51 @@ bool UPlayerInventoryWidget::Initialize()
 	ListenForInputAction("ToggleInventory", EInputEvent::IE_Pressed, false, Callback);
 	ListenForInputAction("Exit", EInputEvent::IE_Pressed, false, Callback);
 	return b;
+}
+
+void UPlayerInventoryWidget::SetCowInfo(int32 CowAmount, int32 MaxCowAmount)
+{
+	if (CowAmountText)
+	{
+		FText NewCowAmountText = FText::AsNumber(CowAmount);
+		CowAmountText->SetText(NewCowAmountText);
+	}
+
+	if (MaxCowAmountText)
+	{
+		FText NewMaxCowAmountText = FText::AsNumber(MaxCowAmount);
+		MaxCowAmountText->SetText(NewMaxCowAmountText);
+	}
+}
+
+void UPlayerInventoryWidget::SetChickenInfo(int32 ChickenAmount, int32 MaxChickenAmount)
+{
+	if (ChickenAmountText)
+	{
+		FText NewChickenAmountText = FText::AsNumber(ChickenAmount);
+		ChickenAmountText->SetText(NewChickenAmountText);
+	}
+
+	if (MaxChickenAmountText)
+	{
+		FText NewMaxChickenAmountText = FText::AsNumber(MaxChickenAmount);
+		MaxChickenAmountText->SetText(NewMaxChickenAmountText);
+	}
+}
+
+void UPlayerInventoryWidget::SetFeedInfo(int32 CowFeedAmount, int32 ChickenFeedAmount)
+{
+	if (CowFeedAmountText)
+	{
+		FText NewCowFeedAmountText = FText::AsNumber(CowFeedAmount);
+		CowFeedAmountText->SetText(NewCowFeedAmountText);
+	}
+
+	if (ChickenFeedAmountText)
+	{
+		FText NewChickenFeedAmountText = FText::AsNumber(ChickenFeedAmount);
+		ChickenFeedAmountText->SetText(NewChickenFeedAmountText);
+	}
 }
 
 void UPlayerInventoryWidget::PopulateSlots(AFarmer* Farmer)

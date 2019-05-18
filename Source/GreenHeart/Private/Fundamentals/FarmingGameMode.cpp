@@ -134,6 +134,19 @@ void AFarmingGameMode::OpenPlayerInventory()
 		PlayerInventoryWidget->AddToViewport(2);
 		EnableUIMode();
 		PlayerInventoryWidget->PopulateSlots(PlayerCharacter);
+
+		if (GameState)
+		{
+			int32 CowAmount = GameState->GetCowAmount();
+			int32 MaxCowAmount = GameState->GetConstructionState(EConstructionType::Barn).CurrentLevel * CowsPerBuildingLevel;
+			int32 ChickenAmount = GameState->GetChickenAmount();
+			int32 MaxChickenAmount = GameState->GetConstructionState(EConstructionType::ChickenCoop).CurrentLevel * ChickensPerBuildingLevel;
+			int32 CowFeedAmount = GameState->GetResourceAmount(EResourceType::CowFeed);
+			int32 ChickenFeedAmount = GameState->GetResourceAmount(EResourceType::ChickenFeed);
+			PlayerInventoryWidget->SetCowInfo(CowAmount, MaxCowAmount);
+			PlayerInventoryWidget->SetChickenInfo(ChickenAmount, MaxChickenAmount);
+			PlayerInventoryWidget->SetFeedInfo(CowFeedAmount, ChickenFeedAmount);
+		}
 	}
 }
 
