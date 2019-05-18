@@ -136,6 +136,7 @@ FFarmerState AFarmer::GetCurrentState()
 		FarmerState.ItemInHandsInfo = FItemInfo();
 	}
 	FarmerState.Energy = Energy;
+	FarmerState.bHadBreakfast = true;
 	return FarmerState;
 }
 
@@ -150,6 +151,19 @@ void AFarmer::RestoreState()
 		RestoreItemInHands(FarmerState.ItemInHandsInfo.Class);
 		Energy = FarmerState.Energy;
 		UpdateFatigueState();
+		if (!FarmerState.bHadBreakfast)
+		{
+			if (ItemInHands)
+			{
+				ItemInHands->SetActorHiddenInGame(true);
+			}
+
+			FActorSpawnParameters SpawnInfo;
+			SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+			BreakfastActor = GetWorld()->SpawnActor<AActor>(BreakfastActorClass, SpawnInfo);
+			AttachActorToItemSocket(BreakfastActor);
+			PlayAnimMontage(BreakfastMontage);
+		}
 	}
 }
 
@@ -778,4 +792,18 @@ void AFarmer::OnSleep()
 void AFarmer::OnConsume()
 {
 	DestroyItemInHands();
+}
+
+void AFarmer::OnEatBreakfast()
+{
+	BreakfastActor->Destroy();
+	BreakfastActor = nullptr;
+}
+
+void AFarmer::OnBreakfastEnd()
+{
+	if (ItemInHands)
+	{
+		ItemInHands->SetActorHiddenInGame(false);
+	}
 }

@@ -21,4 +21,6 @@ struct FFarmerState
 	FItemInventoryState ItemInventoryState;
 
 	FItemInfo ItemInHandsInfo;
+
+	bool bHadBreakfast = true;
 };

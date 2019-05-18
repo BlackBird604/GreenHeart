@@ -19,4 +19,6 @@ void UFarmerUpdater::ApplyNextDay(FGameStateInfo& GameStateInfo, FFarmerState& F
 		FarmerState.Energy = MaxEnergy;
 		GameStateInfo.ClockInfo = NormalClockInfo;
 	}
+
+	FarmerState.bHadBreakfast = false;
 }

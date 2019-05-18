@@ -66,6 +66,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "AnimNotifies")
 	void OnConsume();
 
+	UFUNCTION(BlueprintCallable, Category = "AnimNotifies")
+	void OnEatBreakfast();
+
+	UFUNCTION(BlueprintCallable, Category = "AnimNotifies")
+	void OnBreakfastEnd();
+
 	UFUNCTION(BlueprintCallable)
 	bool HasItemInHands() const;
 
@@ -165,6 +171,12 @@ protected:
 	UAnimMontage* BedJumpMontage;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	UAnimMontage* BreakfastMontage;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	TSubclassOf<AActor> BreakfastActorClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	float ChargeDelay = 1.0f;
 
 private:
@@ -214,6 +226,9 @@ private:
 
 	UPROPERTY()
 	AActor* ItemInHands;
+
+	UPROPERTY()
+	AActor* BreakfastActor;
 
 	TArray<EMovementDirection> MovementInputs;
 
