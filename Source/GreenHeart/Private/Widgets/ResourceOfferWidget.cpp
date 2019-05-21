@@ -1,6 +1,7 @@
 // The Green Heart @Politechnika Opolska
 
 #include "ResourceOfferWidget.h"
+#include "Components/Image.h"
 
 #include "Enums/ResourceTypes.h"
 #include "Fundamentals/FarmingGameMode.h"
@@ -8,7 +9,7 @@
 void UResourceOfferWidget::SetOfferInfo(const FResourceOffer& NewOffer)
 {
 	ResourceOffer = NewOffer;
-
+	Thumbnail->SetBrushFromTexture(NewOffer.Thumbnail);
 	UpdateActivation();
 }
 

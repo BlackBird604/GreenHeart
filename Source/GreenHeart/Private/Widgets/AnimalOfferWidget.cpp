@@ -1,6 +1,7 @@
 // The Green Heart @Politechnika Opolska
 
 #include "AnimalOfferWidget.h"
+#include "Components/Image.h"
 
 #include "Enums/ResourceTypes.h"
 #include "Fundamentals/FarmingGameMode.h"
@@ -9,7 +10,7 @@
 void UAnimalOfferWidget::SetOfferInfo(const FAnimalOffer& NewOffer)
 {
 	AnimalOffer = NewOffer;
-
+	Thumbnail->SetBrushFromTexture(NewOffer.Thumbnail);
 	UpdateActivation();
 }
 

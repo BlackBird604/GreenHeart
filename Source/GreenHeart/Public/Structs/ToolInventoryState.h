@@ -18,7 +18,7 @@ struct FToolInventoryState
 
 	bool CanUpgrade()
 	{
-		return LevelInfos.Num() > Level;
+		return LevelInfos.Num() > Level+1;
 	}
 
 	FLevelInfo GetCurrentLevelInfo()

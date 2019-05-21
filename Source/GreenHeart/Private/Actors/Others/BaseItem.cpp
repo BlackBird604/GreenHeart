@@ -19,6 +19,7 @@ ABaseItem::ABaseItem()
 	ItemMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ItemMesh"));
 	ItemMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	ItemMesh->SetupAttachment(CollisionSphere);
+	ItemMesh->bReceivesDecals = false;
 
 	ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovement"));
 	ProjectileMovement->bAutoActivate = false;
