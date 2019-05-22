@@ -9,6 +9,6 @@ void ANextDayGameMode::BeginPlay()
 	if (UFarmingGameInstance* GameInstance = Cast<UFarmingGameInstance>(GetGameInstance()))
 	{
 		GameInstance->ApplyNextDayChanges();
-		GameInstance->OpenLevel("Farm", 0);
+		GameInstance->OpenLevel("House", 1);
 	}
 }

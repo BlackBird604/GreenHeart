@@ -35,7 +35,7 @@ void UFarmingGameInstance::InitializeVariables()
 void UFarmingGameInstance::StartNewGame()
 {
 	InitializeVariables();
-	OpenLevel("Farm", 0);
+	OpenLevel("Farm", 6);
 }
 
 void UFarmingGameInstance::SetupFarmerInventory(FFarmerState& FarmerState)
