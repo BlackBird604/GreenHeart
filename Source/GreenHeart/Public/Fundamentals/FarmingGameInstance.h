@@ -12,6 +12,7 @@
 #include "FarmingGameInstance.generated.h"
 
 class UDataTable;
+class USoundWave;
 
 UCLASS()
 class GREENHEART_API UFarmingGameInstance : public UGameInstance
@@ -49,6 +50,10 @@ public:
 	FGameStateInfo GetGameStateInfo();
 
 	void OpenLevel(FName LevelName, int32 SpawnPoint);
+
+	void SetBackgroundMusicTime(float NewTime);
+
+	float GetBackgroundMusicTime();
 
 	int32 GetSpawnPointIndex();
 
@@ -106,4 +111,6 @@ private:
 	FGameStateInfo GameStateInfo;
 
 	int32 SpawnPointIndex = 0;
+
+	float BackgroundMusicTime = 0.0f;
 };

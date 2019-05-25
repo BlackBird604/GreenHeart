@@ -41,9 +41,6 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* NameText;
 
-	UPROPERTY(meta = (BindWidget))
-	UTextBlock* PriceText;
-
 private:
 	void SetupWidgetComponents();
 

@@ -10,6 +10,7 @@ void UResourceOfferWidget::SetOfferInfo(const FResourceOffer& NewOffer)
 {
 	ResourceOffer = NewOffer;
 	Thumbnail->SetBrushFromTexture(NewOffer.Thumbnail);
+	SetPriceText(NewOffer.Cost);
 	UpdateActivation();
 }
 

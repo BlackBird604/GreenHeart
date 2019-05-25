@@ -15,6 +15,7 @@
 #include "Enums/ConstructionTypes.h"
 #include "FarmingGameMode.generated.h"
 
+class UAudioComponent;
 class AFarmingGameState;
 class UGameHUDWidget;
 class UPlayerInventoryWidget;
@@ -27,6 +28,7 @@ class UBlacksmithWidget;
 class USupermarketWidget;
 class UHouseBuilderWidget;
 class UMessageboxWidget;
+class USoundWave;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnTimeUpdatedSigneture, int32, NewHour, int32, NewMinute);
 
@@ -34,6 +36,9 @@ UCLASS()
 class GREENHEART_API AFarmingGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
+
+public:
+	AFarmingGameMode();
 
 protected:
 	virtual AActor* ChoosePlayerStart_Implementation(AController* Player) override;
@@ -93,6 +98,9 @@ public:
 	FOnTimeUpdatedSigneture OnTimeUpdated;
 
 protected:
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	UAudioComponent* AudioComponent;
+
 	UPROPERTY(EditDefaultsOnly, Category = "Setup|UMG")
 	TSubclassOf<UGameHUDWidget> GameHUDClass;
 
@@ -130,6 +138,9 @@ protected:
 	int32 EndDayHour = 20;
 
 private:
+	UFUNCTION()
+		void OnAudioPercentUpdated(const USoundWave* PlayingSoundWave, const float PlaybackPercent);
+
 	void CreateHUD();
 
 	void InitializeManagers();
@@ -165,4 +176,6 @@ private:
 	FTimerHandle ClockTimer;
 
 	FClockInfo ClockInfo;
+
+	UFarmingGameInstance* GameInstance;
 };

@@ -9,6 +9,7 @@
 class UFocusButton;
 class UImage;
 class UOfferWidget;
+class UTextBlock;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnOfferClickedSignature, UOfferWidget*, ClickedOffer);
 
@@ -39,11 +40,16 @@ public:
 	virtual void UpdateActivation();
 
 protected:
+	void SetPriceText(int32 NewPrice);
+
 	UPROPERTY(meta = (BindWidget))
 	UFocusButton* Button;
 
 	UPROPERTY(meta = (BindWidget))
 	UImage* Thumbnail;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* PriceText;
 
 private:
 	UFUNCTION()

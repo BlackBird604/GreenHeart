@@ -27,6 +27,7 @@ void UToolOfferWidget::SetDefaults(TSubclassOf<ATool> ToolClass)
 
 			FLevelInfo LevelInfo = ToolInfo.GetFirstLevelInfo();
 			OfferPrice = LevelInfo.Cost;
+			SetPriceText(OfferPrice);
 			OfferThumbnail = LevelInfo.Thumbnail;
 
 			Thumbnail->SetBrushFromTexture(OfferThumbnail);

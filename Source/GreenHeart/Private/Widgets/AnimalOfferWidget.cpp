@@ -11,6 +11,7 @@ void UAnimalOfferWidget::SetOfferInfo(const FAnimalOffer& NewOffer)
 {
 	AnimalOffer = NewOffer;
 	Thumbnail->SetBrushFromTexture(NewOffer.Thumbnail);
+	SetPriceText(NewOffer.Cost);
 	UpdateActivation();
 }
 

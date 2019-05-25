@@ -3,6 +3,7 @@
 #include "OfferWidget.h"
 #include "Widgets/Buttons/FocusButton.h"
 #include "Components/Image.h"
+#include "Components/TextBlock.h"
 
 #include "Fundamentals/FarmingGameMode.h"
 
@@ -42,4 +43,11 @@ void UOfferWidget::UpdateActivation()
 		bool HasResources = GameMode->HasResource(EResourceType::Money, GetOfferPrice());
 		Button->SetIsEnabled(HasResources);
 	}
+}
+
+void UOfferWidget::SetPriceText(int32 NewPrice)
+{
+	FString PriceString = FString::FromInt(NewPrice);
+	FText NewText = FText::FromString(PriceString + "G");
+	PriceText->SetText(NewText);
 }

@@ -23,9 +23,7 @@ FConstructionState UConstructionOfferWidget::GetOfferInfo()
 void UConstructionOfferWidget::SetupWidgetComponents()
 {
 	NameText->SetText(ConstructionOffer.Name);
-	FString PriceString = FString::FromInt(GetOfferPrice());
-	FText NewText = FText::FromString(PriceString + "G");
-	PriceText->SetText(NewText);
+	SetPriceText(GetOfferPrice());
 	Thumbnail->SetBrushFromTexture(GetThumbnail());
 }
 

@@ -11,6 +11,7 @@ class UBoxComponent;
 class USkeletalMeshComponent;
 class UAnimSequence;
 
+
 UCLASS()
 class GREENHEART_API ASalesContainer : public AActor
 {

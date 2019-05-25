@@ -186,3 +186,13 @@ int32 UFarmingGameInstance::GetSpawnPointIndex()
 {
 	return SpawnPointIndex;
 }
+
+void UFarmingGameInstance::SetBackgroundMusicTime(float NewTime)
+{
+	BackgroundMusicTime = NewTime;
+}
+
+float UFarmingGameInstance::GetBackgroundMusicTime()
+{
+	return BackgroundMusicTime;
+}

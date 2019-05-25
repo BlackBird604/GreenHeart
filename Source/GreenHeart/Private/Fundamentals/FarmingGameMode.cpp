@@ -5,6 +5,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "TimerManager.h"
 #include "GameFramework/PlayerController.h"
+#include "Components/AudioComponent.h"
+#include "Sound/SoundWave.h"
 
 #include "Fundamentals/FarmingGameInstance.h"
 #include "Fundamentals/FarmingGameState.h"
@@ -19,6 +21,12 @@
 #include "Widgets/SupermarketWidget.h"
 #include "Widgets/HouseBuilderWidget.h"
 #include "Widgets/MessageboxWidget.h"
+
+AFarmingGameMode::AFarmingGameMode()
+{
+	AudioComponent = CreateDefaultSubobject<UAudioComponent>("AudioComponent");
+	AudioComponent->bAutoActivate = false;
+}
 
 AActor* AFarmingGameMode::ChoosePlayerStart_Implementation(AController* Player)
 {
@@ -45,6 +53,20 @@ void AFarmingGameMode::BeginPlay()
 {
 	Super::BeginPlay();
 	AFarmingGameMode::CreateHUD();
+	GameInstance = GetGameInstance<UFarmingGameInstance>();
+	if (GameInstance)
+	{
+		float BackgroundMusicTime = GameInstance->GetBackgroundMusicTime();
+		AudioComponent->OnAudioPlaybackPercent.AddDynamic(this, &AFarmingGameMode::OnAudioPercentUpdated);
+	}
+}
+
+void AFarmingGameMode::OnAudioPercentUpdated(const USoundWave* PlayingSoundWave, const float PlaybackPercent)
+{
+	if (GameInstance)
+	{
+		GameInstance->SetBackgroundMusicTime(PlaybackPercent * PlayingSoundWave->Duration);
+	}
 }
 
 void AFarmingGameMode::CreateHUD()
@@ -462,7 +484,7 @@ UMessageboxWidget* AFarmingGameMode::OpenMessagebox(FText NewMessage)
 
 void AFarmingGameMode::EndDay()
 {
-	if (UFarmingGameInstance* GameInstance = GetGameInstance<UFarmingGameInstance>())
+	if (GameInstance)
 	{
 		GameInstance->StartNextDay();
 	}
