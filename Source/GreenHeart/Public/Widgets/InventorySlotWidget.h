@@ -32,6 +32,10 @@ public:
 
 	void SetupFocus();
 
+	void Select();
+
+	void Deselect();
+
 protected:
 	void SetThumbnail(UTexture2D* NewTexture);
 

@@ -9,6 +9,7 @@
 bool UOfferWidget::Initialize()
 {
 	bool b = Super::Initialize();
+	Button->OnHovered.AddDynamic(this, &UOfferWidget::OnButtonHovered);
 	Button->OnClicked.AddDynamic(this, &UOfferWidget::OnButtonClicked);
 	Button->StartUpdating();
 	return b;
@@ -22,6 +23,11 @@ bool UOfferWidget::IsEnabled()
 void UOfferWidget::SetupFocus()
 {
 	Button->SetKeyboardFocus();
+}
+
+void UOfferWidget::OnButtonHovered()
+{
+	SetupFocus();
 }
 
 void UOfferWidget::OnButtonClicked()

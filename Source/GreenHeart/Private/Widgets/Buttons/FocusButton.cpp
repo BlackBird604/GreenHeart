@@ -11,24 +11,68 @@ void UFocusButton::StartUpdating()
 	KeyboardFocusedStyle.Normal = WidgetStyle.Hovered;
 	KeyboardUnfocusedStyle = WidgetStyle;
 	KeyboardUnfocusedStyle.Hovered = WidgetStyle.Normal;
+
+	SelectedMouseStyle = SelectedStyle;
+	SelectedKeyboardFocusedStyle = SelectedStyle;
+	SelectedKeyboardFocusedStyle.Normal = SelectedStyle.Hovered;
+	SelectedKeyboardUnfocusedStyle = SelectedStyle;
+	SelectedKeyboardUnfocusedStyle.Hovered = SelectedStyle.Normal;
 	GetWorld()->GetTimerManager().SetTimer(UpdateTimer, this, &UFocusButton::UpdateFocus, UpdateRate, true, 0.0f);
 }
 
 void UFocusButton::UpdateFocus()
 {
+	UpdateStyle(false);
+}
+
+void UFocusButton::UpdateStyle(bool bForce)
+{
+	EFocusButtonState CurrentState = GetCurrentState();
+	if (CurrentState == LastState && !bForce)
+	{
+		return;
+	}
+
+	switch (CurrentState)
+	{
+	case EFocusButtonState::MouseHovered:
+		SetStyle(bSelected ? SelectedMouseStyle : MouseStyle);
+		break;
+	case EFocusButtonState::KeyboardHovered:
+		if (LastState != EFocusButtonState::MouseHovered || bForce)
+		{
+			SetStyle(bSelected ? SelectedKeyboardFocusedStyle : KeyboardFocusedStyle);
+			OnHovered.Broadcast();
+		}
+		break;
+	case EFocusButtonState::Unhovered:
+		SetStyle(bSelected ? SelectedKeyboardUnfocusedStyle : KeyboardUnfocusedStyle);
+		break;
+	}
+	LastState = CurrentState;
+}
+
+EFocusButtonState UFocusButton::GetCurrentState()
+{
 	if (IsHovered())
 	{
-		SetStyle(MouseStyle);
+		return EFocusButtonState::MouseHovered;
 	}
-	else
+	if (HasKeyboardFocus())
 	{
-		if (HasKeyboardFocus())
-		{
-			SetStyle(KeyboardFocusedStyle);
-		}
-		else
-		{
-			SetStyle(KeyboardUnfocusedStyle);
-		}
+		return EFocusButtonState::KeyboardHovered;
 	}
+	return EFocusButtonState::Unhovered;
+}
+
+void UFocusButton::Select()
+{
+	bSelected = true;
+	UpdateStyle(true);
+}
+
+void UFocusButton::Deselect()
+{
+	bSelected = false;
+	UpdateStyle(true);
 }

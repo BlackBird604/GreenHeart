@@ -47,5 +47,8 @@ protected:
 
 private:
 	UFUNCTION()
+	void OnButtonHovered();
+
+	UFUNCTION()
 	void OnButtonClicked();
 };

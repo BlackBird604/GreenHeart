@@ -27,6 +27,7 @@ void UInventorySlotWidget::OnButtonClicked()
 
 void UInventorySlotWidget::OnButtonHovered()
 {
+	SetupFocus();
 	OnHovered.Broadcast(this);
 }
 
@@ -38,4 +39,14 @@ void UInventorySlotWidget::OnButtonUnhovered()
 void UInventorySlotWidget::SetThumbnail(UTexture2D* NewTexture)
 {
 	Thumbnail->SetBrushFromTexture(NewTexture);
+}
+
+void UInventorySlotWidget::Select()
+{
+	Button->Select();
+}
+
+void UInventorySlotWidget::Deselect()
+{
+	Button->Deselect();
 }

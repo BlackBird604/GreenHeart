@@ -152,6 +152,7 @@ void UPlayerInventoryWidget::OnToolSlotClicked(UInventorySlotWidget* ClickedSlot
 	if (!ActiveSlot)
 	{
 		ActiveSlot = ClickedSlot;
+		ClickedSlot->Select();
 	}
 	else
 	{
@@ -164,15 +165,20 @@ void UPlayerInventoryWidget::OnToolSlotClicked(UInventorySlotWidget* ClickedSlot
 				ActiveToolSlot->SetToolInfo(ClickedToolInfo);
 				ClickedToolSlot->SetToolInfo(ActiveToolInfo);
 				OnToolSlotHovered(ClickedSlot);
+				ActiveSlot->Deselect();
 				ActiveSlot = nullptr;
 			}
 			else
 			{
+				ActiveSlot->Deselect();
+				ClickedSlot->Select();
 				ActiveSlot = ClickedSlot;
 			}
 		}
 		else
 		{
+			ActiveSlot->Deselect();
+			ClickedSlot->Select();
 			ActiveSlot = ClickedSlot;
 		}
 	}
@@ -183,6 +189,7 @@ void UPlayerInventoryWidget::OnItemSlotClicked(UInventorySlotWidget* ClickedSlot
 	if (!ActiveSlot)
 	{
 		ActiveSlot = ClickedSlot;
+		ActiveSlot->Select();
 	}
 	else
 	{
@@ -195,15 +202,20 @@ void UPlayerInventoryWidget::OnItemSlotClicked(UInventorySlotWidget* ClickedSlot
 				ActiveItemSlot->SetItemInfo(ClickedItemInfo);
 				ClickedItemSlot->SetItemInfo(ActiveItemInfo);
 				OnItemSlotHovered(ClickedSlot);
+				ActiveSlot->Deselect();
 				ActiveSlot = nullptr;
 			}
 			else
 			{
+				ActiveSlot->Deselect();
+				ClickedSlot->Select();
 				ActiveSlot = ClickedSlot;
 			}
 		}
 		else
 		{
+			ActiveSlot->Deselect();
+			ClickedSlot->Select();
 			ActiveSlot = ClickedSlot;
 		}
 	}
