@@ -15,6 +15,7 @@ class UToolOfferWidget;
 class UUniformGridPanel;
 class UOfferConfirmationWidget;
 class UUpgradeConfirmationWidget;
+class UDescriptionWidget;
 
 UCLASS()
 class GREENHEART_API UBlacksmithWidget : public UUserWidget
@@ -66,6 +67,9 @@ protected:
 	UPROPERTY(BlueprintReadWrite, Category = "Animations")
 	UWidgetAnimation* ShowUpgradeConfirmationAnimation;
 
+	UPROPERTY(meta = (BindWidget))
+	UDescriptionWidget* DescriptionBox;
+
 private:
 	void CreateConfirmationWidgetBindings();
 
@@ -97,6 +101,12 @@ private:
 	void HideUpgradeWidget();
 
 	void RestoreGame();
+
+	UFUNCTION()
+	void OnOfferHovered(UOfferWidget* HoveredOffer);
+
+	UFUNCTION()
+	void OnOfferUnhovered();
 
 	UFUNCTION()
 	void OnOfferClicked(UOfferWidget* ClickedOffer);

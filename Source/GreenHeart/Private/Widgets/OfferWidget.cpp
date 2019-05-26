@@ -11,6 +11,7 @@ bool UOfferWidget::Initialize()
 {
 	bool b = Super::Initialize();
 	Button->OnHovered.AddDynamic(this, &UOfferWidget::OnButtonHovered);
+	Button->OnUnhovered.AddDynamic(this, &UOfferWidget::OnButtonUnhovered);
 	Button->OnClicked.AddDynamic(this, &UOfferWidget::OnButtonClicked);
 	Button->StartUpdating();
 	return b;
@@ -29,6 +30,12 @@ void UOfferWidget::SetupFocus()
 void UOfferWidget::OnButtonHovered()
 {
 	SetupFocus();
+	OnHovered.Broadcast(this);
+}
+
+void UOfferWidget::OnButtonUnhovered()
+{
+	OnUnhovered.Broadcast();
 }
 
 void UOfferWidget::OnButtonClicked()

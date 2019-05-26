@@ -12,6 +12,7 @@
 #include "Structs/LevelInfo.h"
 #include "Actors/Tools/Tool.h"
 #include "Widgets/AmountOfferConfirmationWidget.h"
+#include "Widgets/DescriptionWidget.h"
 
 bool USupermarketWidget::Initialize()
 {
@@ -89,11 +90,15 @@ void USupermarketWidget::SetupFeedOffers(const TArray<FResourceOffer>& Offers)
 
 void USupermarketWidget::CreateOfferBindings(UOfferWidget* OfferWidget)
 {
+	OfferWidget->OnHovered.AddDynamic(this, &USupermarketWidget::OnOfferHovered);
+	OfferWidget->OnUnhovered.AddDynamic(this, &USupermarketWidget::OnOfferUnhovered);
 	OfferWidget->OnClicked.AddDynamic(this, &USupermarketWidget::OnOfferClicked);
 }
 
 void USupermarketWidget::CreateAmountOfferBindings(UResourceOfferWidget* OfferWidget)
 {
+	OfferWidget->OnHovered.AddDynamic(this, &USupermarketWidget::OnOfferHovered);
+	OfferWidget->OnUnhovered.AddDynamic(this, &USupermarketWidget::OnOfferUnhovered);
 	OfferWidget->OnClicked.AddDynamic(this, &USupermarketWidget::OnAmountOfferClicked);
 }
 
@@ -103,6 +108,22 @@ void USupermarketWidget::CreateConfirmationWidgetBindings()
 	OfferConfirmation->OnCancel.AddDynamic(this, &USupermarketWidget::OnOfferCanceled);
 	AmountOfferConfirmation->OnConfirm.AddDynamic(this, &USupermarketWidget::OnAmountOfferConfirmed);
 	AmountOfferConfirmation->OnCancel.AddDynamic(this, &USupermarketWidget::OnAmountOfferCanceled);
+}
+
+void USupermarketWidget::OnOfferHovered(UOfferWidget* HoveredOffer)
+{
+	if (DescriptionBox)
+	{
+		DescriptionBox->SetText(HoveredOffer->GetOfferName(), HoveredOffer->GetOfferDesctiprion());
+	}
+}
+
+void USupermarketWidget::OnOfferUnhovered()
+{
+	if (DescriptionBox)
+	{
+		DescriptionBox->ClearText();
+	}
 }
 
 void USupermarketWidget::SetupFocus()

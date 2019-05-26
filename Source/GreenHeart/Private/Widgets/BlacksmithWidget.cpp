@@ -13,6 +13,7 @@
 #include "Structs/LevelInfo.h"
 #include "Actors/Tools/Tool.h"
 #include "Widgets/Buttons/FocusButton.h"
+#include "Widgets/DescriptionWidget.h"
 
 bool UBlacksmithWidget::Initialize()
 {
@@ -146,7 +147,25 @@ void UBlacksmithWidget::SetupItemInventoryUpgrade()
 
 void UBlacksmithWidget::CreateOfferBindings(UToolOfferWidget* OfferWidget)
 {
+	OfferWidget->OnHovered.AddDynamic(this, &UBlacksmithWidget::OnOfferHovered);
+	OfferWidget->OnUnhovered.AddDynamic(this, &UBlacksmithWidget::OnOfferUnhovered);
 	OfferWidget->OnClicked.AddDynamic(this, &UBlacksmithWidget::OnOfferClicked);
+}
+
+void UBlacksmithWidget::OnOfferHovered(UOfferWidget* HoveredOffer)
+{
+	if (DescriptionBox)
+	{
+		DescriptionBox->SetText(HoveredOffer->GetOfferName(), HoveredOffer->GetOfferDesctiprion());
+	}
+}
+
+void UBlacksmithWidget::OnOfferUnhovered()
+{
+	if (DescriptionBox)
+	{
+		DescriptionBox->ClearText();
+	}
 }
 
 void UBlacksmithWidget::OnOfferClicked(UOfferWidget* ClickedOffer)

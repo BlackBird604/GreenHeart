@@ -11,6 +11,7 @@ class UUniformGridPanel;
 class UOfferWidget;
 class UConstructionOfferWidget;
 class UUpgradeConfirmationWidget;
+class UDescriptionWidget;
 
 UCLASS()
 class GREENHEART_API UHouseBuilderWidget : public UUserWidget
@@ -38,6 +39,9 @@ protected:
 	UPROPERTY(BlueprintReadWrite, Category = "Animations")
 	UWidgetAnimation* ShowUpgradeConfirmationAnimation;
 
+	UPROPERTY(meta = (BindWidget))
+	UDescriptionWidget* DescriptionBox;
+
 private:
 	void SetupFocus();
 
@@ -46,6 +50,12 @@ private:
 	void SetupConstructionOffers(const TArray<FConstructionState>& Offers);
 
 	void CreateOfferBindings(UOfferWidget* OfferWidget);
+
+	UFUNCTION()
+	void OnOfferHovered(UOfferWidget* HoveredOffer);
+
+	UFUNCTION()
+	void OnOfferUnhovered();
 
 	UFUNCTION()
 	void OnOfferClicked(UOfferWidget* ClickedOffer);

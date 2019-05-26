@@ -7,6 +7,7 @@
 #include "Fundamentals/FarmingGameMode.h"
 #include "Widgets/ConstructionOfferWidget.h"
 #include "Widgets/UpgradeConfirmationWidget.h"
+#include "Widgets/DescriptionWidget.h"
 
 bool UHouseBuilderWidget::Initialize()
 {
@@ -63,7 +64,25 @@ void UHouseBuilderWidget::CreateConfirmationWidgetBindings()
 
 void UHouseBuilderWidget::CreateOfferBindings(UOfferWidget* OfferWidget)
 {
+	OfferWidget->OnHovered.AddDynamic(this, &UHouseBuilderWidget::OnOfferHovered);
+	OfferWidget->OnUnhovered.AddDynamic(this, &UHouseBuilderWidget::OnOfferUnhovered);
 	OfferWidget->OnClicked.AddDynamic(this, &UHouseBuilderWidget::OnOfferClicked);
+}
+
+void UHouseBuilderWidget::OnOfferHovered(UOfferWidget* HoveredOffer)
+{
+	if (DescriptionBox)
+	{
+		DescriptionBox->SetText(HoveredOffer->GetOfferName(), HoveredOffer->GetOfferDesctiprion());
+	}
+}
+
+void UHouseBuilderWidget::OnOfferUnhovered()
+{
+	if (DescriptionBox)
+	{
+		DescriptionBox->ClearText();
+	}
 }
 
 void UHouseBuilderWidget::OnOfferClicked(UOfferWidget* ClickedOffer)

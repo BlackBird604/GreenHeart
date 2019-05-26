@@ -11,6 +11,8 @@ class UImage;
 class UOfferWidget;
 class UTextBlock;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnOfferHoveredSignature, UOfferWidget*, HoveredOffer);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnOfferUnhoveredSignature);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnOfferClickedSignature, UOfferWidget*, ClickedOffer);
 
 UCLASS()
@@ -24,6 +26,10 @@ public:
 	bool IsEnabled();
 
 	void SetupFocus();
+
+	FOnOfferHoveredSignature OnHovered;
+
+	FOnOfferUnhoveredSignature OnUnhovered;
 
 	FOnOfferClickedSignature OnClicked;
 
@@ -54,6 +60,9 @@ protected:
 private:
 	UFUNCTION()
 	void OnButtonHovered();
+
+	UFUNCTION()
+	void OnButtonUnhovered();
 
 	UFUNCTION()
 	void OnButtonClicked();

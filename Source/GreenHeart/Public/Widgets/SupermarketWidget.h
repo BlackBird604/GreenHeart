@@ -16,6 +16,7 @@ class UResourceOfferWidget;
 class UOfferConfirmationWidget;
 class UAmountOfferConfirmationWidget;
 class UWidgetAnimation;
+class UDescriptionWidget;
 
 UCLASS()
 class GREENHEART_API USupermarketWidget : public UUserWidget
@@ -67,6 +68,9 @@ protected:
 	UPROPERTY(BlueprintReadWrite, Category = "Animations")
 	UWidgetAnimation* ShowAmountOfferConfirmationAnimation;
 
+	UPROPERTY(meta = (BindWidget))
+	UDescriptionWidget* DescriptionBox;
+
 private:
 	void SetupFocus();
 
@@ -87,6 +91,12 @@ private:
 
 	UFUNCTION()
 	void OnAmountOfferClicked(UOfferWidget* ClickedOffer);
+
+	UFUNCTION()
+	void OnOfferHovered(UOfferWidget* HoveredOffer);
+
+	UFUNCTION()
+	void OnOfferUnhovered();
 
 	void SetupOfferConfirmationWidget(UOfferWidget* ClickedOffer);
 
