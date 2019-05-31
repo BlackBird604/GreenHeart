@@ -21,6 +21,7 @@
 #include "Widgets/SupermarketWidget.h"
 #include "Widgets/HouseBuilderWidget.h"
 #include "Widgets/MessageboxWidget.h"
+#include "Widgets/PauseWidget.h"
 
 AFarmingGameMode::AFarmingGameMode()
 {
@@ -255,6 +256,27 @@ void AFarmingGameMode::OpenHouseBuilder()
 		EnableUIMode();
 		HouseBuilderWidget->SetupWidget(GameState->GetConstructionStates());
 	}
+}
+
+void AFarmingGameMode::Pause()
+{
+	UPauseWidget* PauseWidget = CreateWidget<UPauseWidget>(GetWorld(), PauseWidgetClass);
+	if (PauseWidget)
+	{
+		if (!GetWorldTimerManager().IsTimerPaused(ClockTimer))
+		{
+			PauseWidget->AddToViewport(2);
+			PauseWidget->SetupFocus();
+			EnableUIMode();
+			GetWorldTimerManager().PauseTimer(ClockTimer);
+		}
+	}
+}
+
+void AFarmingGameMode::Unpause()
+{
+	DisableUIMode();
+	GetWorldTimerManager().UnPauseTimer(ClockTimer);
 }
 
 void AFarmingGameMode::EndPlay(const EEndPlayReason::Type EndPlayReason)

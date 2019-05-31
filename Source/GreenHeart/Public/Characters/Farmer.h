@@ -126,6 +126,8 @@ protected:
 	void OnNextItemPressed();
 	void OnEatPressed();
 
+	void OnPausePressed();
+
 	void OnToggleInventory();
 
 	UPROPERTY(VisibleAnywhere, Category = "Components")

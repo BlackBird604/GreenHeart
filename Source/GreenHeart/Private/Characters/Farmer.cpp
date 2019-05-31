@@ -99,6 +99,8 @@ void AFarmer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	InputComponent->BindAction("NextItem", IE_Pressed, this, &AFarmer::OnNextItemPressed);
 	InputComponent->BindAction("Eat", IE_Pressed, this, &AFarmer::OnEatPressed);
 
+	InputComponent->BindAction("Pause", IE_Pressed, this, &AFarmer::OnPausePressed);
+
 	InputComponent->BindAction("ToggleInventory", IE_Pressed, this, &AFarmer::OnToggleInventory);
 }
 
@@ -343,6 +345,14 @@ void AFarmer::OnEatPressed()
 		PlayAnimMontage(ConsumeMontage);
 		Energy += Consumable->GetEnergyPoints();
 		UpdateFatigueState();
+	}
+}
+
+void AFarmer::OnPausePressed()
+{
+	if(AFarmingGameMode* GameMode = GetWorld()->GetAuthGameMode<AFarmingGameMode>())
+	{
+		GameMode->Pause();
 	}
 }
 

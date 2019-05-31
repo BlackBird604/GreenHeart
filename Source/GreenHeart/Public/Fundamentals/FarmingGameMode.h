@@ -28,6 +28,7 @@ class UBlacksmithWidget;
 class USupermarketWidget;
 class UHouseBuilderWidget;
 class UMessageboxWidget;
+class UPauseWidget;
 class USoundWave;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnTimeUpdatedSigneture, int32, NewHour, int32, NewMinute);
@@ -94,6 +95,10 @@ public:
 
 	void OnPlayerOutOfEnergy();
 
+	void Pause();
+
+	void Unpause();
+
 	UPROPERTY(BlueprintAssignable)
 	FOnTimeUpdatedSigneture OnTimeUpdated;
 
@@ -124,6 +129,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup|UMG")
 	TSubclassOf<UMessageboxWidget> MessageboxWidgetClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Setup|UMG")
+	TSubclassOf<UPauseWidget> PauseWidgetClass;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	float ClockMinuteTick = 1.0f;
