@@ -8,6 +8,7 @@
 #include "Defaults/ProjectDefaults.h"
 #include "Actors/Fields/Crop.h"
 #include "Actors/Tools/Tool.h"
+#include "Actors/Others/DestroyActor.h"
 
 APlant::APlant()
 {
@@ -139,5 +140,15 @@ bool APlant::HasMesh(int32 CheckedValue)
 void APlant::HandleDestroy()
 {
 	OnDepleted.Broadcast();
+	SpawnDestroyActor();
 	Destroy();
+}
+
+void APlant::SpawnDestroyActor()
+{
+	FActorSpawnParameters SpawnInfo;
+	FVector SpawnLocation = GetActorLocation();
+	FRotator SpawnRotation = GetActorRotation();
+	SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	GetWorld()->SpawnActor<ADestroyActor>(DestroyActorClass, SpawnLocation, SpawnRotation, SpawnInfo);
 }

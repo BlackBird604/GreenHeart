@@ -54,7 +54,7 @@ protected:
 	FItemInfo ItemInfo;
 
 private:
-	float HorizontalSpeed = 300.0f;
+	float HorizontalSpeed = 200.0f;
 
 	float VerticalSpeed = 100.0f;
 

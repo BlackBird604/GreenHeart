@@ -11,9 +11,9 @@ struct FAnimalState
 
 	int32 ID;
 
-	bool bHasItem;
+	bool bHasItem = false;
 
-	bool bReceivedInteraction;
+	bool bReceivedInteraction = false;
 
-	int32 Happiness;
+	int32 Happiness = 0;
 };

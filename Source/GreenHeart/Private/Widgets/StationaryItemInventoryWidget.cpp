@@ -95,6 +95,7 @@ void UStationaryItemInventoryWidget::OnItemSlotClicked(UInventorySlotWidget* Cli
 	if (!ActiveSlot)
 	{
 		ActiveSlot = ClickedSlot;
+		ActiveSlot->Select();
 	}
 	else
 	{
@@ -107,15 +108,20 @@ void UStationaryItemInventoryWidget::OnItemSlotClicked(UInventorySlotWidget* Cli
 				ActiveItemSlot->SetItemInfo(ClickedItemInfo);
 				ClickedItemSlot->SetItemInfo(ActiveItemInfo);
 				OnItemSlotHovered(ClickedSlot);
+				ActiveSlot->Deselect();
 				ActiveSlot = nullptr;
 			}
 			else
 			{
+				ActiveSlot->Deselect();
+				ClickedSlot->Select();
 				ActiveSlot = ClickedSlot;
 			}
 		}
 		else
 		{
+			ActiveSlot->Deselect();
+			ClickedSlot->Select();
 			ActiveSlot = ClickedSlot;
 		}
 	}

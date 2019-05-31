@@ -94,6 +94,7 @@ void UStationaryToolInventoryWidget::OnToolSlotClicked(UInventorySlotWidget* Cli
 	if (!ActiveSlot)
 	{
 		ActiveSlot = ClickedSlot;
+		ActiveSlot->Select();
 	}
 	else
 	{
@@ -106,15 +107,20 @@ void UStationaryToolInventoryWidget::OnToolSlotClicked(UInventorySlotWidget* Cli
 				ActiveToolSlot->SetToolInfo(ClickedToolInfo);
 				ClickedToolSlot->SetToolInfo(ActiveToolInfo);
 				OnToolSlotHovered(ClickedSlot);
+				ActiveSlot->Deselect();
 				ActiveSlot = nullptr;
 			}
 			else
 			{
+				ActiveSlot->Deselect();
+				ClickedSlot->Select();
 				ActiveSlot = ClickedSlot;
 			}
 		}
 		else
 		{
+			ActiveSlot->Deselect();
+			ClickedSlot->Select();
 			ActiveSlot = ClickedSlot;
 		}
 	}

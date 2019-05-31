@@ -13,6 +13,7 @@ class UBoxComponent;
 class UStaticMeshComponent;
 class UStaticMesh;
 class ACrop;
+class ADestroyActor;
 
 USTRUCT(BlueprintType)
 struct FGrowthInfo
@@ -83,10 +84,15 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	UAnimMontage* PickupMontage;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	TSubclassOf<ADestroyActor> DestroyActorClass;
+
 private:
 	void UpdateMesh();
 
 	void HandleDestroy();
+
+	void SpawnDestroyActor();
 
 	int32 GrowthValue = 0;
 };
